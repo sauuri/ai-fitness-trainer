@@ -902,6 +902,11 @@ const $ = id => document.getElementById(id);
 function showErr(id,msg){const el=$(id);el.textContent=msg;el.classList.add('show')}
 function hideErr(id){$(id).classList.remove('show')}
 
+// Capacitor 환경이면 Render 서버로, 아니면 상대경로
+const API = (typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform())
+  ? 'https://ai-fitness-trainer-28oe.onrender.com'
+  : '';
+
 // ── Sound & Vibration ─────────────────────────────────────────────────────────
 let soundOn = true;
 let _audioCtx = null;
@@ -1027,7 +1032,7 @@ async function predictRisk(){
   $('risk-btn').disabled=true;
 
   try{
-    const res=await fetch('/predict-risk',{
+    const res=await fetch(API+'/predict-risk',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         sleep_hours:parseFloat($('td-sleep').value)||7,
@@ -1151,7 +1156,7 @@ async function getRoutine(){
   if($('routine-btn-default')) $('routine-btn-default').disabled=true;
 
   try{
-    const res=await fetch('/routine',{
+    const res=await fetch(API+'/routine',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         gender:p.gender,age:p.age,goal:p.goal,level:p.level,
@@ -1299,7 +1304,7 @@ async function getMinRoutine(){
 
   const reason=$('lazy-reason')?.value||'귀찮음';
   try{
-    const res=await fetch('/min-routine',{
+    const res=await fetch(API+'/min-routine',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         gender:p.gender,goal:p.goal,level:p.level,
@@ -1364,7 +1369,7 @@ async function getMotivation(){
   $('home-loading').classList.add('show');
   $('home-loading-text').textContent='동기부여 준비 중...';
   try{
-    const res=await fetch('/motivation',{
+    const res=await fetch(API+'/motivation',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({reason:$('lazy-reason').value,situation:$('lazy-reason').value})
     });
@@ -1530,7 +1535,7 @@ async function getFeedback(){
   $('fb-loading').classList.add('show');
   $('feedback-result').style.display='none';
   try{
-    const res=await fetch('/feedback',{
+    const res=await fetch(API+'/feedback',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({gender:p.gender,goal:p.goal,level:p.level,recent_logs:logs.slice(0,7)})
     });
@@ -1570,7 +1575,7 @@ async function getAnalysis(){
   $('analysis-loading').classList.add('show');
   $('analysis-result').style.display='none';
   try{
-    const res=await fetch('/analyze-failures',{
+    const res=await fetch(API+'/analyze-failures',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({gender:p.gender,goal:p.goal,level:p.level,logs,missed_logs:missed})
     });
@@ -1593,7 +1598,7 @@ async function getReport(){
   $('report-loading').classList.add('show');
   $('report-result').style.display='none';
   try{
-    const res=await fetch('/report',{
+    const res=await fetch(API+'/report',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({gender:p.gender,goal:p.goal,level:p.level,logs})
     });
@@ -1620,7 +1625,7 @@ async function convertRoutine(){
   $('convert-loading').classList.add('show');
   $('convert-result').style.display='none';
   try{
-    const res=await fetch('/convert-routine',{
+    const res=await fetch(API+'/convert-routine',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         original_routine:d,
@@ -1668,7 +1673,7 @@ async function getDiet(){
   $('diet-result').classList.remove('show');
   $('diet-loading').classList.add('show');
   try{
-    const res=await fetch('/calories',{
+    const res=await fetch(API+'/calories',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,weekly_days:parseInt($('diet-days').value),diet_style:$('diet-style').value})
     });

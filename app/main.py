@@ -2,11 +2,25 @@ import json
 import pathlib
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import AsyncOpenAI
 from app.config import settings
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost",
+        "https://localhost",
+        "capacitor://localhost",
+        "ionic://localhost",
+        "http://localhost:3000",
+        "http://localhost:8100",
+    ],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 client = AsyncOpenAI(api_key=settings.openai_api_key)
 BASE = pathlib.Path(__file__).parent
 

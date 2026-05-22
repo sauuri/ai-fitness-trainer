@@ -1,0 +1,15 @@
+{
+  "appId": "com.sauuri.nozeroday",
+  "appName": "No-Zero-Day",
+  "webDir": "app/static",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#06080f",
+      "showSpinner": false
+    }
+  }
+}
