@@ -20,8 +20,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-size:28px 28px;opacity:.35}
 
 .cold-notice{position:sticky;top:0;z-index:200;background:#0c1220;border-bottom:1px solid #1e2d42;
-  color:#7a9cc0;font-size:12px;text-align:center;padding:8px 16px}
+  color:#7a9cc0;font-size:12px;text-align:center;padding:8px 16px;display:flex;align-items:center;justify-content:center;gap:8px}
 .cold-notice strong{color:#a0c0e0}
+.sound-toggle{background:none;border:1px solid #1e2d42;border-radius:6px;color:#7a9cc0;
+  font-size:13px;cursor:pointer;padding:2px 7px;line-height:1;transition:all .2s;margin-left:8px}
+.sound-toggle:hover{border-color:var(--accent);color:var(--accent)}
 
 .nav{position:sticky;top:33px;z-index:100;background:#06080fcc;backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);display:flex;justify-content:center;gap:2px;padding:8px 12px}
@@ -304,7 +307,10 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 </style>
 </head>
 <body>
-<div class="cold-notice">🕐 무료 서버 사용 중 — 첫 요청 시 <strong>약 50초</strong> 소요될 수 있습니다</div>
+<div class="cold-notice">
+  <span>🕐 무료 서버 사용 중 — 첫 요청 시 <strong>약 50초</strong> 소요될 수 있습니다</span>
+  <button class="sound-toggle" id="sound-btn" onclick="toggleSound()" title="효과음 on/off">🔔</button>
+</div>
 
 <nav class="nav">
   <button class="nav-btn active" onclick="showPage('home')">🏋️ 루틴</button>
@@ -823,6 +829,45 @@ const $ = id => document.getElementById(id);
 function showErr(id,msg){const el=$(id);el.textContent=msg;el.classList.add('show')}
 function hideErr(id){$(id).classList.remove('show')}
 
+// ── Sound & Vibration ─────────────────────────────────────────────────────────
+let soundOn = true;
+let _audioCtx = null;
+function getCtx(){
+  if(!_audioCtx) _audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  return _audioCtx;
+}
+function tone(freq, dur, vol=0.25, type='sine', delay=0){
+  if(!soundOn) return;
+  try{
+    const ctx=getCtx();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type=type; osc.frequency.value=freq;
+    const t=ctx.currentTime+delay;
+    gain.gain.setValueAtTime(vol,t);
+    gain.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    osc.start(t); osc.stop(t+dur);
+  }catch(e){}
+}
+function vibrate(pattern){ if('vibrate' in navigator) navigator.vibrate(pattern) }
+
+function playCheck(){ tone(880,0.08,0.15) }
+function playTick(){ tone(660,0.12,0.2) }
+function playWarning(){
+  tone(280,0.3,0.2,'sawtooth');
+  tone(240,0.4,0.15,'sawtooth',0.2);
+}
+function playComplete(){
+  // 상승 아르페지오: C → E → G → C5
+  [[523,0],[659,0.09],[784,0.18],[1047,0.28]].forEach(([f,d])=>tone(f,0.35,0.22,'sine',d));
+}
+function toggleSound(){
+  soundOn=!soundOn;
+  $('sound-btn').textContent=soundOn?'🔔':'🔕';
+  if(soundOn) playTick();
+}
+
 // ── Navigation ──────────────────────────────────────────────────────────────
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -951,6 +996,8 @@ function renderRisk(d){
   $('risk-result').style.display='block';
   $('action-btns').style.display='flex';
   $('routine-btn-default').parentElement.style.display='none';
+  if(score>=60){playWarning();vibrate([120,60,120])}
+  else{playTick();vibrate([40])}
 }
 
 // ── Lazy Mode ────────────────────────────────────────────────────────────────
@@ -1031,7 +1078,7 @@ function renderRoutine(d){
         <div class="ex-name">${ex.name}</div>
         <div class="ex-check">
           <span class="ex-num">${i+1}</span>
-          <input type="checkbox" onchange="updateProgress()" title="완료">
+          <input type="checkbox" onchange="updateProgress();playCheck();vibrate([25])" title="완료">
         </div>
       </div>
       <div class="ex-detail">
@@ -1106,6 +1153,8 @@ function completeWorkout(){
   logs.unshift(log);
   if(logs.length>100) logs.pop();
   localStorage.setItem('fitness_logs',JSON.stringify(logs));
+  playComplete();
+  vibrate([80,40,80,40,300]);
   alert(`운동 완료! 완료율 ${rate}% · 피로도 ${fatigue}/10 저장됐어요 💪`);
 }
 
@@ -1174,6 +1223,8 @@ function saveMinWorkout(){
   logs.unshift(log);
   if(logs.length>100) logs.pop();
   localStorage.setItem('fitness_logs',JSON.stringify(logs));
+  playComplete();
+  vibrate([60,40,60,40,200]);
   alert('최소 실행 루틴 완료! 오늘 0일을 막았어요 🔥');
 }
 
