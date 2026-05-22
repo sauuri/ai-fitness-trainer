@@ -403,11 +403,13 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         <div class="form-group full">
           <label>오늘 운동 부위</label>
           <select id="target">
-            <option value="전신">전신</option>
-            <option value="상체">상체 (가슴·등·어깨·팔)</option>
-            <option value="하체">하체 (스쿼트·레그·런지)</option>
+            <option value="전신">전신 (풀바디)</option>
+            <option value="가슴+삼두">가슴 + 삼두</option>
+            <option value="등+이두">등 + 이두</option>
+            <option value="어깨">어깨 (숄더데이)</option>
+            <option value="하체">하체 (스쿼트·레그프레스·런지)</option>
             <option value="코어">코어 (복근·허리)</option>
-            <option value="유산소">유산소</option>
+            <option value="유산소">유산소 (런닝·자전거)</option>
           </select>
         </div>
       </div>
@@ -1296,15 +1298,18 @@ function renderDash(){
   }
 
   // Balance chart
-  const targets={상체:counts['상체']||0,하체:counts['하체']||0,코어:counts['코어']||0,전신:counts['전신']||0,유산소:counts['유산소']||0};
-  const maxT=Math.max(...Object.values(targets),1);
-  const colors={상체:'',하체:'green',코어:'blue',전신:'',유산소:'green'};
-  $('target-chart').innerHTML=Object.entries(targets).map(([k,v])=>`
-    <div class="bar-row">
-      <div class="bar-label" style="width:40px;font-size:10px">${k}</div>
-      <div class="bar-track"><div class="bar-fill ${colors[k]||''}" style="width:${Math.round(v/maxT*100)}%"></div></div>
+  const splitOrder=['가슴+삼두','등+이두','어깨','하체','코어','유산소','전신'];
+  const splitColors={'가슴+삼두':'','등+이두':'blue','어깨':'','하체':'green','코어':'blue','유산소':'green','전신':''};
+  const splitLabel={'가슴+삼두':'가슴','등+이두':'등','어깨':'어깨','하체':'하체','코어':'코어','유산소':'유산소','전신':'전신'};
+  const maxT=Math.max(...splitOrder.map(k=>counts[k]||0),1);
+  $('target-chart').innerHTML=splitOrder.map(k=>{
+    const v=counts[k]||0;
+    return`<div class="bar-row">
+      <div class="bar-label" style="width:44px;font-size:10px">${splitLabel[k]}</div>
+      <div class="bar-track"><div class="bar-fill ${splitColors[k]}" style="width:${Math.round(v/maxT*100)}%"></div></div>
       <div class="bar-val">${v}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   // Logs
   const allLogs=[
@@ -1340,14 +1345,20 @@ function renderDash(){
 }
 
 function calcBalance(logs){
-  const counts={상체:0,하체:0,코어:0,전신:0,유산소:0};
-  logs.forEach(l=>{if(counts.hasOwnProperty(l.target)) counts[l.target]++});
-  const main=['상체','하체','코어'];
+  const counts={'가슴+삼두':0,'등+이두':0,'어깨':0,'하체':0,'코어':0,'전신':0,'유산소':0};
+  logs.forEach(l=>{
+    const t=l.target;
+    if(counts.hasOwnProperty(t)) counts[t]++;
+    // 구버전 '상체' 데이터 호환
+    else if(t==='상체'){counts['가슴+삼두']++;counts['등+이두']++}
+  });
+  // 4분할 핵심 부위 균형 평가
+  const main=['가슴+삼두','등+이두','어깨','하체'];
   const mainTotal=main.reduce((a,k)=>a+counts[k],0);
   if(mainTotal===0) return{score:0,counts};
-  const ideal=mainTotal/3;
+  const ideal=mainTotal/4;
   const deviation=main.reduce((a,k)=>a+Math.abs(counts[k]-ideal),0);
-  const score=Math.max(0,Math.round(100-(deviation/Math.max(mainTotal,1))*50));
+  const score=Math.max(0,Math.round(100-(deviation/Math.max(mainTotal,1))*60));
   return{score,counts};
 }
 
