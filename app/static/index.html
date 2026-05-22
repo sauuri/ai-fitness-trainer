@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 헬스 트레이너</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --accent: #f97316; --accent2: #fb923c; --bg: #06080f; --card: #0c1018; --border: #1a2436; --text: #c8d8f0; --muted: #4a6080; }
+
+    body { background: var(--bg); font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; color: var(--text); min-height: 100vh; }
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse at 10% 20%, #f9731622 0%, transparent 45%),
+        radial-gradient(ellipse at 90% 80%, #fb923c14 0%, transparent 45%);
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image: radial-gradient(circle, #1e2a3a 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.4;
+    }
+
+    .wrap { max-width: 640px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 1; }
+    .hero { text-align: center; margin-bottom: 36px; }
+    .hero-icon { font-size: 48px; margin-bottom: 12px; display: block; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; background: #f9731610; border: 1px solid #f9731630; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+    h1 { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .sub { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+    .card-title { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
+    input[type=number], select {
+      background: #0a0f1a; border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text); font-size: 14px; padding: 10px 14px;
+      transition: border-color 0.2s;
+    }
+    input[type=number]:focus, select:focus { outline: none; border-color: var(--accent); }
+    select option { background: #0a0f1a; }
+
+    .btn-group { display: flex; gap: 10px; margin-top: 8px; }
+    .btn {
+      flex: 1; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+      font-size: 14px; font-weight: 700; transition: all 0.2s;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #f9731640; }
+    .btn-lazy { background: #1a2436; color: var(--muted); border: 1px solid var(--border); }
+    .btn-lazy:hover { border-color: var(--accent); color: var(--accent); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+    .loading { display: none; text-align: center; padding: 40px 20px; }
+    .loading.show { display: block; }
+    .loading-ring { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+    .loading-text { font-size: 13px; color: var(--muted); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    .result { display: none; animation: fadeUp 0.4s ease; }
+    .result.show { display: block; }
+
+    .routine-header { background: linear-gradient(135deg, #f9731615, #fb923c08); border: 1px solid #f9731630; border-radius: 14px; padding: 20px; margin-bottom: 16px; text-align: center; }
+    .routine-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .routine-intro { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+    .routine-meta { display: flex; justify-content: center; gap: 20px; }
+    .meta-item { font-size: 12px; color: var(--accent); font-weight: 700; }
+
+    .exercise-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .exercise-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .ex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .ex-name { font-size: 15px; font-weight: 700; color: #fff; }
+    .ex-num { font-size: 11px; color: var(--accent); font-weight: 700; background: #f9731615; padding: 3px 8px; border-radius: 6px; }
+    .ex-detail { display: flex; gap: 12px; margin-bottom: 8px; }
+    .ex-badge { font-size: 11px; color: var(--muted); background: #1a2436; padding: 3px 8px; border-radius: 6px; }
+    .ex-tip { font-size: 12px; color: var(--muted); line-height: 1.5; border-left: 2px solid #f9731630; padding-left: 10px; }
+
+    .advice-box { background: #f9731608; border: 1px solid #f9731620; border-radius: 12px; padding: 16px; font-size: 13px; color: var(--text); line-height: 1.6; }
+
+    .motivation-result { display: none; animation: fadeUp 0.4s ease; }
+    .motivation-result.show { display: block; }
+    .motive-card { background: linear-gradient(135deg, #f9731610, #fb923c08); border: 1px solid #f9731630; border-radius: 14px; padding: 24px; text-align: center; margin-bottom: 16px; }
+    .motive-emoji { font-size: 48px; margin-bottom: 12px; display: block; }
+    .motive-msg { font-size: 15px; line-height: 1.8; color: var(--text); margin-bottom: 16px; }
+    .motive-quote { font-size: 13px; color: var(--accent); font-style: italic; margin-bottom: 16px; }
+    .motive-challenge { background: #0a0f1a; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #fff; font-weight: 600; }
+
+    .lazy-input { background: #0a0f1a; border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 14px; padding: 10px 14px; width: 100%; margin-bottom: 10px; display: none; }
+    .lazy-input.show { display: block; }
+    .lazy-input:focus { outline: none; border-color: var(--accent); }
+
+    .error { display: none; background: #ff4d4d10; border: 1px solid #ff4d4d30; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #ff6b6b; margin-bottom: 12px; }
+    .error.show { display: block; }
+  </style>
+</head>
+<body>
+<div class="cold-start-banner">
+  <span>🕐</span>
+  무료 서버를 사용 중이에요. 첫 요청 시 <strong>약 50초</strong> 정도 소요될 수 있으니 잠시만 기다려 주세요.
+</div>
+<style>
+  .cold-start-banner {
+    position: sticky; top: 0; z-index: 100;
+    background: #0c1220; border-bottom: 1px solid #1e2d42;
+    color: #7a9cc0; font-size: 12.5px; text-align: center;
+    padding: 9px 16px; letter-spacing: 0.2px;
+  }
+  .cold-start-banner strong { color: #a0c0e0; }
+</style>
+
+<div class="wrap">
+  <div class="hero">
+    <span class="hero-icon">🏋️</span>
+    <div class="badge">✦ AI Personal Trainer</div>
+    <h1>AI 헬스 트레이너</h1>
+    <p class="sub">목표와 수준을 입력하면 오늘의 맞춤 운동 루틴을 짜드려요.<br>가기 싫으면 동기부여도 해드릴게요.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚙️ 내 정보 입력</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>목표</label>
+        <select id="goal">
+          <option value="증량">증량 (근육 키우기)</option>
+          <option value="감량">감량 (다이어트)</option>
+          <option value="유지">유지 (체력 관리)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>경험</label>
+        <select id="level">
+          <option value="초급">초급 (헬린이)</option>
+          <option value="중급">중급 (1년 이상)</option>
+          <option value="고급">고급 (3년 이상)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>몸무게 (kg)</label>
+        <input type="number" id="weight" placeholder="70" min="30" max="200">
+      </div>
+      <div class="form-group">
+        <label>키 (cm)</label>
+        <input type="number" id="height" placeholder="175" min="130" max="230">
+      </div>
+      <div class="form-group full">
+        <label>오늘 운동 부위</label>
+        <select id="target">
+          <option value="전신">전신</option>
+          <option value="상체">상체 (가슴·등·어깨·팔)</option>
+          <option value="하체">하체 (스쿼트·레그프레스·런지)</option>
+          <option value="코어">코어 (복근·허리)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-group" style="margin-top:16px">
+      <button class="btn btn-primary" id="routine-btn" onclick="getRoutine()">오늘 루틴 짜줘 💪</button>
+      <button class="btn btn-lazy" onclick="toggleLazy()">오늘 가기 싫어 😩</button>
+    </div>
+  </div>
+
+  <input class="lazy-input" id="lazy-input" placeholder="이유가 있으면 적어봐요 (없어도 됩니다)" id="lazy-reason">
+
+  <div class="error" id="error"></div>
+  <div class="loading" id="loading">
+    <div class="loading-ring"></div>
+    <div class="loading-text" id="loading-text">루틴 생성 중...</div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="routine-header">
+      <div class="routine-title" id="r-title"></div>
+      <div class="routine-intro" id="r-intro"></div>
+      <div class="routine-meta">
+        <div class="meta-item" id="r-time"></div>
+        <div class="meta-item" id="r-cal"></div>
+      </div>
+    </div>
+    <div class="exercise-list" id="r-exercises"></div>
+    <div class="advice-box" id="r-advice"></div>
+  </div>
+
+  <div class="motivation-result" id="motive-result">
+    <div class="motive-card">
+      <span class="motive-emoji" id="m-emoji"></span>
+      <div class="motive-msg" id="m-msg"></div>
+      <div class="motive-quote" id="m-quote"></div>
+      <div class="motive-challenge" id="m-challenge"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let lazyMode = false;
+
+  function toggleLazy() {
+    lazyMode = !lazyMode;
+    document.getElementById('lazy-input').classList.toggle('show', lazyMode);
+    if (lazyMode) {
+      document.getElementById('routine-btn').textContent = '그래도 루틴 짜줘 💪';
+      document.querySelector('.btn-lazy').textContent = '역시 갈게요 🏃';
+      document.getElementById('lazy-input').focus();
+    } else {
+      document.getElementById('routine-btn').textContent = '오늘 루틴 짜줘 💪';
+      document.querySelector('.btn-lazy').textContent = '오늘 가기 싫어 😩';
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  function hideAll() {
+    document.getElementById('error').classList.remove('show');
+    document.getElementById('result').classList.remove('show');
+    document.getElementById('motive-result').classList.remove('show');
+  }
+
+  async function getRoutine() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+    if (!weight || !height) { showError('몸무게와 키를 입력해주세요.'); return; }
+
+    hideAll();
+
+    if (lazyMode) {
+      const reason = document.getElementById('lazy-input').value;
+      document.getElementById('loading').classList.add('show');
+      document.getElementById('loading-text').textContent = '동기부여 멘트 준비 중...';
+      document.getElementById('routine-btn').disabled = true;
+      try {
+        const res = await fetch('/motivation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason })
+        });
+        const d = await res.json();
+        if (!res.ok) throw new Error(d.detail || '오류가 발생했습니다');
+        document.getElementById('m-emoji').textContent = d.emoji;
+        document.getElementById('m-msg').textContent = d.message;
+        document.getElementById('m-quote').textContent = `"${d.quote}"`;
+        document.getElementById('m-challenge').textContent = `🎯 ${d.challenge}`;
+        document.getElementById('motive-result').classList.add('show');
+      } catch(e) {
+        showError(e.message);
+      } finally {
+        document.getElementById('loading').classList.remove('show');
+        document.getElementById('routine-btn').disabled = false;
+      }
+      return;
+    }
+
+    document.getElementById('loading').classList.add('show');
+    document.getElementById('loading-text').textContent = '루틴 생성 중...';
+    document.getElementById('routine-btn').disabled = true;
+
+    try {
+      const res = await fetch('/routine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          goal: document.getElementById('goal').value,
+          level: document.getElementById('level').value,
+          weight,
+          height,
+          target: document.getElementById('target').value
+        })
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.detail || '오류가 발생했습니다');
+
+      document.getElementById('r-title').textContent = d.title;
+      document.getElementById('r-intro').textContent = d.intro;
+      document.getElementById('r-time').textContent = `⏱ ${d.total_time}`;
+      document.getElementById('r-cal').textContent = `🔥 ${d.calories}`;
+
+      const list = document.getElementById('r-exercises');
+      list.innerHTML = '';
+      d.exercises.forEach((ex, i) => {
+        list.innerHTML += `
+          <div class="exercise-item">
+            <div class="ex-header">
+              <div class="ex-name">${ex.name}</div>
+              <div class="ex-num">${i + 1}</div>
+            </div>
+            <div class="ex-detail">
+              <span class="ex-badge">🔁 ${ex.sets}세트 × ${ex.reps}</span>
+              <span class="ex-badge">⏸ 휴식 ${ex.rest}</span>
+            </div>
+            <div class="ex-tip">💡 ${ex.tip}</div>
+          </div>`;
+      });
+
+      document.getElementById('r-advice').textContent = `✅ ${d.advice}`;
+      document.getElementById('result').classList.add('show');
+    } catch(e) {
+      showError(e.message);
+    } finally {
+      document.getElementById('loading').classList.remove('show');
+      document.getElementById('routine-btn').disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
