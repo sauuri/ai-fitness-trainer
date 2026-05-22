@@ -96,6 +96,7 @@ class CaloriesRequest(BaseModel):
     height: float
     goal: str
     weekly_days: int
+    diet_style: str = "한식"
 
 
 @app.get("/")
@@ -428,6 +429,12 @@ async def get_calories(req: CaloriesRequest):
 
 성별: {req.gender} / 나이: {req.age}세 / 몸무게: {req.weight}kg / 키: {req.height}cm
 목표: {req.goal} / 주당 운동 횟수: {req.weekly_days}회
+선호 식단 스타일: {req.diet_style}
+
+식단 예시는 반드시 {req.diet_style} 스타일로 작성해주세요.
+한식이면 밥·국·반찬 위주, 양식이면 파스타·샐러드·스테이크 위주,
+빵/샌드위치면 토스트·베이글·샌드위치 위주, 간편식이면 편의점·조리 최소화 위주,
+고단백 위주면 닭가슴살·계란·단백질쉐이크 중심으로 작성해주세요.
 
 다음 JSON 형식으로만 응답:
 {{
