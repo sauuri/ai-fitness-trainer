@@ -6,308 +6,842 @@
   <title>AI 헬스 트레이너</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --accent: #f97316; --accent2: #fb923c; --bg: #06080f; --card: #0c1018; --border: #1a2436; --text: #c8d8f0; --muted: #4a6080; }
+    :root { --accent: #f97316; --accent2: #fb923c; --bg: #06080f; --card: #0c1018; --border: #1a2436; --text: #c8d8f0; --muted: #4a6080; --green: #10b981; --red: #f43f5e; --blue: #6366f1; }
 
     body { background: var(--bg); font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; color: var(--text); min-height: 100vh; }
-    body::before {
-      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background:
-        radial-gradient(ellipse at 10% 20%, #f9731622 0%, transparent 45%),
-        radial-gradient(ellipse at 90% 80%, #fb923c14 0%, transparent 45%);
-    }
-    body::after {
-      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background-image: radial-gradient(circle, #1e2a3a 1px, transparent 1px);
-      background-size: 28px 28px;
-      opacity: 0.4;
-    }
+    body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse at 10% 20%, #f9731618 0%, transparent 45%), radial-gradient(ellipse at 90% 80%, #fb923c10 0%, transparent 45%); }
+    body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; background-image: radial-gradient(circle, #1e2a3a 1px, transparent 1px); background-size: 28px 28px; opacity: 0.35; }
 
-    .wrap { max-width: 640px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 1; }
-    .hero { text-align: center; margin-bottom: 36px; }
-    .hero-icon { font-size: 48px; margin-bottom: 12px; display: block; }
-    .badge { display: inline-flex; align-items: center; gap: 6px; background: #f9731610; border: 1px solid #f9731630; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
-    h1 { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-bottom: 8px; }
-    .sub { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .cold-notice { position: sticky; top: 0; z-index: 200; background: #0c1220; border-bottom: 1px solid #1e2d42; color: #7a9cc0; font-size: 12px; text-align: center; padding: 8px 16px; }
+    .cold-notice strong { color: #a0c0e0; }
 
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
-    .card-title { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
+    /* NAV */
+    .nav { position: sticky; top: 33px; z-index: 100; background: #06080fcc; backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; justify-content: center; gap: 4px; padding: 10px 16px; }
+    .nav-btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; background: transparent; color: var(--muted); transition: all 0.2s; }
+    .nav-btn.active { background: #f9731618; color: var(--accent); }
 
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .wrap { max-width: 680px; margin: 0 auto; padding: 24px 16px 80px; position: relative; z-index: 1; }
+
+    /* PAGES */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* CARDS */
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 14px; }
+    .card-title { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+    /* FORM */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
     .form-group.full { grid-column: 1 / -1; }
-    label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
-    input[type=number], select {
+    label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.6px; text-transform: uppercase; }
+    input[type=number], input[type=text], select, textarea {
       background: #0a0f1a; border: 1px solid var(--border); border-radius: 10px;
-      color: var(--text); font-size: 14px; padding: 10px 14px;
-      transition: border-color 0.2s;
+      color: var(--text); font-size: 13px; padding: 9px 12px; transition: border-color 0.2s; width: 100%;
     }
-    input[type=number]:focus, select:focus { outline: none; border-color: var(--accent); }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
     select option { background: #0a0f1a; }
+    textarea { resize: none; min-height: 70px; line-height: 1.5; }
 
-    .btn-group { display: flex; gap: 10px; margin-top: 8px; }
-    .btn {
-      flex: 1; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
-      font-size: 14px; font-weight: 700; transition: all 0.2s;
-    }
-    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #f9731640; }
-    .btn-lazy { background: #1a2436; color: var(--muted); border: 1px solid var(--border); }
-    .btn-lazy:hover { border-color: var(--accent); color: var(--accent); }
+    /* CHECKBOX GROUP */
+    .check-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .check-item { display: flex; align-items: center; gap: 6px; background: #0a0f1a; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 12px; transition: all 0.2s; }
+    .check-item input { width: 14px; height: 14px; accent-color: var(--accent); cursor: pointer; }
+    .check-item:has(input:checked) { border-color: var(--accent); color: var(--accent); }
+
+    /* BUTTONS */
+    .btn { padding: 13px 20px; border-radius: 12px; border: none; cursor: pointer; font-size: 14px; font-weight: 700; transition: all 0.2s; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; width: 100%; margin-top: 8px; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #f9731440; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); font-size: 13px; padding: 10px 16px; border-radius: 10px; }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+    .btn-group { display: flex; gap: 8px; margin-top: 8px; }
 
-    .loading { display: none; text-align: center; padding: 40px 20px; }
+    /* HERO */
+    .hero { text-align: center; padding: 20px 0 28px; }
+    .hero-icon { font-size: 44px; display: block; margin-bottom: 10px; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; background: #f9731612; border: 1px solid #f9731630; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    h1 { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .sub { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* PROFILE SUMMARY */
+    .profile-bar { background: #f9731608; border: 1px solid #f9731620; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; }
+    .profile-bar span { font-size: 12px; color: var(--muted); }
+    .profile-bar strong { color: var(--text); }
+    .profile-edit-btn { margin-left: auto; font-size: 11px; color: var(--accent); cursor: pointer; background: none; border: none; font-weight: 700; }
+
+    /* LOADING */
+    .loading { display: none; text-align: center; padding: 36px 20px; }
     .loading.show { display: block; }
-    .loading-ring { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+    .loading-ring { width: 38px; height: 38px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 10px; }
     .loading-text { font-size: 13px; color: var(--muted); }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* ERROR */
+    .error { display: none; background: #f43f5e10; border: 1px solid #f43f5e30; border-radius: 10px; padding: 11px 14px; font-size: 13px; color: #f87191; margin-bottom: 12px; }
+    .error.show { display: block; }
+
+    /* RESULT */
     .result { display: none; animation: fadeUp 0.4s ease; }
     .result.show { display: block; }
 
-    .routine-header { background: linear-gradient(135deg, #f9731615, #fb923c08); border: 1px solid #f9731630; border-radius: 14px; padding: 20px; margin-bottom: 16px; text-align: center; }
-    .routine-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-    .routine-intro { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+    /* ROUTINE HEADER */
+    .routine-header { background: linear-gradient(135deg, #f9731612, #fb923c08); border: 1px solid #f9731628; border-radius: 14px; padding: 18px; margin-bottom: 12px; text-align: center; }
+    .routine-title { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 5px; }
+    .routine-intro { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
     .routine-meta { display: flex; justify-content: center; gap: 20px; }
     .meta-item { font-size: 12px; color: var(--accent); font-weight: 700; }
 
-    .exercise-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-    .exercise-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-    .ex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .ex-name { font-size: 15px; font-weight: 700; color: #fff; }
-    .ex-num { font-size: 11px; color: var(--accent); font-weight: 700; background: #f9731615; padding: 3px 8px; border-radius: 6px; }
-    .ex-detail { display: flex; gap: 12px; margin-bottom: 8px; }
-    .ex-badge { font-size: 11px; color: var(--muted); background: #1a2436; padding: 3px 8px; border-radius: 6px; }
-    .ex-tip { font-size: 12px; color: var(--muted); line-height: 1.5; border-left: 2px solid #f9731630; padding-left: 10px; }
+    /* SECTION LABEL */
+    .section-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; margin: 14px 0 8px; padding-left: 2px; }
 
-    .advice-box { background: #f9731608; border: 1px solid #f9731620; border-radius: 12px; padding: 16px; font-size: 13px; color: var(--text); line-height: 1.6; }
+    /* EXERCISE ITEM */
+    .exercise-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+    .exercise-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; transition: border-color 0.2s; }
+    .exercise-item.done { border-color: #10b98140; background: #10b98108; }
+    .ex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .ex-name { font-size: 14px; font-weight: 700; color: #fff; }
+    .ex-check { display: flex; align-items: center; gap: 8px; }
+    .ex-check input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; }
+    .ex-num { font-size: 11px; color: var(--accent); font-weight: 700; background: #f9731615; padding: 2px 8px; border-radius: 5px; }
+    .ex-detail { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+    .ex-badge { font-size: 11px; color: var(--muted); background: #1a2436; padding: 2px 8px; border-radius: 5px; }
+    .ex-purpose { font-size: 11px; color: var(--blue); background: #6366f110; padding: 2px 8px; border-radius: 5px; }
+    .ex-tip { font-size: 11px; color: var(--muted); line-height: 1.5; border-left: 2px solid #f9731630; padding-left: 8px; margin-top: 4px; }
+    .ex-caution { font-size: 11px; color: #f59e0b; margin-top: 4px; }
+    .ex-alt { font-size: 11px; color: var(--muted); margin-top: 4px; font-style: italic; }
 
-    .motivation-result { display: none; animation: fadeUp 0.4s ease; }
-    .motivation-result.show { display: block; }
-    .motive-card { background: linear-gradient(135deg, #f9731610, #fb923c08); border: 1px solid #f9731630; border-radius: 14px; padding: 24px; text-align: center; margin-bottom: 16px; }
-    .motive-emoji { font-size: 48px; margin-bottom: 12px; display: block; }
-    .motive-msg { font-size: 15px; line-height: 1.8; color: var(--text); margin-bottom: 16px; }
-    .motive-quote { font-size: 13px; color: var(--accent); font-style: italic; margin-bottom: 16px; }
-    .motive-challenge { background: #0a0f1a; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #fff; font-weight: 600; }
+    /* WARMUP / COOLDOWN */
+    .simple-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+    .simple-item { background: #0a0f1a; border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
+    .simple-name { font-size: 13px; color: var(--text); }
+    .simple-dur { font-size: 11px; color: var(--accent); font-weight: 700; }
+    .simple-desc { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
-    .lazy-input { background: #0a0f1a; border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 14px; padding: 10px 14px; width: 100%; margin-bottom: 10px; display: none; }
-    .lazy-input.show { display: block; }
-    .lazy-input:focus { outline: none; border-color: var(--accent); }
+    /* COMPLETE BTN */
+    .complete-section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-top: 14px; }
+    .complete-stats { display: flex; gap: 16px; margin-bottom: 12px; }
+    .stat-box { flex: 1; text-align: center; background: #0a0f1a; border-radius: 10px; padding: 10px; }
+    .stat-num { font-size: 20px; font-weight: 800; color: var(--accent); }
+    .stat-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .btn-complete { background: linear-gradient(135deg, var(--green), #34d399); color: #fff; width: 100%; }
+    .btn-complete:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #10b98140; }
 
-    .error { display: none; background: #ff4d4d10; border: 1px solid #ff4d4d30; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #ff6b6b; margin-bottom: 12px; }
-    .error.show { display: block; }
+    /* ADVICE / INJURY */
+    .advice-box { background: #f9731608; border: 1px solid #f9731620; border-radius: 10px; padding: 13px 15px; font-size: 12px; color: var(--text); line-height: 1.6; margin-bottom: 8px; }
+    .injury-box { background: #f43f5e08; border: 1px solid #f43f5e25; border-radius: 10px; padding: 11px 14px; font-size: 12px; color: #f87191; line-height: 1.6; }
+
+    /* MOTIVATION */
+    .motive-card { background: linear-gradient(135deg, #f9731612, #fb923c08); border: 1px solid #f9731630; border-radius: 14px; padding: 22px; text-align: center; margin-bottom: 12px; animation: fadeUp 0.4s ease; }
+    .motive-emoji { font-size: 44px; display: block; margin-bottom: 10px; }
+    .motive-msg { font-size: 14px; line-height: 1.8; color: var(--text); margin-bottom: 12px; }
+    .motive-quote { font-size: 12px; color: var(--accent); font-style: italic; margin-bottom: 12px; }
+    .motive-challenge { background: #0a0f1a; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #fff; font-weight: 600; }
+    .motive-result { display: none; }
+    .motive-result.show { display: block; }
+
+    /* DASHBOARD */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+    .stats-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+    .stats-num { font-size: 22px; font-weight: 800; color: var(--accent); }
+    .stats-label { font-size: 10px; color: var(--muted); margin-top: 4px; }
+    .stats-sub { font-size: 11px; color: var(--text); margin-top: 2px; }
+
+    .bar-chart { display: flex; flex-direction: column; gap: 8px; }
+    .bar-row { display: flex; align-items: center; gap: 10px; }
+    .bar-label { font-size: 11px; color: var(--muted); width: 30px; text-align: right; }
+    .bar-track { flex: 1; background: #1a2436; border-radius: 4px; height: 8px; }
+    .bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.8s ease; }
+    .bar-val { font-size: 11px; color: var(--accent); width: 24px; font-weight: 700; }
+
+    /* LOGS */
+    .log-list { display: flex; flex-direction: column; gap: 8px; }
+    .log-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+    .log-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .log-date { font-size: 12px; color: var(--accent); font-weight: 700; }
+    .log-target { font-size: 11px; color: var(--muted); background: #1a2436; padding: 2px 8px; border-radius: 5px; }
+    .log-exercises { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .log-complete { font-size: 11px; color: var(--green); font-weight: 700; }
+    .log-rate { font-size: 11px; color: var(--muted); }
+    .empty-msg { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px; }
+
+    /* FEEDBACK */
+    .feedback-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 12px; animation: fadeUp 0.4s ease; }
+    .fb-summary { font-size: 13px; line-height: 1.7; color: var(--text); margin-bottom: 12px; }
+    .fb-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+    .fb-item { font-size: 12px; line-height: 1.6; padding: 8px 12px; border-radius: 8px; }
+    .fb-good { background: #10b98110; border-left: 3px solid var(--green); color: var(--text); }
+    .fb-improve { background: #f9731610; border-left: 3px solid var(--accent); color: var(--text); }
+    .fb-tip { background: #6366f110; border: 1px solid #6366f130; border-radius: 10px; padding: 12px; font-size: 13px; color: var(--text); line-height: 1.6; }
+
+    /* DIET */
+    .macro-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+    .macro-card { background: #0a0f1a; border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
+    .macro-num { font-size: 18px; font-weight: 800; color: var(--accent); }
+    .macro-unit { font-size: 10px; color: var(--muted); }
+    .macro-label { font-size: 10px; color: var(--muted); margin-top: 3px; }
+    .meal-list { display: flex; flex-direction: column; gap: 8px; }
+    .meal-item { background: #0a0f1a; border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+    .meal-time { font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+    .meal-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .diet-result { display: none; animation: fadeUp 0.4s ease; }
+    .diet-result.show { display: block; }
   </style>
 </head>
 <body>
-<div class="cold-start-banner">
-  <span>🕐</span>
-  무료 서버를 사용 중이에요. 첫 요청 시 <strong>약 50초</strong> 정도 소요될 수 있으니 잠시만 기다려 주세요.
-</div>
-<style>
-  .cold-start-banner {
-    position: sticky; top: 0; z-index: 100;
-    background: #0c1220; border-bottom: 1px solid #1e2d42;
-    color: #7a9cc0; font-size: 12.5px; text-align: center;
-    padding: 9px 16px; letter-spacing: 0.2px;
-  }
-  .cold-start-banner strong { color: #a0c0e0; }
-</style>
+<div class="cold-notice">🕐 무료 서버 사용 중 — 첫 요청 시 <strong>약 50초</strong> 소요될 수 있습니다.</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showPage('home')">🏋️ 루틴</button>
+  <button class="nav-btn" onclick="showPage('dash')">📊 기록</button>
+  <button class="nav-btn" onclick="showPage('diet')">🥗 식단</button>
+  <button class="nav-btn" onclick="showPage('profile')">⚙️ 프로필</button>
+</nav>
 
 <div class="wrap">
-  <div class="hero">
-    <span class="hero-icon">🏋️</span>
-    <div class="badge">✦ AI Personal Trainer</div>
-    <h1>AI 헬스 트레이너</h1>
-    <p class="sub">목표와 수준을 입력하면 오늘의 맞춤 운동 루틴을 짜드려요.<br>가기 싫으면 동기부여도 해드릴게요.</p>
+
+  <!-- ===== HOME PAGE ===== -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <span class="hero-icon">🏋️</span>
+      <div class="badge">✦ AI Personal Trainer</div>
+      <h1>AI 헬스 트레이너</h1>
+      <p class="sub">오늘의 맞춤 루틴을 AI가 짜드려요</p>
+    </div>
+
+    <div id="profile-bar" class="profile-bar" style="display:none">
+      <span id="pb-info"></span>
+      <button class="profile-edit-btn" onclick="showPage('profile')">수정 →</button>
+    </div>
+    <div id="no-profile-msg" class="card" style="text-align:center; padding:24px">
+      <div style="font-size:32px;margin-bottom:8px">👤</div>
+      <div style="font-size:14px;color:var(--text);margin-bottom:12px">먼저 프로필을 설정해주세요</div>
+      <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('profile')">프로필 설정하기</button>
+    </div>
+
+    <div id="home-form" style="display:none">
+      <div class="card">
+        <div class="card-title">🎯 오늘 운동 설정</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>오늘 운동 부위</label>
+            <select id="target">
+              <option value="전신">전신</option>
+              <option value="상체">상체 (가슴·등·어깨·팔)</option>
+              <option value="하체">하체 (스쿼트·레그·런지)</option>
+              <option value="코어">코어 (복근·허리)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>운동 가능 시간</label>
+            <select id="duration">
+              <option value="30">30분</option>
+              <option value="45">45분</option>
+              <option value="60" selected>60분</option>
+              <option value="90">90분</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="routine-btn" onclick="getRoutine()">오늘 루틴 짜줘 💪</button>
+          <button class="btn btn-outline" onclick="toggleLazy()">가기 싫어 😩</button>
+        </div>
+      </div>
+
+      <!-- LAZY MODE -->
+      <div id="lazy-section" style="display:none">
+        <div class="card">
+          <div class="card-title">😩 오늘 가기 싫은 이유</div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>상황</label>
+            <select id="lazy-situation">
+              <option value="피곤함">너무 피곤함</option>
+              <option value="시간없음">시간이 없음</option>
+              <option value="의욕없음">의욕이 없음</option>
+              <option value="몸이찌뿌둥함">몸이 찌뿌둥함</option>
+              <option value="스트레스">스트레스 받음</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>더 하고 싶은 말 (선택)</label>
+            <textarea id="lazy-reason" placeholder="오늘 진짜 힘들었어..."></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="getMotivation()">동기부여 받기 🔥</button>
+        </div>
+      </div>
+
+      <div class="error" id="home-error"></div>
+      <div class="loading" id="home-loading">
+        <div class="loading-ring"></div>
+        <div class="loading-text" id="home-loading-text">루틴 생성 중...</div>
+      </div>
+
+      <!-- MOTIVATION RESULT -->
+      <div class="motive-result" id="motive-result">
+        <div class="motive-card">
+          <span class="motive-emoji" id="m-emoji"></span>
+          <div class="motive-msg" id="m-msg"></div>
+          <div class="motive-quote" id="m-quote"></div>
+          <div class="motive-challenge" id="m-challenge"></div>
+        </div>
+        <button class="btn btn-primary" onclick="getRoutine()" style="margin-top:8px">그래도 루틴 짜줘 💪</button>
+      </div>
+
+      <!-- ROUTINE RESULT -->
+      <div class="result" id="routine-result">
+        <div class="routine-header">
+          <div class="routine-title" id="r-title"></div>
+          <div class="routine-intro" id="r-intro"></div>
+          <div class="routine-meta">
+            <div class="meta-item" id="r-time"></div>
+            <div class="meta-item" id="r-cal"></div>
+          </div>
+        </div>
+
+        <div class="section-label">🔥 워밍업</div>
+        <div class="simple-list" id="r-warmup"></div>
+
+        <div class="section-label">💪 메인 운동</div>
+        <div class="exercise-list" id="r-main"></div>
+
+        <div class="section-label">🧘 마무리 스트레칭</div>
+        <div class="simple-list" id="r-cooldown"></div>
+
+        <div id="r-advice" class="advice-box"></div>
+        <div id="r-injury" class="injury-box" style="display:none"></div>
+
+        <div class="complete-section">
+          <div class="complete-stats">
+            <div class="stat-box"><div class="stat-num" id="done-count">0</div><div class="stat-label">완료한 운동</div></div>
+            <div class="stat-box"><div class="stat-num" id="total-count">0</div><div class="stat-label">전체 운동</div></div>
+            <div class="stat-box"><div class="stat-num" id="done-pct">0%</div><div class="stat-label">완료율</div></div>
+          </div>
+          <button class="btn btn-complete" onclick="completeWorkout()">운동 완료 저장 ✅</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">⚙️ 내 정보 입력</div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>목표</label>
-        <select id="goal">
-          <option value="증량">증량 (근육 키우기)</option>
-          <option value="감량">감량 (다이어트)</option>
-          <option value="유지">유지 (체력 관리)</option>
-        </select>
+  <!-- ===== DASHBOARD PAGE ===== -->
+  <div class="page" id="page-dash">
+    <div class="card-title" style="margin-bottom:16px;font-size:16px;color:#fff;font-weight:800">📊 운동 기록</div>
+
+    <div class="stats-grid">
+      <div class="stats-card"><div class="stats-num" id="d-week">0</div><div class="stats-label">이번 주</div><div class="stats-sub">회</div></div>
+      <div class="stats-card"><div class="stats-num" id="d-month">0</div><div class="stats-label">이번 달</div><div class="stats-sub">회</div></div>
+      <div class="stats-card"><div class="stats-num" id="d-rate">0%</div><div class="stats-label">평균 완료율</div><div class="stats-sub">최근 10회</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">📅 최근 7일 운동</div>
+      <div class="bar-chart" id="week-chart"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">🏋️ 부위별 운동 횟수</div>
+      <div class="bar-chart" id="target-chart"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between">
+        <span>📋 운동 로그</span>
+        <button class="btn-outline btn" style="padding:4px 10px;font-size:11px" onclick="getFeedback()">AI 피드백 받기 🤖</button>
       </div>
-      <div class="form-group">
-        <label>경험</label>
-        <select id="level">
-          <option value="초급">초급 (헬린이)</option>
-          <option value="중급">중급 (1년 이상)</option>
-          <option value="고급">고급 (3년 이상)</option>
-        </select>
+      <div class="loading" id="fb-loading"><div class="loading-ring"></div><div class="loading-text">AI 분석 중...</div></div>
+      <div id="feedback-result" style="display:none" class="feedback-card">
+        <div class="fb-summary" id="fb-summary"></div>
+        <div class="fb-list" id="fb-good"></div>
+        <div style="height:8px"></div>
+        <div class="fb-list" id="fb-improve"></div>
+        <div style="height:8px"></div>
+        <div class="fb-tip" id="fb-tip"></div>
       </div>
-      <div class="form-group">
-        <label>몸무게 (kg)</label>
-        <input type="number" id="weight" placeholder="70" min="30" max="200">
+      <div class="log-list" id="log-list"></div>
+    </div>
+  </div>
+
+  <!-- ===== DIET PAGE ===== -->
+  <div class="page" id="page-diet">
+    <div class="card-title" style="margin-bottom:16px;font-size:16px;color:#fff;font-weight:800">🥗 식단 추천</div>
+
+    <div id="diet-no-profile" class="card" style="text-align:center;padding:24px;display:none">
+      <div style="font-size:13px;color:var(--muted)">프로필을 먼저 설정해주세요</div>
+    </div>
+
+    <div id="diet-form">
+      <div class="card">
+        <div class="card-title">📊 내 정보 기반 칼로리 계산</div>
+        <div id="diet-profile-info" style="font-size:12px;color:var(--muted);margin-bottom:12px"></div>
+        <div class="form-group" style="margin-bottom:10px">
+          <label>주당 운동 횟수</label>
+          <select id="diet-days">
+            <option value="1">주 1회</option>
+            <option value="2">주 2회</option>
+            <option value="3" selected>주 3회</option>
+            <option value="4">주 4회</option>
+            <option value="5">주 5회 이상</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="getDiet()">식단 추천받기 🥗</button>
       </div>
-      <div class="form-group">
-        <label>키 (cm)</label>
-        <input type="number" id="height" placeholder="175" min="130" max="230">
+
+      <div class="loading" id="diet-loading"><div class="loading-ring"></div><div class="loading-text">식단 계산 중...</div></div>
+      <div class="error" id="diet-error"></div>
+
+      <div class="diet-result" id="diet-result">
+        <div class="card">
+          <div class="card-title">🔥 하루 칼로리</div>
+          <div class="macro-grid">
+            <div class="macro-card"><div class="macro-num" id="d-calories"></div><div class="macro-unit">kcal</div><div class="macro-label">목표 칼로리</div></div>
+            <div class="macro-card"><div class="macro-num" id="d-protein"></div><div class="macro-unit">g</div><div class="macro-label">단백질</div></div>
+            <div class="macro-card"><div class="macro-num" id="d-carbs"></div><div class="macro-unit">g</div><div class="macro-label">탄수화물</div></div>
+            <div class="macro-card"><div class="macro-num" id="d-fat"></div><div class="macro-unit">g</div><div class="macro-label">지방</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">🍽️ 식단 예시</div>
+          <div class="meal-list">
+            <div class="meal-item"><div class="meal-time">🌅 아침</div><div class="meal-text" id="d-breakfast"></div></div>
+            <div class="meal-item"><div class="meal-time">☀️ 점심</div><div class="meal-text" id="d-lunch"></div></div>
+            <div class="meal-item"><div class="meal-time">🌙 저녁</div><div class="meal-text" id="d-dinner"></div></div>
+            <div class="meal-item"><div class="meal-time">🍎 간식</div><div class="meal-text" id="d-snack"></div></div>
+          </div>
+          <div class="advice-box" id="d-tip" style="margin-top:10px;margin-bottom:0"></div>
+        </div>
       </div>
-      <div class="form-group full">
-        <label>오늘 운동 부위</label>
-        <select id="target">
-          <option value="전신">전신</option>
-          <option value="상체">상체 (가슴·등·어깨·팔)</option>
-          <option value="하체">하체 (스쿼트·레그프레스·런지)</option>
-          <option value="코어">코어 (복근·허리)</option>
-        </select>
+    </div>
+  </div>
+
+  <!-- ===== PROFILE PAGE ===== -->
+  <div class="page" id="page-profile">
+    <div class="card-title" style="margin-bottom:16px;font-size:16px;color:#fff;font-weight:800">⚙️ 내 프로필</div>
+
+    <div class="card">
+      <div class="card-title">👤 기본 정보</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>성별</label>
+          <select id="p-gender">
+            <option value="남성">남성</option>
+            <option value="여성">여성</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>나이</label>
+          <input type="number" id="p-age" placeholder="25" min="15" max="80">
+        </div>
+        <div class="form-group">
+          <label>키 (cm)</label>
+          <input type="number" id="p-height" placeholder="175" min="130" max="230">
+        </div>
+        <div class="form-group">
+          <label>몸무게 (kg)</label>
+          <input type="number" id="p-weight" placeholder="70" min="30" max="200">
+        </div>
       </div>
     </div>
 
-    <div class="btn-group" style="margin-top:16px">
-      <button class="btn btn-primary" id="routine-btn" onclick="getRoutine()">오늘 루틴 짜줘 💪</button>
-      <button class="btn btn-lazy" onclick="toggleLazy()">오늘 가기 싫어 😩</button>
-    </div>
-  </div>
-
-  <input class="lazy-input" id="lazy-input" placeholder="이유가 있으면 적어봐요 (없어도 됩니다)" id="lazy-reason">
-
-  <div class="error" id="error"></div>
-  <div class="loading" id="loading">
-    <div class="loading-ring"></div>
-    <div class="loading-text" id="loading-text">루틴 생성 중...</div>
-  </div>
-
-  <div class="result" id="result">
-    <div class="routine-header">
-      <div class="routine-title" id="r-title"></div>
-      <div class="routine-intro" id="r-intro"></div>
-      <div class="routine-meta">
-        <div class="meta-item" id="r-time"></div>
-        <div class="meta-item" id="r-cal"></div>
+    <div class="card">
+      <div class="card-title">🎯 운동 정보</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>목표</label>
+          <select id="p-goal">
+            <option value="증량">증량 (근육 키우기)</option>
+            <option value="감량">감량 (다이어트)</option>
+            <option value="유지">유지 (체력 관리)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>운동 경험</label>
+          <select id="p-level">
+            <option value="초급">초급 (헬린이)</option>
+            <option value="중급">중급 (1년 이상)</option>
+            <option value="고급">고급 (3년 이상)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>운동 장소</label>
+          <select id="p-location">
+            <option value="헬스장">헬스장</option>
+            <option value="집">집</option>
+            <option value="야외">야외</option>
+          </select>
+        </div>
       </div>
     </div>
-    <div class="exercise-list" id="r-exercises"></div>
-    <div class="advice-box" id="r-advice"></div>
+
+    <div class="card">
+      <div class="card-title">🔧 보유 장비</div>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" name="equip" value="덤벨"> 덤벨</label>
+        <label class="check-item"><input type="checkbox" name="equip" value="바벨"> 바벨</label>
+        <label class="check-item"><input type="checkbox" name="equip" value="머신"> 머신</label>
+        <label class="check-item"><input type="checkbox" name="equip" value="케이블"> 케이블</label>
+        <label class="check-item"><input type="checkbox" name="equip" value="풀업바"> 풀업바</label>
+        <label class="check-item"><input type="checkbox" name="equip" value="맨몸"> 맨몸만</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🩹 부상 부위 <span style="font-size:10px;color:var(--muted);font-weight:400">(해당 부위 운동 제외)</span></div>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" name="injury" value="허리"> 허리</label>
+        <label class="check-item"><input type="checkbox" name="injury" value="무릎"> 무릎</label>
+        <label class="check-item"><input type="checkbox" name="injury" value="어깨"> 어깨</label>
+        <label class="check-item"><input type="checkbox" name="injury" value="손목"> 손목</label>
+        <label class="check-item"><input type="checkbox" name="injury" value="목"> 목</label>
+        <label class="check-item"><input type="checkbox" name="injury" value="발목"> 발목</label>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:10px">⚠️ 통증이 있으면 운동을 중단하고 전문가와 상담하세요.</div>
+    </div>
+
+    <button class="btn btn-primary" onclick="saveProfile()">프로필 저장 ✓</button>
+    <div id="profile-saved" style="display:none;text-align:center;color:var(--green);font-size:13px;margin-top:8px;font-weight:700">✅ 저장됐어요!</div>
   </div>
 
-  <div class="motivation-result" id="motive-result">
-    <div class="motive-card">
-      <span class="motive-emoji" id="m-emoji"></span>
-      <div class="motive-msg" id="m-msg"></div>
-      <div class="motive-quote" id="m-quote"></div>
-      <div class="motive-challenge" id="m-challenge"></div>
-    </div>
-  </div>
 </div>
 
 <script>
-  let lazyMode = false;
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+  const $ = id => document.getElementById(id);
+  function showErr(id, msg) { const el = $(id); el.textContent = msg; el.classList.add('show'); }
+  function hideErr(id) { $(id).classList.remove('show'); }
 
+  // ── Navigation ───────────────────────────────────────────────────────────────
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    $('page-' + name).classList.add('active');
+    const idx = {home:0, dash:1, diet:2, profile:3}[name];
+    document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+    if (name === 'dash') renderDash();
+    if (name === 'diet') initDiet();
+  }
+
+  // ── Profile ──────────────────────────────────────────────────────────────────
+  function getProfile() { return JSON.parse(localStorage.getItem('fitness_profile') || 'null'); }
+
+  function saveProfile() {
+    const equip = [...document.querySelectorAll('input[name=equip]:checked')].map(e => e.value);
+    const injury = [...document.querySelectorAll('input[name=injury]:checked')].map(e => e.value);
+    const profile = {
+      gender: $('p-gender').value,
+      age: parseInt($('p-age').value) || 25,
+      height: parseFloat($('p-height').value) || 170,
+      weight: parseFloat($('p-weight').value) || 70,
+      goal: $('p-goal').value,
+      level: $('p-level').value,
+      location: $('p-location').value,
+      equipment: equip,
+      injury
+    };
+    localStorage.setItem('fitness_profile', JSON.stringify(profile));
+    $('profile-saved').style.display = 'block';
+    setTimeout(() => { $('profile-saved').style.display = 'none'; }, 2000);
+    initHome();
+  }
+
+  function loadProfileForm() {
+    const p = getProfile();
+    if (!p) return;
+    $('p-gender').value = p.gender || '남성';
+    $('p-age').value = p.age || '';
+    $('p-height').value = p.height || '';
+    $('p-weight').value = p.weight || '';
+    $('p-goal').value = p.goal || '증량';
+    $('p-level').value = p.level || '초급';
+    $('p-location').value = p.location || '헬스장';
+    document.querySelectorAll('input[name=equip]').forEach(cb => { cb.checked = (p.equipment || []).includes(cb.value); });
+    document.querySelectorAll('input[name=injury]').forEach(cb => { cb.checked = (p.injury || []).includes(cb.value); });
+  }
+
+  function initHome() {
+    const p = getProfile();
+    if (!p) {
+      $('no-profile-msg').style.display = 'block';
+      $('home-form').style.display = 'none';
+      $('profile-bar').style.display = 'none';
+    } else {
+      $('no-profile-msg').style.display = 'none';
+      $('home-form').style.display = 'block';
+      $('profile-bar').style.display = 'flex';
+      const injText = p.injury && p.injury.length ? ` · 부상: ${p.injury.join(', ')}` : '';
+      $('pb-info').innerHTML = `<strong>${p.gender}</strong> · <strong>${p.age}세</strong> · <strong>${p.weight}kg</strong> / <strong>${p.height}cm</strong> · ${p.goal} · ${p.level} · ${p.location}${injText}`;
+    }
+  }
+
+  // ── Lazy Mode ─────────────────────────────────────────────────────────────────
+  let lazyMode = false;
   function toggleLazy() {
     lazyMode = !lazyMode;
-    document.getElementById('lazy-input').classList.toggle('show', lazyMode);
-    if (lazyMode) {
-      document.getElementById('routine-btn').textContent = '그래도 루틴 짜줘 💪';
-      document.querySelector('.btn-lazy').textContent = '역시 갈게요 🏃';
-      document.getElementById('lazy-input').focus();
-    } else {
-      document.getElementById('routine-btn').textContent = '오늘 루틴 짜줘 💪';
-      document.querySelector('.btn-lazy').textContent = '오늘 가기 싫어 😩';
-    }
+    $('lazy-section').style.display = lazyMode ? 'block' : 'none';
+    document.querySelector('.btn-outline').textContent = lazyMode ? '역시 갈게요 🏃' : '가기 싫어 😩';
   }
 
-  function showError(msg) {
-    const el = document.getElementById('error');
-    el.textContent = msg;
-    el.classList.add('show');
-  }
-
-  function hideAll() {
-    document.getElementById('error').classList.remove('show');
-    document.getElementById('result').classList.remove('show');
-    document.getElementById('motive-result').classList.remove('show');
-  }
-
+  // ── Get Routine ──────────────────────────────────────────────────────────────
   async function getRoutine() {
-    const weight = parseFloat(document.getElementById('weight').value);
-    const height = parseFloat(document.getElementById('height').value);
-    if (!weight || !height) { showError('몸무게와 키를 입력해주세요.'); return; }
-
-    hideAll();
-
-    if (lazyMode) {
-      const reason = document.getElementById('lazy-input').value;
-      document.getElementById('loading').classList.add('show');
-      document.getElementById('loading-text').textContent = '동기부여 멘트 준비 중...';
-      document.getElementById('routine-btn').disabled = true;
-      try {
-        const res = await fetch('/motivation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ reason })
-        });
-        const d = await res.json();
-        if (!res.ok) throw new Error(d.detail || '오류가 발생했습니다');
-        document.getElementById('m-emoji').textContent = d.emoji;
-        document.getElementById('m-msg').textContent = d.message;
-        document.getElementById('m-quote').textContent = `"${d.quote}"`;
-        document.getElementById('m-challenge').textContent = `🎯 ${d.challenge}`;
-        document.getElementById('motive-result').classList.add('show');
-      } catch(e) {
-        showError(e.message);
-      } finally {
-        document.getElementById('loading').classList.remove('show');
-        document.getElementById('routine-btn').disabled = false;
-      }
-      return;
-    }
-
-    document.getElementById('loading').classList.add('show');
-    document.getElementById('loading-text').textContent = '루틴 생성 중...';
-    document.getElementById('routine-btn').disabled = true;
+    const p = getProfile();
+    if (!p) { showErr('home-error', '프로필을 먼저 설정해주세요.'); return; }
+    hideErr('home-error');
+    $('motive-result').classList.remove('show');
+    $('routine-result').classList.remove('show');
+    $('home-loading').classList.add('show');
+    $('home-loading-text').textContent = '맞춤 루틴 생성 중...';
+    $('routine-btn').disabled = true;
 
     try {
       const res = await fetch('/routine', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          goal: document.getElementById('goal').value,
-          level: document.getElementById('level').value,
-          weight,
-          height,
-          target: document.getElementById('target').value
+          gender: p.gender, age: p.age, goal: p.goal, level: p.level,
+          weight: p.weight, height: p.height,
+          target: $('target').value,
+          location: p.location,
+          equipment: p.equipment || [],
+          injury: p.injury || [],
+          duration: parseInt($('duration').value)
         })
       });
       const d = await res.json();
-      if (!res.ok) throw new Error(d.detail || '오류가 발생했습니다');
-
-      document.getElementById('r-title').textContent = d.title;
-      document.getElementById('r-intro').textContent = d.intro;
-      document.getElementById('r-time').textContent = `⏱ ${d.total_time}`;
-      document.getElementById('r-cal').textContent = `🔥 ${d.calories}`;
-
-      const list = document.getElementById('r-exercises');
-      list.innerHTML = '';
-      d.exercises.forEach((ex, i) => {
-        list.innerHTML += `
-          <div class="exercise-item">
-            <div class="ex-header">
-              <div class="ex-name">${ex.name}</div>
-              <div class="ex-num">${i + 1}</div>
-            </div>
-            <div class="ex-detail">
-              <span class="ex-badge">🔁 ${ex.sets}세트 × ${ex.reps}</span>
-              <span class="ex-badge">⏸ 휴식 ${ex.rest}</span>
-            </div>
-            <div class="ex-tip">💡 ${ex.tip}</div>
-          </div>`;
-      });
-
-      document.getElementById('r-advice').textContent = `✅ ${d.advice}`;
-      document.getElementById('result').classList.add('show');
-    } catch(e) {
-      showError(e.message);
-    } finally {
-      document.getElementById('loading').classList.remove('show');
-      document.getElementById('routine-btn').disabled = false;
-    }
+      if (!res.ok) throw new Error(d.detail || '오류');
+      renderRoutine(d);
+    } catch(e) { showErr('home-error', e.message); }
+    finally { $('home-loading').classList.remove('show'); $('routine-btn').disabled = false; }
   }
+
+  function renderRoutine(d) {
+    $('r-title').textContent = d.title;
+    $('r-intro').textContent = d.intro;
+    $('r-time').textContent = `⏱ ${d.total_time}`;
+    $('r-cal').textContent = `🔥 ${d.calories}`;
+
+    $('r-warmup').innerHTML = (d.warmup||[]).map(w => `
+      <div class="simple-item">
+        <div><div class="simple-name">${w.name}</div><div class="simple-desc">${w.desc||''}</div></div>
+        <div class="simple-dur">${w.duration}</div>
+      </div>`).join('');
+
+    $('r-main').innerHTML = (d.main||[]).map((ex, i) => `
+      <div class="exercise-item" id="ex-${i}">
+        <div class="ex-header">
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-check">
+            <span class="ex-num">${i+1}</span>
+            <input type="checkbox" onchange="updateProgress()" title="완료">
+          </div>
+        </div>
+        <div class="ex-detail">
+          <span class="ex-badge">🔁 ${ex.sets}세트 × ${ex.reps}</span>
+          <span class="ex-badge">⏸ ${ex.rest}</span>
+          ${ex.purpose ? `<span class="ex-purpose">✦ ${ex.purpose}</span>` : ''}
+        </div>
+        <div class="ex-tip">💡 ${ex.tip}</div>
+        ${ex.caution ? `<div class="ex-caution">⚠️ ${ex.caution}</div>` : ''}
+        ${ex.alternative ? `<div class="ex-alt">대체: ${ex.alternative}</div>` : ''}
+      </div>`).join('');
+
+    $('r-cooldown').innerHTML = (d.cooldown||[]).map(c => `
+      <div class="simple-item">
+        <div><div class="simple-name">${c.name}</div><div class="simple-desc">${c.desc||''}</div></div>
+        <div class="simple-dur">${c.duration}</div>
+      </div>`).join('');
+
+    $('r-advice').textContent = `✅ ${d.advice}`;
+    if (d.injury_note) { $('r-injury').textContent = `⚠️ ${d.injury_note}`; $('r-injury').style.display = 'block'; }
+    else { $('r-injury').style.display = 'none'; }
+
+    updateProgress();
+    $('routine-result').classList.add('show');
+
+    // Store for completion
+    window._currentRoutine = d;
+  }
+
+  function updateProgress() {
+    const checkboxes = $('r-main').querySelectorAll('input[type=checkbox]');
+    const total = checkboxes.length;
+    let done = 0;
+    checkboxes.forEach((cb, i) => {
+      if (cb.checked) { done++; document.getElementById('ex-' + i)?.classList.add('done'); }
+      else { document.getElementById('ex-' + i)?.classList.remove('done'); }
+    });
+    $('done-count').textContent = done;
+    $('total-count').textContent = total;
+    $('done-pct').textContent = total ? Math.round(done/total*100) + '%' : '0%';
+  }
+
+  function completeWorkout() {
+    const d = window._currentRoutine;
+    if (!d) return;
+    const checkboxes = $('r-main').querySelectorAll('input[type=checkbox]');
+    const total = checkboxes.length;
+    const done = [...checkboxes].filter(cb => cb.checked).length;
+    const rate = total ? Math.round(done/total*100) : 0;
+
+    const log = {
+      date: new Date().toLocaleDateString('ko-KR'),
+      target: $('target').value,
+      exercises: (d.main||[]).map(ex => ex.name),
+      done, total, rate,
+      ts: Date.now()
+    };
+    const logs = JSON.parse(localStorage.getItem('fitness_logs') || '[]');
+    logs.unshift(log);
+    if (logs.length > 50) logs.pop();
+    localStorage.setItem('fitness_logs', JSON.stringify(logs));
+    alert(`운동 완료! 완료율 ${rate}% 저장됐어요 💪`);
+  }
+
+  // ── Motivation ───────────────────────────────────────────────────────────────
+  async function getMotivation() {
+    hideErr('home-error');
+    $('motive-result').classList.remove('show');
+    $('home-loading').classList.add('show');
+    $('home-loading-text').textContent = '동기부여 준비 중...';
+
+    try {
+      const res = await fetch('/motivation', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ reason: $('lazy-reason').value, situation: $('lazy-situation').value })
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.detail || '오류');
+      $('m-emoji').textContent = d.emoji;
+      $('m-msg').textContent = d.message;
+      $('m-quote').textContent = `"${d.quote}"`;
+      $('m-challenge').textContent = `🎯 ${d.challenge}`;
+      $('motive-result').classList.add('show');
+    } catch(e) { showErr('home-error', e.message); }
+    finally { $('home-loading').classList.remove('show'); }
+  }
+
+  // ── Dashboard ─────────────────────────────────────────────────────────────────
+  function renderDash() {
+    const logs = JSON.parse(localStorage.getItem('fitness_logs') || '[]');
+    const now = new Date();
+
+    // stats
+    const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
+    const weekLogs = logs.filter(l => new Date(l.ts) >= weekStart);
+    const monthLogs = logs.filter(l => { const d = new Date(l.ts); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); });
+    const recent10 = logs.slice(0, 10);
+    const avgRate = recent10.length ? Math.round(recent10.reduce((a,l) => a+l.rate, 0) / recent10.length) : 0;
+
+    $('d-week').textContent = weekLogs.length;
+    $('d-month').textContent = monthLogs.length;
+    $('d-rate').textContent = avgRate + '%';
+
+    // 7-day bar chart
+    const days = ['일','월','화','수','목','금','토'];
+    const chartEl = $('week-chart');
+    chartEl.innerHTML = '';
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now); d.setDate(now.getDate() - i);
+      const dayLogs = logs.filter(l => new Date(l.ts).toDateString() === d.toDateString());
+      const label = days[d.getDay()];
+      const val = dayLogs.length;
+      chartEl.innerHTML += `<div class="bar-row">
+        <div class="bar-label">${label}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${val > 0 ? '100%' : '0%'}"></div></div>
+        <div class="bar-val">${val}</div>
+      </div>`;
+    }
+
+    // target chart
+    const targets = {};
+    logs.forEach(l => { targets[l.target] = (targets[l.target] || 0) + 1; });
+    const maxT = Math.max(...Object.values(targets), 1);
+    $('target-chart').innerHTML = Object.entries(targets).map(([k,v]) => `
+      <div class="bar-row">
+        <div class="bar-label" style="width:40px;font-size:10px">${k}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/maxT*100)}%"></div></div>
+        <div class="bar-val">${v}</div>
+      </div>`).join('') || '<div style="color:var(--muted);font-size:13px;padding:8px 0">아직 운동 기록이 없어요</div>';
+
+    // logs
+    $('log-list').innerHTML = logs.length ? logs.slice(0, 10).map(l => `
+      <div class="log-item">
+        <div class="log-header">
+          <div class="log-date">${l.date}</div>
+          <div class="log-target">${l.target}</div>
+        </div>
+        <div class="log-exercises">${l.exercises.join(' · ')}</div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px">
+          <div class="log-complete">✅ ${l.done}/${l.total} 완료</div>
+          <div class="log-rate">${l.rate}%</div>
+        </div>
+      </div>`).join('') : '<div class="empty-msg">운동 기록이 없어요.<br>루틴 완료 후 저장해보세요 💪</div>';
+  }
+
+  // ── AI Feedback ──────────────────────────────────────────────────────────────
+  async function getFeedback() {
+    const logs = JSON.parse(localStorage.getItem('fitness_logs') || '[]');
+    const p = getProfile();
+    if (!p || logs.length < 2) { alert('운동 기록이 2개 이상 있어야 피드백을 받을 수 있어요.'); return; }
+
+    $('fb-loading').classList.add('show');
+    $('feedback-result').style.display = 'none';
+
+    try {
+      const res = await fetch('/feedback', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ gender: p.gender, goal: p.goal, level: p.level, recent_logs: logs.slice(0,7) })
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.detail || '오류');
+
+      $('fb-summary').textContent = d.summary;
+      $('fb-good').innerHTML = (d.good||[]).map(g => `<div class="fb-item fb-good">✅ ${g}</div>`).join('');
+      $('fb-improve').innerHTML = (d.improve||[]).map(i => `<div class="fb-item fb-improve">💡 ${i}</div>`).join('');
+      $('fb-tip').textContent = `🎯 ${d.next_tip}`;
+      $('feedback-result').style.display = 'block';
+    } catch(e) { alert(e.message); }
+    finally { $('fb-loading').classList.remove('show'); }
+  }
+
+  // ── Diet ─────────────────────────────────────────────────────────────────────
+  function initDiet() {
+    const p = getProfile();
+    if (!p) { $('diet-no-profile').style.display = 'block'; $('diet-form').style.display = 'none'; return; }
+    $('diet-no-profile').style.display = 'none';
+    $('diet-form').style.display = 'block';
+    $('diet-profile-info').textContent = `${p.gender} · ${p.age}세 · ${p.weight}kg · ${p.height}cm · 목표: ${p.goal}`;
+  }
+
+  async function getDiet() {
+    const p = getProfile();
+    if (!p) return;
+    hideErr('diet-error');
+    $('diet-result').classList.remove('show');
+    $('diet-loading').classList.add('show');
+
+    try {
+      const res = await fetch('/calories', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ gender: p.gender, age: p.age, weight: p.weight, height: p.height, goal: p.goal, weekly_days: parseInt($('diet-days').value) })
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.detail || '오류');
+      $('d-calories').textContent = d.target_calories;
+      $('d-protein').textContent = d.protein;
+      $('d-carbs').textContent = d.carbs;
+      $('d-fat').textContent = d.fat;
+      $('d-breakfast').textContent = d.meals.breakfast;
+      $('d-lunch').textContent = d.meals.lunch;
+      $('d-dinner').textContent = d.meals.dinner;
+      $('d-snack').textContent = d.meals.snack;
+      $('d-tip').textContent = d.tip;
+      $('diet-result').classList.add('show');
+    } catch(e) { showErr('diet-error', e.message); }
+    finally { $('diet-loading').classList.remove('show'); }
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  loadProfileForm();
+  initHome();
 </script>
 </body>
 </html>
