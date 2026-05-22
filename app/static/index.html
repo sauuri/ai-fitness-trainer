@@ -304,6 +304,39 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
 /* SECTION HEADING */
 .page-heading{font-size:16px;font-weight:800;color:#fff;margin-bottom:14px}
+
+/* REST TIMER */
+.rest-timer{position:fixed;bottom:0;left:0;right:0;z-index:400;
+  background:#0d1420;border-top:2px solid var(--green);
+  padding:14px 20px 22px;transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.rest-timer.show{transform:translateY(0)}
+.rest-timer-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:18px}
+.rest-ring-wrap{position:relative;width:72px;height:72px;flex-shrink:0}
+.rest-ring-wrap svg{width:72px;height:72px}
+.rest-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:800;color:var(--green)}
+.rest-info{flex:1;min-width:0}
+.rest-ex-name{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.rest-label{font-size:11px;color:var(--muted);margin-bottom:8px}
+.rest-btns{display:flex;gap:7px}
+.rest-btn{padding:6px 12px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:700;transition:all .2s}
+.rest-btn-skip{background:#1a2436;color:var(--muted)}
+.rest-btn-skip:hover{color:var(--text)}
+.rest-btn-add{background:#10b98120;color:var(--green);border:1px solid #10b98140}
+.rest-btn-add:hover{background:#10b98130}
+
+/* ONBOARDING */
+.onboard-card{background:linear-gradient(135deg,#f9731608,#6366f108);
+  border:1px solid #f9731620;border-radius:16px;padding:28px 20px;text-align:center;margin-bottom:12px}
+.onboard-icon{font-size:44px;margin-bottom:12px}
+.onboard-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:6px}
+.onboard-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.onboard-steps{display:flex;flex-direction:column;gap:8px;text-align:left;margin-bottom:18px}
+.onboard-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text);
+  background:#0a0f1a;border-radius:10px;padding:9px 12px}
+.onboard-step-num{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -586,7 +619,9 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <span>😞 운동 실패 원인 분석</span>
       <button class="btn-outline btn" style="padding:3px 8px;font-size:11px" onclick="getAnalysis()">분석하기</button>
     </div>
-    <div id="missed-reason-chart" class="bar-chart" style="margin-bottom:10px"></div>
+    <div id="missed-reason-chart" class="bar-chart" style="margin-bottom:10px">
+      <div style="font-size:13px;color:var(--muted);padding:6px 0">기록 탭에서 😞 못 함 기록을 남기면 여기서 패턴을 분석해요.</div>
+    </div>
     <div class="loading" id="analysis-loading"><div class="loading-ring"></div><div class="loading-text">실패 패턴 분석 중...</div></div>
     <div id="analysis-result" style="display:none">
       <div class="analysis-stat" id="analysis-summary"></div>
@@ -813,6 +848,30 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
 </div><!-- /wrap -->
 
+<!-- REST TIMER -->
+<div class="rest-timer" id="rest-timer">
+  <div class="rest-timer-inner">
+    <div class="rest-ring-wrap">
+      <svg viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r="30" fill="none" stroke="#1a2436" stroke-width="6"/>
+        <circle id="rt-ring" cx="36" cy="36" r="30" fill="none" stroke="var(--green)"
+          stroke-width="6" stroke-linecap="round"
+          stroke-dasharray="188.5" stroke-dashoffset="0"
+          transform="rotate(-90 36 36)" style="transition:stroke-dashoffset .9s linear"/>
+      </svg>
+      <div class="rest-num" id="rt-num">60</div>
+    </div>
+    <div class="rest-info">
+      <div class="rest-ex-name" id="rt-ex">휴식 중</div>
+      <div class="rest-label">😤 다음 세트까지</div>
+      <div class="rest-btns">
+        <button class="rest-btn rest-btn-skip" onclick="skipRest()">건너뛰기</button>
+        <button class="rest-btn rest-btn-add" onclick="addRestTime(30)">+30초</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MISSED WORKOUT MODAL -->
 <div class="modal-bg" id="missed-modal" onclick="if(event.target===this)hideMissedModal()">
   <div class="modal">
@@ -1014,6 +1073,62 @@ function renderRisk(d){
   else{playTick();vibrate([40])}
 }
 
+// ── Rest Timer ───────────────────────────────────────────────────────────────
+let _restInterval = null;
+let _restTotal = 60;
+let _restRemain = 60;
+const RT_CIRC = 188.5; // 2π×30
+
+function parseRestSec(str){
+  if(!str) return 60;
+  const m=str.match(/(\d+)\s*분/), s=str.match(/(\d+)\s*초/);
+  return (m?parseInt(m[1])*60:0)+(s?parseInt(s[1]):0)||60;
+}
+function startRestTimer(name, restStr){
+  _restTotal = parseRestSec(restStr);
+  _restRemain = _restTotal;
+  $('rt-ex').textContent = name;
+  updateTimerUI();
+  $('rest-timer').classList.add('show');
+  clearInterval(_restInterval);
+  _restInterval = setInterval(()=>{
+    _restRemain--;
+    updateTimerUI();
+    if(_restRemain<=3 && _restRemain>0) tone(880,0.08,0.15);
+    if(_restRemain<=0){
+      clearInterval(_restInterval);
+      tone(660,0.15,0.2); setTimeout(()=>tone(880,0.25,0.25),150);
+      vibrate([100,50,200]);
+      setTimeout(stopRestTimer,1800);
+    }
+  },1000);
+}
+function updateTimerUI(){
+  $('rt-num').textContent=_restRemain;
+  const offset=RT_CIRC*(1-_restRemain/Math.max(_restTotal,1));
+  $('rt-ring').style.strokeDashoffset=offset;
+  $('rt-ring').style.stroke=_restRemain<=10?'var(--red)':_restRemain<=20?'var(--yellow)':'var(--green)';
+  $('rt-num').style.color=_restRemain<=10?'var(--red)':_restRemain<=20?'var(--yellow)':'var(--green)';
+}
+function stopRestTimer(){
+  clearInterval(_restInterval);
+  $('rest-timer').classList.remove('show');
+}
+function skipRest(){ stopRestTimer(); playTick(); }
+function addRestTime(sec){
+  _restRemain=Math.min(_restRemain+sec,_restTotal+sec);
+  _restTotal=Math.max(_restTotal,_restRemain);
+  updateTimerUI();
+  playTick();
+}
+function onExCheck(cb){
+  updateProgress();
+  playCheck();
+  vibrate([25]);
+  if(cb.checked) startRestTimer(cb.dataset.name||'운동', cb.dataset.rest||'60초');
+  else if($('r-main').querySelectorAll('input:checked').length===0) stopRestTimer();
+}
+
 // ── Lazy Mode ────────────────────────────────────────────────────────────────
 let lazyMode=false;
 function toggleLazy(){
@@ -1092,7 +1207,7 @@ function renderRoutine(d){
         <div class="ex-name">${ex.name}</div>
         <div class="ex-check">
           <span class="ex-num">${i+1}</span>
-          <input type="checkbox" onchange="updateProgress();playCheck();vibrate([25])" title="완료">
+          <input type="checkbox" data-idx="${i}" data-rest="${ex.rest||'60초'}" data-name="${ex.name}" onchange="onExCheck(this)" title="완료">
         </div>
       </div>
       <div class="ex-detail">
@@ -1329,7 +1444,22 @@ function renderDash(){
     ...missed.map(l=>({...l,type:'missed',rate:0}))
   ].sort((a,b)=>b.ts-a.ts).slice(0,15);
 
-  $('log-list').innerHTML=allLogs.length?allLogs.map(l=>{
+  if(!allLogs.length){
+    $('log-list').innerHTML=`
+      <div class="onboard-card">
+        <div class="onboard-icon">🚀</div>
+        <div class="onboard-title">첫 운동을 기록해봐요!</div>
+        <div class="onboard-desc">루틴을 완료하면 여기에 기록이 쌓여요.<br>기록이 쌓일수록 AI 분석도 정확해져요.</div>
+        <div class="onboard-steps">
+          <div class="onboard-step"><div class="onboard-step-num">1</div> 프로필 탭에서 내 정보 입력</div>
+          <div class="onboard-step"><div class="onboard-step-num">2</div> 루틴 탭에서 컨디션 입력 후 루틴 생성</div>
+          <div class="onboard-step"><div class="onboard-step-num">3</div> 운동 완료 후 저장 버튼 클릭</div>
+        </div>
+        <button class="btn btn-primary" onclick="showPage('home')" style="max-width:220px;margin:0 auto">첫 루틴 짜러 가기 💪</button>
+      </div>`;
+    return;
+  }
+  $('log-list').innerHTML=allLogs.map(l=>{
     if(l.type==='missed') return `
       <div class="log-item missed">
         <div class="log-header">
