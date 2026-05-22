@@ -176,6 +176,31 @@
     .fb-improve { background: #f9731610; border-left: 3px solid var(--accent); color: var(--text); }
     .fb-tip { background: #6366f110; border: 1px solid #6366f130; border-radius: 10px; padding: 12px; font-size: 13px; color: var(--text); line-height: 1.6; }
 
+    /* CONDITION SLIDER */
+    .slider-row { display: flex; align-items: center; gap: 10px; }
+    .slider-row input[type=range] { flex: 1; height: 4px; accent-color: var(--accent); cursor: pointer; }
+    .slider-val { font-size: 18px; font-weight: 800; color: var(--accent); min-width: 24px; text-align: center; }
+    .slider-val.red { color: var(--red); }
+
+    /* WEIGHT INPUT */
+    .ex-weight-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+    .ex-weight-label { font-size: 11px; color: var(--muted); }
+    .weight-input { width: 76px !important; font-size: 12px !important; padding: 5px 8px !important; border-radius: 7px !important; }
+
+    /* 4주 REPORT */
+    .report-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 12px; animation: fadeUp 0.4s ease; }
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .report-stat { background: #0a0f1a; border-radius: 10px; padding: 10px; text-align: center; }
+    .report-num { font-size: 18px; font-weight: 800; color: var(--accent); }
+    .report-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .report-section { margin-bottom: 12px; }
+    .report-section-title { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 6px; }
+    .report-summary { font-size: 13px; line-height: 1.7; color: var(--text); background: #f9731608; border: 1px solid #f9731620; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+    .report-list-item { font-size: 12px; line-height: 1.6; padding: 7px 11px; border-radius: 8px; margin-bottom: 5px; }
+    .report-achievement { background: #10b98110; border-left: 3px solid var(--green); color: var(--text); }
+    .report-warning { background: #f9731610; border-left: 3px solid var(--accent); color: var(--text); }
+    .report-next { background: #6366f110; border: 1px solid #6366f130; border-radius: 10px; padding: 12px; font-size: 13px; color: var(--text); line-height: 1.6; }
+
     /* DIET */
     .macro-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
     .macro-card { background: #0a0f1a; border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
@@ -241,6 +266,22 @@
               <option value="45">45분</option>
               <option value="60" selected>60분</option>
               <option value="90">90분</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>오늘 컨디션 <span id="condition-val" class="slider-val">7</span> / 10</label>
+            <div class="slider-row">
+              <span style="font-size:11px;color:var(--muted)">😴 1</span>
+              <input type="range" id="condition" min="1" max="10" value="7" oninput="$('condition-val').textContent=this.value">
+              <span style="font-size:11px;color:var(--muted)">10 🔥</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>운동 의욕</label>
+            <select id="motivation-lvl">
+              <option value="낮음">낮음 😔</option>
+              <option value="보통" selected>보통 😐</option>
+              <option value="높음">높음 🔥</option>
             </select>
           </div>
         </div>
@@ -318,6 +359,14 @@
             <div class="stat-box"><div class="stat-num" id="total-count">0</div><div class="stat-label">전체 운동</div></div>
             <div class="stat-box"><div class="stat-num" id="done-pct">0%</div><div class="stat-label">완료율</div></div>
           </div>
+          <div class="form-group" style="margin:10px 0 12px">
+            <label>오늘 피로도 <span id="fatigue-val" class="slider-val red">5</span> / 10</label>
+            <div class="slider-row">
+              <span style="font-size:11px;color:var(--muted)">😌 1</span>
+              <input type="range" id="fatigue" min="1" max="10" value="5" style="accent-color:var(--red)" oninput="$('fatigue-val').textContent=this.value">
+              <span style="font-size:11px;color:var(--muted)">10 😵</span>
+            </div>
+          </div>
           <button class="btn btn-complete" onclick="completeWorkout()">운동 완료 저장 ✅</button>
         </div>
       </div>
@@ -342,6 +391,35 @@
     <div class="card" style="margin-bottom:14px">
       <div class="card-title">🏋️ 부위별 운동 횟수</div>
       <div class="bar-chart" id="target-chart"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>📈 4주 성장 리포트</span>
+        <button class="btn-outline btn" style="padding:4px 10px;font-size:11px" onclick="getReport()">분석하기 📊</button>
+      </div>
+      <div class="loading" id="report-loading"><div class="loading-ring"></div><div class="loading-text">4주 데이터 분석 중...</div></div>
+      <div id="report-result" style="display:none">
+        <div class="report-grid">
+          <div class="report-stat"><div class="report-num" id="rp-sessions">-</div><div class="report-label">총 운동 횟수</div></div>
+          <div class="report-stat"><div class="report-num" id="rp-completion">-</div><div class="report-label">평균 완료율</div></div>
+          <div class="report-stat"><div class="report-num" id="rp-streak">-</div><div class="report-label">연속 운동일</div></div>
+          <div class="report-stat"><div class="report-num" id="rp-most">-</div><div class="report-label">가장 많이 한 부위</div></div>
+        </div>
+        <div class="report-summary" id="rp-summary"></div>
+        <div class="report-section">
+          <div class="report-section-title">🏆 달성한 것들</div>
+          <div id="rp-achievements"></div>
+        </div>
+        <div class="report-section">
+          <div class="report-section-title">⚠️ 주의사항</div>
+          <div id="rp-warnings"></div>
+        </div>
+        <div class="report-section">
+          <div class="report-section-title">🎯 다음 2주 집중 추천</div>
+          <div class="report-next" id="rp-next"></div>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -602,7 +680,9 @@
           location: p.location,
           equipment: p.equipment || [],
           injury: p.injury || [],
-          duration: parseInt($('duration').value)
+          duration: parseInt($('duration').value),
+          condition: parseInt($('condition').value) || 7,
+          motivation: $('motivation-lvl').value
         })
       });
       const d = await res.json();
@@ -641,6 +721,11 @@
         <div class="ex-tip">💡 ${ex.tip}</div>
         ${ex.caution ? `<div class="ex-caution">⚠️ ${ex.caution}</div>` : ''}
         ${ex.alternative ? `<div class="ex-alt">대체: ${ex.alternative}</div>` : ''}
+        <div class="ex-weight-row">
+          <span class="ex-weight-label">💪 사용 중량</span>
+          <input type="number" class="weight-input" placeholder="kg" min="0" max="999" step="0.5">
+          <span style="font-size:11px;color:var(--muted)">kg</span>
+        </div>
       </div>`).join('');
 
     $('r-cooldown').innerHTML = (d.cooldown||[]).map(c => `
@@ -677,22 +762,34 @@
     const d = window._currentRoutine;
     if (!d) return;
     const checkboxes = $('r-main').querySelectorAll('input[type=checkbox]');
+    const weightInputs = $('r-main').querySelectorAll('.weight-input');
     const total = checkboxes.length;
     const done = [...checkboxes].filter(cb => cb.checked).length;
     const rate = total ? Math.round(done/total*100) : 0;
+    const fatigue = parseInt($('fatigue').value) || 5;
+    const condition = parseInt($('condition').value) || 7;
+
+    const exercise_detail = (d.main||[]).map((ex, i) => ({
+      name: ex.name,
+      sets: ex.sets,
+      reps: ex.reps,
+      weight: parseFloat(weightInputs[i]?.value) || null,
+      done: checkboxes[i]?.checked || false
+    }));
 
     const log = {
       date: new Date().toLocaleDateString('ko-KR'),
       target: $('target').value,
       exercises: (d.main||[]).map(ex => ex.name),
-      done, total, rate,
+      exercise_detail,
+      done, total, rate, fatigue, condition,
       ts: Date.now()
     };
     const logs = JSON.parse(localStorage.getItem('fitness_logs') || '[]');
     logs.unshift(log);
     if (logs.length > 50) logs.pop();
     localStorage.setItem('fitness_logs', JSON.stringify(logs));
-    alert(`운동 완료! 완료율 ${rate}% 저장됐어요 💪`);
+    alert(`운동 완료! 완료율 ${rate}% · 피로도 ${fatigue}/10 저장됐어요 💪`);
   }
 
   // ── Motivation ───────────────────────────────────────────────────────────────
@@ -769,9 +866,10 @@
           <div class="log-target">${l.target}</div>
         </div>
         <div class="log-exercises">${l.exercises.join(' · ')}</div>
-        <div style="display:flex;justify-content:space-between;margin-top:6px">
-          <div class="log-complete">✅ ${l.done}/${l.total} 완료</div>
-          <div class="log-rate">${l.rate}%</div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;flex-wrap:wrap;gap:4px">
+          <div class="log-complete">✅ ${l.done}/${l.total} 완료 (${l.rate}%)</div>
+          ${l.condition != null ? `<span style="font-size:11px;color:var(--accent)">컨디션 ${l.condition}/10</span>` : ''}
+          ${l.fatigue != null ? `<span style="font-size:11px;color:var(--red)">피로도 ${l.fatigue}/10</span>` : ''}
         </div>
       </div>`).join('') : '<div class="empty-msg">운동 기록이 없어요.<br>루틴 완료 후 저장해보세요 💪</div>';
   }
@@ -800,6 +898,36 @@
       $('feedback-result').style.display = 'block';
     } catch(e) { alert(e.message); }
     finally { $('fb-loading').classList.remove('show'); }
+  }
+
+  // ── 4주 Report ───────────────────────────────────────────────────────────────
+  async function getReport() {
+    const logs = JSON.parse(localStorage.getItem('fitness_logs') || '[]');
+    const p = getProfile();
+    if (!p || logs.length < 4) { alert('4주 리포트는 운동 기록이 4개 이상 있어야 해요.'); return; }
+
+    $('report-loading').classList.add('show');
+    $('report-result').style.display = 'none';
+
+    try {
+      const res = await fetch('/report', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ gender: p.gender, goal: p.goal, level: p.level, logs })
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.detail || '오류');
+
+      $('rp-sessions').textContent = d.total_sessions ?? logs.length;
+      $('rp-completion').textContent = (d.avg_completion ?? 0) + '%';
+      $('rp-streak').textContent = d.streak ?? '-';
+      $('rp-most').textContent = d.most_trained ?? '-';
+      $('rp-summary').textContent = d.summary ?? '';
+      $('rp-achievements').innerHTML = (d.achievements||[]).map(a => `<div class="report-list-item report-achievement">🏆 ${a}</div>`).join('');
+      $('rp-warnings').innerHTML = (d.warnings||[]).map(w => `<div class="report-list-item report-warning">⚠️ ${w}</div>`).join('');
+      $('rp-next').textContent = d.next_focus ?? '';
+      $('report-result').style.display = 'block';
+    } catch(e) { alert(e.message); }
+    finally { $('report-loading').classList.remove('show'); }
   }
 
   // ── Diet ─────────────────────────────────────────────────────────────────────

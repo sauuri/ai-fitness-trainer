@@ -23,6 +23,15 @@ class RoutineRequest(BaseModel):
     equipment: list[str]
     injury: list[str]
     duration: int
+    condition: int = 5       # 1~10: 오늘 컨디션
+    motivation: str = "보통"  # 낮음 / 보통 / 높음
+
+
+class ReportRequest(BaseModel):
+    gender: str
+    goal: str
+    level: str
+    logs: list[dict]
 
 
 class FeedbackRequest(BaseModel):
@@ -66,8 +75,10 @@ async def generate_routine(req: RoutineRequest):
 목표: {req.goal} / 경험: {req.level} / 오늘 부위: {req.target}
 운동 장소: {req.location} / 보유 장비: {equip_text}
 {injury_text} / 운동 가능 시간: {req.duration}분
+오늘 컨디션: {req.condition}/10 / 운동 의욕: {req.motivation}
 
 부상 부위 운동은 절대 포함하지 마세요. 대체 운동을 제시해주세요.
+컨디션이 낮으면(1~4) 고중량·고강도 운동 대신 가볍고 안전한 루틴으로 조정하세요.
 
 다음 JSON 형식으로만 응답:
 {{
@@ -95,6 +106,38 @@ async def generate_routine(req: RoutineRequest):
     "calories": "약 350kcal",
     "advice": "오늘 루틴 조언",
     "injury_note": "부상 관련 주의사항 (없으면 빈 문자열)"
+}}"""}
+        ],
+        response_format={"type": "json_object"}
+    )
+    return JSONResponse(json.loads(resp.choices[0].message.content))
+
+
+@app.post("/report")
+async def get_report(req: ReportRequest):
+    logs_text = json.dumps(req.logs, ensure_ascii=False)
+    resp = await client.chat.completions.create(
+        model=settings.model_name,
+        messages=[
+            {"role": "system", "content": "당신은 데이터 기반 AI 피트니스 코치입니다. JSON으로만 응답합니다."},
+            {"role": "user", "content": f"""다음 운동 기록을 바탕으로 4주 성장 리포트를 작성해주세요.
+
+성별: {req.gender} / 목표: {req.goal} / 경험: {req.level}
+전체 운동 기록: {logs_text}
+
+다음 JSON 형식으로만 응답:
+{{
+    "total_sessions": 12,
+    "avg_completion": 82,
+    "most_trained": "상체",
+    "least_trained": "하체",
+    "streak": 3,
+    "weight_change": "기록 없음",
+    "strength_growth": "벤치프레스 기록 향상",
+    "summary": "전반적인 4주 총평 (3~4문장)",
+    "next_focus": "다음 2주 집중 추천 (예: 하체 주 2회 포함)",
+    "achievements": ["달성한 것 1", "달성한 것 2"],
+    "warnings": ["주의할 점 1"]
 }}"""}
         ],
         response_format={"type": "json_object"}
