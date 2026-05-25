@@ -10,6 +10,16 @@
 
 > 오늘 운동 빠지는 날은 없다. 컨디션이 어떻든 AI가 딱 맞는 루틴을 만들어줍니다.
 
+## 스크린샷
+
+<p align="center">
+  <img src="docs/screenshots/01_home_condition.png" width="18%"/>
+  <img src="docs/screenshots/05_routine_result.png" width="18%"/>
+  <img src="docs/screenshots/02_records_calendar.png" width="18%"/>
+  <img src="docs/screenshots/03_analysis.png" width="18%"/>
+  <img src="docs/screenshots/04_diet.png" width="18%"/>
+</p>
+
 ## 주요 기능
 
 | 기능 | 설명 |
