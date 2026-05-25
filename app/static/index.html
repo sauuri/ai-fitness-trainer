@@ -8,7 +8,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --accent:#f97316;--accent2:#fb923c;--bg:#06080f;--card:#0c1018;
-  --border:#1a2436;--text:#c8d8f0;--muted:#4a6080;
+  --border:#1a2436;--text:#c8d8f0;--muted:#5a7898;
   --green:#10b981;--red:#f43f5e;--blue:#6366f1;--yellow:#f59e0b;
 }
 body{background:var(--bg);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;color:var(--text);min-height:100vh}
@@ -26,10 +26,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   font-size:13px;cursor:pointer;padding:2px 7px;line-height:1;transition:all .2s;margin-left:8px}
 .sound-toggle:hover{border-color:var(--accent);color:var(--accent)}
 
-.nav{position:sticky;top:33px;z-index:100;background:#06080fcc;backdrop-filter:blur(12px);
+.nav{position:sticky;top:0;z-index:100;background:#06080fcc;backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);display:flex;justify-content:center;gap:2px;padding:8px 12px}
-.nav-btn{padding:7px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;
-  background:transparent;color:var(--muted);transition:all .2s}
+.nav-btn{padding:7px 10px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;
+  background:transparent;color:var(--muted);transition:all .2s;white-space:nowrap}
 .nav-btn.active{background:#f9731618;color:var(--accent)}
 
 .wrap{max-width:680px;margin:0 auto;padding:20px 14px 80px;position:relative;z-index:1}
@@ -136,6 +136,54 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .error.show{display:block}
 .result{display:none;animation:fadeUp .4s ease}.result.show{display:block}
 
+/* STEP FLOW */
+.step-indicator{display:flex;align-items:center;justify-content:center;gap:0;margin:4px 0 20px}
+.sdot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;flex-shrink:0;transition:all .3s}
+.sdot.active{background:var(--accent);color:#fff;box-shadow:0 0 14px #f9731450}
+.sdot.done{background:var(--green);color:#fff}
+.sdot.pending{background:var(--border);color:var(--muted)}
+.sline{flex:1;height:2px;max-width:44px;transition:background .3s}
+.sline.done{background:var(--green)}.sline.pending{background:var(--border)}
+.step-label{font-size:10px;color:var(--muted);margin-top:3px;text-align:center;white-space:nowrap}
+.step-col{display:flex;flex-direction:column;align-items:center;gap:2px}
+.step-page{display:none}.step-page.active{display:block;animation:slideStep .28s ease}
+@keyframes slideStep{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+.step-back{background:none;border:none;color:var(--accent);font-size:15px;cursor:pointer;
+  padding:0 0 16px;display:flex;align-items:center;gap:4px;font-weight:700}
+.step-back:hover{opacity:.75}
+.step-back::before{content:'‹';font-size:22px;line-height:1;margin-right:1px}
+
+/* SETS / REST STEPPER */
+.ex-sets-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.ex-rest-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sets-stepper{display:flex;align-items:center;gap:0;background:#0a0f1a;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.sets-btn{background:none;border:none;color:var(--accent);font-size:18px;font-weight:700;
+  width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s}
+.sets-btn:hover{background:#f9731618}
+.sets-btn:active{background:#f9731630}
+.sets-num{font-size:18px;font-weight:900;color:#fff;min-width:28px;text-align:center;padding:0 4px}
+.rest-sec-disp{font-size:15px;font-weight:800;color:#60a5fa;min-width:48px;text-align:center;padding:0 4px}
+.sets-label{font-size:12px;color:var(--muted);font-weight:600}
+.cal-live-bar{background:linear-gradient(135deg,#f9731412,#ef444412);border:1px solid #f9731435;
+  border-radius:12px;padding:11px 16px;margin:10px 0 4px;display:flex;align-items:center;justify-content:space-between}
+.cal-live-label{font-size:12px;color:var(--muted);font-weight:600}
+.cal-live-num{font-size:20px;font-weight:900;color:var(--accent);letter-spacing:-0.5px}
+.ex-reps-badge{background:#6366f118;border:1px solid #6366f130;border-radius:8px;
+  padding:4px 10px;font-size:12px;font-weight:700;color:#a5b4fc}
+.lazy-link{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;
+  text-align:center;width:100%;padding:14px 0 4px;text-decoration:underline;display:block}
+.lazy-link:hover{color:var(--accent)}
+.btn-peak{display:block;width:100%;padding:12px 18px;border-radius:12px;border:none;
+  cursor:pointer;font-size:14px;font-weight:800;transition:all .2s;margin-top:0;
+  background:#f59e0b18;color:#f59e0b;box-sizing:border-box}
+.btn-group .btn-peak{width:auto;display:flex;align-items:center;justify-content:center}
+.btn-peak:hover{background:#f59e0b28;transform:translateY(-1px);box-shadow:0 6px 20px #f59e0b25}
+.peak-badge{display:inline-flex;align-items:center;gap:5px;background:#f59e0b18;
+  border:1px solid #f59e0b40;border-radius:20px;padding:4px 12px;
+  font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.5px;margin-bottom:10px}
+
 /* ROUTINE */
 .routine-header{background:linear-gradient(135deg,#f9731612,#fb923c08);border:1px solid #f9731628;
   border-radius:14px;padding:16px;margin-bottom:10px;text-align:center}
@@ -155,8 +203,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .exercise-item.done{border-color:#10b98140;background:#10b98108}
 .ex-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .ex-name{font-size:14px;font-weight:700;color:#fff}
-.ex-check{display:flex;align-items:center;gap:7px}
-.ex-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--green);cursor:pointer}
+.ex-check{display:flex;align-items:center;gap:8px}
+.ex-check input[type=checkbox]{width:22px;height:22px;accent-color:var(--green);cursor:pointer;flex-shrink:0}
 .ex-num{font-size:11px;color:var(--accent);font-weight:700;background:#f9731615;padding:2px 7px;border-radius:5px}
 .ex-detail{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:5px}
 .ex-badge{font-size:11px;color:var(--muted);background:#1a2436;padding:2px 7px;border-radius:5px}
@@ -177,11 +225,20 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .simple-desc{font-size:11px;color:var(--muted);margin-top:2px}
 
 /* COMPLETE SECTION */
-.complete-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-top:12px}
+.complete-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-top:12px;transition:border-color .4s,box-shadow .4s}
+.complete-section.all-done{border-color:#10b98160;box-shadow:0 0 24px #10b98120;animation:completePulse 1.2s ease}
+@keyframes completePulse{0%{box-shadow:0 0 0 #10b98100}50%{box-shadow:0 0 32px #10b98145}100%{box-shadow:0 0 24px #10b98120}}
 .complete-stats{display:flex;gap:12px;margin-bottom:12px}
-.stat-box{flex:1;text-align:center;background:#0a0f1a;border-radius:10px;padding:9px}
+.stat-box{flex:1;text-align:center;background:#0a0f1a;border-radius:10px;padding:9px;transition:background .4s}
+.stat-box.all-done{background:#10b98110}
 .stat-num{font-size:20px;font-weight:800;color:var(--accent)}
+.stat-num.all-done{color:var(--green)}
 .stat-label{font-size:10px;color:var(--muted);margin-top:2px}
+.all-done-banner{display:none;background:linear-gradient(135deg,#10b98118,#34d39910);
+  border:1px solid #10b98140;border-radius:10px;padding:12px 16px;
+  text-align:center;font-size:14px;font-weight:800;color:#6ee7b7;
+  margin-bottom:10px;animation:fadeUp .4s ease}
+.all-done-banner.show{display:block}
 
 /* ADVICE */
 .advice-box{background:#f9731608;border:1px solid #f9731620;border-radius:10px;
@@ -326,6 +383,101 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .rest-btn-add{background:#10b98120;color:var(--green);border:1px solid #10b98140}
 .rest-btn-add:hover{background:#10b98130}
 
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:9999;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 28px;transition:opacity .5s ease,transform .5s ease}
+#splash.hide{opacity:0;transform:scale(1.04);pointer-events:none}
+.splash-icon{font-size:64px;margin-bottom:20px;animation:splashPop .6s ease}
+@keyframes splashPop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.splash-badge{display:inline-flex;align-items:center;gap:5px;background:#f9731615;
+  border:1px solid #f9731630;border-radius:20px;padding:4px 14px;
+  font-size:11px;font-weight:700;color:var(--accent);letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:14px}
+.splash-title{font-size:30px;font-weight:900;color:#fff;text-align:center;
+  line-height:1.25;margin-bottom:8px}
+.splash-sub{font-size:14px;color:var(--muted);text-align:center;line-height:1.7;margin-bottom:36px}
+.splash-features{display:flex;flex-direction:column;gap:12px;width:100%;max-width:320px;margin-bottom:40px}
+.splash-feat{display:flex;align-items:center;gap:12px;background:#0c1018;
+  border:1px solid #1a2436;border-radius:12px;padding:12px 14px}
+.splash-feat-icon{font-size:22px;flex-shrink:0}
+.splash-feat-text{font-size:13px;color:var(--text);line-height:1.4}
+.splash-feat-text strong{color:#fff;display:block;margin-bottom:2px}
+.splash-cta{width:100%;max-width:320px;padding:16px;border-radius:14px;border:none;
+  cursor:pointer;font-size:16px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+  box-shadow:0 8px 28px #f9731445;transition:transform .15s,box-shadow .15s}
+.splash-cta:hover{transform:translateY(-2px);box-shadow:0 12px 32px #f9731455}
+.splash-skip{background:none;border:none;color:var(--muted);font-size:12px;
+  cursor:pointer;margin-top:14px;text-decoration:underline}
+
+/* WORKOUT TIMER */
+.workout-timer-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px}
+.workout-elapsed{font-size:13px;font-weight:800;color:var(--green);letter-spacing:1px;
+  background:#10b98112;border:1px solid #10b98128;border-radius:8px;padding:3px 12px;
+  cursor:pointer;user-select:none;transition:all .2s}
+.workout-elapsed:hover{background:#10b98120;border-color:#10b98150}
+.workout-elapsed.paused{color:var(--yellow);background:#f59e0b12;border-color:#f59e0b30}
+
+/* LOG WEIGHTS */
+.log-weights{font-size:11px;color:#60a5fa;margin-top:3px}
+
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-month-label{font-size:14px;font-weight:800;color:#fff}
+.cal-nav-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);
+  font-size:16px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cal-nav-btn:hover{border-color:var(--accent);color:var(--accent)}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+.cal-weekday{text-align:center;font-size:10px;font-weight:700;color:var(--muted);padding:2px 0}
+.cal-weekday:first-child{color:#f87171}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;font-size:12px;font-weight:600;color:var(--muted);cursor:default;position:relative;transition:all .2s}
+.cal-day.other-month{opacity:.25}
+.cal-day.today{border:1.5px solid var(--accent);color:var(--accent);font-weight:800}
+.cal-day.done{background:var(--green);color:#fff;font-weight:800;box-shadow:0 2px 8px #10b98140}
+.cal-day.missed{background:#f43f5e20;border:1px solid #f43f5e40;color:#f87191}
+.cal-day.done.today{box-shadow:0 2px 8px #10b98160,0 0 0 2px var(--accent)}
+.cal-legend{display:flex;gap:14px;margin-top:10px;justify-content:center}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.cal-legend-dot{width:10px;height:10px;border-radius:50%}
+
+/* CAL CHART */
+.cal-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.cal-bar-label{font-size:10px;color:var(--muted);width:28px;text-align:right;flex-shrink:0}
+.cal-bar-track{flex:1;background:#1a2436;border-radius:4px;height:7px}
+.cal-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),#fb923c);transition:width .8s ease}
+.cal-bar-val{font-size:10px;color:var(--accent);width:46px;font-weight:700}
+
+/* DIET MACRO COLORS */
+.macro-card.cal-card{border-top:2px solid var(--accent)}
+.macro-card.pro-card{border-top:2px solid var(--green)}
+.macro-card.carb-card{border-top:2px solid var(--blue)}
+.macro-card.fat-card{border-top:2px solid var(--yellow)}
+.macro-card.cal-card .macro-num{color:var(--accent)}
+.macro-card.pro-card .macro-num{color:var(--green)}
+.macro-card.carb-card .macro-num{color:#818cf8}
+.macro-card.fat-card .macro-num{color:var(--yellow)}
+.meal-item{background:#0a0f1a;border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:7px}
+.meal-time{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:3px}
+.meal-text{font-size:13px;color:var(--text);line-height:1.5}
+
+/* WORKOUT DONE */
+#workout-done{display:none;animation:fadeUp .5s ease}
+.done-hero{text-align:center;padding:32px 0 22px}
+.done-icon{font-size:60px;display:block;margin-bottom:14px;animation:splashPop .55s ease}
+.done-title{font-size:26px;font-weight:900;color:#fff;margin-bottom:6px}
+.done-sub{font-size:14px;color:var(--muted);line-height:1.6}
+.done-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.done-stat-box{background:#0a0f1a;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+.done-stat-num{font-size:26px;font-weight:900;color:var(--green);letter-spacing:-1px}
+.done-stat-label{font-size:11px;color:var(--muted);margin-top:4px}
+.done-target-tag{display:inline-block;background:#f9731610;border:1px solid #f9731630;
+  border-radius:20px;padding:4px 14px;font-size:12px;color:var(--accent);
+  font-weight:700;margin-bottom:18px}
+.done-actions{display:flex;flex-direction:column;gap:8px}
+
 /* ONBOARDING */
 .onboard-card{background:linear-gradient(135deg,#f9731608,#6366f108);
   border:1px solid #f9731620;border-radius:16px;padding:28px 20px;text-align:center;margin-bottom:12px}
@@ -340,9 +492,28 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 </style>
 </head>
 <body>
-<div class="cold-notice">
-  <span>🕐 무료 서버 사용 중 — 첫 요청 시 <strong>약 50초</strong> 소요될 수 있습니다</span>
-  <button class="sound-toggle" id="sound-btn" onclick="toggleSound()" title="효과음 on/off">🔔</button>
+<!-- ===== SPLASH ===== -->
+<div id="splash">
+  <div class="splash-badge">✦ AI FITNESS COACH</div>
+  <div class="splash-icon">🔥</div>
+  <div class="splash-title">No-Zero-Day</div>
+  <div class="splash-sub">포기하지 않게 만드는 AI 운동 코치<br>오늘도 0일은 없다</div>
+  <div class="splash-features">
+    <div class="splash-feat">
+      <div class="splash-feat-icon">🔮</div>
+      <div class="splash-feat-text"><strong>실패 위험도 예측</strong>오늘 컨디션 분석 후 운동 포기 확률 계산</div>
+    </div>
+    <div class="splash-feat">
+      <div class="splash-feat-icon">💪</div>
+      <div class="splash-feat-text"><strong>맞춤 루틴 생성</strong>수면·피로·스트레스 반영한 오늘만의 루틴</div>
+    </div>
+    <div class="splash-feat">
+      <div class="splash-feat-icon">😮‍💨</div>
+      <div class="splash-feat-text"><strong>가기 싫어도 OK</strong>5분 최소 실행 루틴으로 제로데이 방지</div>
+    </div>
+  </div>
+  <button class="splash-cta" onclick="enterApp()">시작하기 →</button>
+  <button class="splash-skip" onclick="enterApp()">건너뛰기</button>
 </div>
 
 <nav class="nav">
@@ -351,221 +522,286 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   <button class="nav-btn" onclick="showPage('analysis')">📈 분석</button>
   <button class="nav-btn" onclick="showPage('diet')">🥗 식단</button>
   <button class="nav-btn" onclick="showPage('profile')">⚙️ 프로필</button>
+  <button class="sound-toggle" id="sound-btn" onclick="toggleSound()" title="효과음 on/off">🔔</button>
 </nav>
 
 <div class="wrap">
 
 <!-- ===== HOME ===== -->
 <div class="page active" id="page-home">
-  <div class="hero">
-    <span class="hero-icon">🔥</span>
-    <div class="badge">✦ No-Zero-Day AI Coach</div>
-    <h1>운동 실패 방지 코치</h1>
-    <p class="sub">포기하지 않게 만드는 AI 헬스 코치<br>오늘 컨디션에 맞는 루틴을 추천해드려요</p>
-  </div>
 
   <div id="profile-bar" class="profile-bar" style="display:none">
     <span id="pb-info"></span>
     <button class="profile-edit-btn" onclick="showPage('profile')">수정 →</button>
   </div>
-  <div id="no-profile-msg" class="card" style="text-align:center;padding:24px">
-    <div style="font-size:32px;margin-bottom:8px">👤</div>
-    <div style="font-size:14px;color:var(--text);margin-bottom:12px">먼저 프로필을 설정해주세요</div>
-    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('profile')">프로필 설정하기</button>
+  <div id="no-profile-msg" class="card" style="text-align:center;padding:28px">
+    <div style="font-size:36px;margin-bottom:10px">🏋️</div>
+    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">No-Zero-Day</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px">포기하지 않게 만드는 AI 운동 코치<br>먼저 프로필을 설정해주세요</div>
+    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('profile')">프로필 설정하기 →</button>
   </div>
 
   <div id="home-form" style="display:none">
-    <!-- 오늘 컨디션 -->
-    <div class="card">
-      <div class="card-title">🌡️ 오늘 컨디션</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>수면 시간 <span id="sleep-val" style="color:var(--accent);font-size:13px">7</span>h</label>
-          <div class="slider-row">
-            <span class="slider-hint">4h</span>
-            <input type="range" id="td-sleep" min="4" max="12" step="0.5" value="7"
-              oninput="$('sleep-val').textContent=this.value">
-            <span class="slider-hint">12h</span>
+    <!-- Step indicator -->
+    <div class="step-indicator">
+      <div class="step-col"><div class="sdot active" id="sdot-1">1</div><div class="step-label">컨디션</div></div>
+      <div class="sline pending" id="sline-1"></div>
+      <div class="step-col"><div class="sdot pending" id="sdot-2">2</div><div class="step-label">분석</div></div>
+      <div class="sline pending" id="sline-2"></div>
+      <div class="step-col"><div class="sdot pending" id="sdot-3">3</div><div class="step-label">루틴</div></div>
+    </div>
+
+    <!-- ── STEP 1: 컨디션 입력 ── -->
+    <div class="step-page active" id="home-step-1">
+      <div class="card">
+        <div class="card-title">🌡️ 오늘 컨디션 입력</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="form-group">
+            <label>수면 시간 <span id="sleep-val" style="color:var(--accent);font-size:13px">7</span>h</label>
+            <div class="slider-row">
+              <span class="slider-hint">4h</span>
+              <input type="range" id="td-sleep" min="4" max="12" step="0.5" value="7"
+                oninput="$('sleep-val').textContent=this.value">
+              <span class="slider-hint">12h</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>피로도 <span id="fatigue-pre-val" style="color:var(--red);font-size:13px">5</span>/10</label>
+            <div class="slider-row">
+              <span class="slider-hint">😌 1</span>
+              <input type="range" id="td-fatigue" min="1" max="10" value="5"
+                oninput="$('fatigue-pre-val').textContent=this.value">
+              <span class="slider-hint">10 😵</span>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>스트레스</label>
+              <select id="td-stress">
+                <option value="낮음">낮음 😌</option>
+                <option value="보통" selected>보통 😐</option>
+                <option value="높음">높음 😫</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>운동 의욕</label>
+              <select id="td-motivation">
+                <option value="낮음">낮음 😔</option>
+                <option value="보통" selected>보통 😐</option>
+                <option value="높음">높음 🔥</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>근육통</label>
+              <div class="toggle-row" style="padding:8px 0">
+                <span style="font-size:13px;color:var(--text)">근육통 있음</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="td-soreness">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>가능한 시간</label>
+              <select id="td-time">
+                <option value="10">10분</option>
+                <option value="20">20분</option>
+                <option value="40">40분</option>
+                <option value="60" selected>60분</option>
+                <option value="90">90분</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>오늘 운동 부위</label>
+            <select id="target">
+              <option value="전신">전신 (풀바디)</option>
+              <option value="가슴+삼두">가슴 + 삼두</option>
+              <option value="등+이두">등 + 이두</option>
+              <option value="어깨">어깨 (숄더데이)</option>
+              <option value="하체">하체 (스쿼트·레그프레스·런지)</option>
+              <option value="코어">코어 (복근·허리)</option>
+              <option value="유산소">유산소 (런닝·자전거)</option>
+            </select>
           </div>
         </div>
-        <div class="form-group">
-          <label>피로도 <span id="fatigue-pre-val" style="color:var(--accent);font-size:13px">5</span>/10</label>
-          <div class="slider-row">
-            <span class="slider-hint">1</span>
-            <input type="range" id="td-fatigue" min="1" max="10" value="5"
-              oninput="$('fatigue-pre-val').textContent=this.value">
-            <span class="slider-hint">10</span>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
+          <button class="btn btn-primary" id="risk-btn" onclick="predictRisk()" style="margin-top:0">🔮 오늘 컨디션 분석하기</button>
+          <button class="btn btn-peak" onclick="goPeak()">💥 고점 모드 — 오늘 전력으로 간다</button>
+          <button class="lazy-link" onclick="goLazy()" style="padding:8px 0">😩 오늘 솔직히 가기 싫어</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: 분석 결과 ── -->
+    <div class="step-page" id="home-step-2">
+      <button class="step-back" onclick="goToStep(1)">← 다시 입력</button>
+      <div class="loading" id="home-loading">
+        <div class="loading-ring"></div>
+        <div class="loading-text" id="home-loading-text">분석 중...</div>
+      </div>
+      <div class="error" id="home-error"></div>
+
+      <!-- 위험도 분석 결과 -->
+      <div id="risk-result" style="display:none"></div>
+      <div id="action-btns" style="display:none;flex-direction:column;gap:8px">
+        <button class="btn btn-primary" id="routine-btn" onclick="getRoutine()" style="margin-top:0">💪 맞춤 루틴 짜줘</button>
+        <div class="btn-group" style="margin-top:0">
+          <button class="btn" style="background:#6366f1;color:#fff" id="min-btn" onclick="getMinRoutine()">😮‍💨 최소 실행</button>
+          <button class="btn btn-peak" onclick="goPeak()">💥 고점으로 간다</button>
+        </div>
+      </div>
+
+      <!-- 가기 싫어 경로 -->
+      <div id="lazy-section" style="display:none">
+        <div class="card">
+          <div class="card-title">😩 오늘 하기 싫은 이유</div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label>이유 선택</label>
+            <select id="lazy-reason">
+              <option value="너무 피곤함">너무 피곤함 😴</option>
+              <option value="귀찮음">그냥 귀찮음 🛋️</option>
+              <option value="시간 없음">시간이 없음 ⏰</option>
+              <option value="근육통 있음">근육통 있음 😣</option>
+              <option value="기분이 안 좋음">기분이 안 좋음 😞</option>
+              <option value="스트레스가 큼">스트레스가 큼 🤯</option>
+              <option value="비 와서">비 와서 나가기 싫음 🌧️</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="getMotivation()">동기부여 받기 🔥</button>
+        </div>
+        <div class="motive-result" id="motive-result">
+          <div class="motive-card">
+            <span class="motive-emoji" id="m-emoji"></span>
+            <div class="motive-msg" id="m-msg"></div>
+            <div class="motive-quote" id="m-quote"></div>
+            <div class="motive-challenge" id="m-challenge"></div>
+          </div>
+          <button class="btn btn-primary" onclick="getMinRoutine()">그래도 최소한 해볼게 💨</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: 루틴 결과 ── -->
+    <div class="step-page" id="home-step-3">
+      <button class="step-back" onclick="goToStep(2)">← 뒤로</button>
+      <div class="loading" id="home-loading-3" style="display:none">
+        <div class="loading-ring"></div>
+        <div class="loading-text" id="home-loading-text-3">루틴 생성 중...</div>
+      </div>
+      <div class="error" id="home-error-3"></div>
+
+      <!-- Workout Done Screen -->
+      <div id="workout-done">
+        <div class="done-hero">
+          <span class="done-icon">🏆</span>
+          <div class="done-title">운동 완료!</div>
+          <div class="done-sub">오늘도 제로데이를 막았어요<br>꾸준함이 최고의 능력이에요</div>
+        </div>
+        <div class="done-stats">
+          <div class="done-stat-box">
+            <div class="done-stat-num" id="ds-rate">0%</div>
+            <div class="done-stat-label">완료율</div>
+          </div>
+          <div class="done-stat-box">
+            <div class="done-stat-num" id="ds-done">0/0</div>
+            <div class="done-stat-label">완료 운동</div>
+          </div>
+          <div class="done-stat-box">
+            <div class="done-stat-num" id="ds-cal">0</div>
+            <div class="done-stat-label">kcal 소모</div>
+          </div>
+          <div class="done-stat-box">
+            <div class="done-stat-num" id="ds-streak">0</div>
+            <div class="done-stat-label">연속 운동일 🔥</div>
           </div>
         </div>
-        <div class="form-group">
-          <label>스트레스</label>
-          <select id="td-stress">
-            <option value="낮음">낮음 😌</option>
-            <option value="보통" selected>보통 😐</option>
-            <option value="높음">높음 😫</option>
-          </select>
+        <div style="text-align:center;margin-bottom:18px">
+          <span class="done-target-tag" id="ds-target">오늘의 루틴</span>
         </div>
-        <div class="form-group">
-          <label>운동 의욕</label>
-          <select id="td-motivation">
-            <option value="낮음">낮음 😔</option>
-            <option value="보통" selected>보통 😐</option>
-            <option value="높음">높음 🔥</option>
-          </select>
+        <div class="done-actions">
+          <button class="btn btn-primary" style="margin-top:0" onclick="showPage('dash')">📊 기록 확인하기</button>
+          <button class="btn" style="background:#1a2436;color:var(--text);width:100%" onclick="startNewRoutine()">💪 새 루틴 짜기</button>
         </div>
-        <div class="form-group">
-          <label>근육통 여부</label>
-          <div class="toggle-row">
-            <span style="font-size:13px;color:var(--text)">근육통 있음</span>
-            <label class="toggle-switch">
-              <input type="checkbox" id="td-soreness">
-              <span class="toggle-slider"></span>
-            </label>
+      </div>
+
+      <!-- Min routine result -->
+      <div class="result" id="min-result">
+        <div class="min-card" id="min-card-inner">
+          <div class="min-title" id="min-title"></div>
+          <div class="min-tagline" id="min-tagline"></div>
+          <div style="font-size:12px;color:var(--blue);font-weight:700;margin-bottom:10px" id="min-time"></div>
+          <div class="min-steps" id="min-steps"></div>
+          <div class="min-success" id="min-success"></div>
+          <div class="min-upgrade" id="min-upgrade"></div>
+        </div>
+        <div class="btn-group" style="margin-top:8px">
+          <button class="btn btn-primary" onclick="getRoutine()">더 하고 싶어졌어 💪</button>
+          <button class="btn btn-green" onclick="saveMinWorkout()">완료 저장 ✅</button>
+        </div>
+      </div>
+
+      <!-- Routine result -->
+      <div class="result" id="routine-result">
+        <div class="routine-header">
+          <div class="routine-title" id="r-title"></div>
+          <div class="routine-intro" id="r-intro"></div>
+          <div class="routine-meta">
+            <div class="meta-item" id="r-time"></div>
+            <div class="meta-item" id="r-cal"></div>
+            <div class="meta-item" id="r-diff"></div>
+          </div>
+          <div class="condition-note" id="r-condition-note" style="display:none"></div>
+          <div class="workout-timer-row">
+            <span class="workout-elapsed" id="workout-elapsed" onclick="toggleWorkoutTimer()" title="탭하여 일시정지">⏱ 00:00</span>
           </div>
         </div>
-        <div class="form-group">
-          <label>가능한 시간</label>
-          <select id="td-time">
-            <option value="10">10분</option>
-            <option value="20">20분</option>
-            <option value="40">40분</option>
-            <option value="60" selected>60분</option>
-            <option value="90">90분</option>
-          </select>
+        <div class="section-label">🔥 워밍업</div>
+        <div class="simple-list" id="r-warmup"></div>
+        <div class="section-label">💪 메인 운동</div>
+        <div class="exercise-list" id="r-main"></div>
+        <div class="cal-live-bar" id="cal-live-bar" style="display:none">
+          <span class="cal-live-label">🔥 예상 소모 칼로리 <span id="cal-live-tag" style="font-size:10px;opacity:.7">(체중·성별·중량 반영)</span></span>
+          <span class="cal-live-num" id="cal-live-num">0 kcal</span>
         </div>
-        <div class="form-group full">
-          <label>오늘 운동 부위</label>
-          <select id="target">
-            <option value="전신">전신 (풀바디)</option>
-            <option value="가슴+삼두">가슴 + 삼두</option>
-            <option value="등+이두">등 + 이두</option>
-            <option value="어깨">어깨 (숄더데이)</option>
-            <option value="하체">하체 (스쿼트·레그프레스·런지)</option>
-            <option value="코어">코어 (복근·허리)</option>
-            <option value="유산소">유산소 (런닝·자전거)</option>
-          </select>
-        </div>
-      </div>
-      <div class="btn-group" style="margin-top:12px">
-        <button class="btn btn-outline" id="risk-btn" onclick="predictRisk()">🔮 실패 위험도 분석</button>
-        <button class="btn btn-outline" onclick="toggleLazy()">😩 가기 싫어</button>
-      </div>
-    </div>
-
-    <!-- Risk result -->
-    <div id="risk-result" style="display:none"></div>
-
-    <!-- Action buttons -->
-    <div id="action-btns" style="display:none" class="btn-group">
-      <button class="btn btn-primary" id="routine-btn" onclick="getRoutine()">💪 맞춤 루틴 짜줘</button>
-      <button class="btn" style="background:#6366f1;color:#fff;flex:1;margin-top:0" id="min-btn" onclick="getMinRoutine()">😮‍💨 최소 실행 루틴</button>
-    </div>
-    <div class="btn-group" style="margin-top:6px">
-      <button class="btn btn-primary" id="routine-btn-default" onclick="getRoutine()" style="margin-top:0">💪 오늘 루틴 짜줘</button>
-    </div>
-
-    <!-- Lazy mode -->
-    <div id="lazy-section" style="display:none">
-      <div class="card" style="margin-top:10px">
-        <div class="card-title">😩 오늘 하기 싫은 이유</div>
-        <div class="form-group" style="margin-bottom:10px">
-          <label>이유 선택</label>
-          <select id="lazy-reason">
-            <option value="너무 피곤함">너무 피곤함 😴</option>
-            <option value="귀찮음">그냥 귀찮음 🛋️</option>
-            <option value="시간 없음">시간이 없음 ⏰</option>
-            <option value="근육통 있음">근육통 있음 😣</option>
-            <option value="기분이 안 좋음">기분이 안 좋음 😞</option>
-            <option value="스트레스가 큼">스트레스가 큼 🤯</option>
-            <option value="비 와서">비 와서 나가기 싫음 🌧️</option>
-          </select>
-        </div>
-        <button class="btn btn-primary" onclick="getMotivation()">동기부여 받기 🔥</button>
-      </div>
-    </div>
-
-    <div class="error" id="home-error"></div>
-    <div class="loading" id="home-loading">
-      <div class="loading-ring"></div>
-      <div class="loading-text" id="home-loading-text">분석 중...</div>
-    </div>
-
-    <!-- Motivation result -->
-    <div class="motive-result" id="motive-result">
-      <div class="motive-card">
-        <span class="motive-emoji" id="m-emoji"></span>
-        <div class="motive-msg" id="m-msg"></div>
-        <div class="motive-quote" id="m-quote"></div>
-        <div class="motive-challenge" id="m-challenge"></div>
-      </div>
-      <button class="btn btn-primary" onclick="getMinRoutine()">그래도 최소한 해볼게 💨</button>
-    </div>
-
-    <!-- Min routine result -->
-    <div class="result" id="min-result">
-      <div class="min-card" id="min-card-inner">
-        <div class="min-title" id="min-title"></div>
-        <div class="min-tagline" id="min-tagline"></div>
-        <div style="font-size:12px;color:var(--blue);font-weight:700;margin-bottom:10px" id="min-time"></div>
-        <div class="min-steps" id="min-steps"></div>
-        <div class="min-success" id="min-success"></div>
-        <div class="min-upgrade" id="min-upgrade"></div>
-      </div>
-      <div class="btn-group" style="margin-top:8px">
-        <button class="btn btn-primary" onclick="getRoutine()">더 하고 싶어졌어 💪</button>
-        <button class="btn btn-green" onclick="saveMinWorkout()">완료 저장 ✅</button>
-      </div>
-    </div>
-
-    <!-- Routine result -->
-    <div class="result" id="routine-result">
-      <div class="routine-header">
-        <div class="routine-title" id="r-title"></div>
-        <div class="routine-intro" id="r-intro"></div>
-        <div class="routine-meta">
-          <div class="meta-item" id="r-time"></div>
-          <div class="meta-item" id="r-cal"></div>
-          <div class="meta-item" id="r-diff"></div>
-        </div>
-        <div class="condition-note" id="r-condition-note" style="display:none"></div>
-      </div>
-
-      <div class="section-label">🔥 워밍업</div>
-      <div class="simple-list" id="r-warmup"></div>
-
-      <div class="section-label">💪 메인 운동</div>
-      <div class="exercise-list" id="r-main"></div>
-
-      <div class="section-label">🧘 마무리 스트레칭</div>
-      <div class="simple-list" id="r-cooldown"></div>
-
-      <div id="r-advice" class="advice-box"></div>
-      <div id="r-injury" class="injury-box" style="display:none"></div>
-
-      <div class="complete-section">
-        <div class="complete-stats">
-          <div class="stat-box"><div class="stat-num" id="done-count">0</div><div class="stat-label">완료한 운동</div></div>
-          <div class="stat-box"><div class="stat-num" id="total-count">0</div><div class="stat-label">전체 운동</div></div>
-          <div class="stat-box"><div class="stat-num" id="done-pct">0%</div><div class="stat-label">완료율</div></div>
-        </div>
-        <div class="form-group" style="margin:10px 0 12px">
-          <label>오늘 피로도 <span id="fatigue-val" style="color:var(--red);font-size:13px">5</span>/10</label>
-          <div class="slider-row">
-            <span class="slider-hint">😌 1</span>
-            <input type="range" id="fatigue" min="1" max="10" value="5" style="accent-color:var(--red)"
-              oninput="$('fatigue-val').textContent=this.value">
-            <span class="slider-hint">10 😵</span>
+        <div class="section-label">🧘 마무리 스트레칭</div>
+        <div class="simple-list" id="r-cooldown"></div>
+        <div id="r-advice" class="advice-box"></div>
+        <div id="r-injury" class="injury-box" style="display:none"></div>
+        <div class="complete-section" id="complete-section">
+          <div class="all-done-banner" id="all-done-banner">🎉 오늘 운동 전부 완료! 제로데이 방지 성공 💪</div>
+          <div class="complete-stats">
+            <div class="stat-box" id="stat-done"><div class="stat-num" id="done-count">0</div><div class="stat-label">완료한 운동</div></div>
+            <div class="stat-box" id="stat-total"><div class="stat-num" id="total-count">0</div><div class="stat-label">전체 운동</div></div>
+            <div class="stat-box" id="stat-pct"><div class="stat-num" id="done-pct">0%</div><div class="stat-label">완료율</div></div>
           </div>
+          <div class="form-group" style="margin:10px 0 12px">
+            <label>오늘 피로도 <span id="fatigue-val" style="color:var(--red);font-size:13px">5</span>/10</label>
+            <div class="slider-row">
+              <span class="slider-hint">😌 1</span>
+              <input type="range" id="fatigue" min="1" max="10" value="5" style="accent-color:var(--red)"
+                oninput="$('fatigue-val').textContent=this.value">
+              <span class="slider-hint">10 😵</span>
+            </div>
+          </div>
+          <button class="btn btn-green" onclick="completeWorkout()">운동 완료 저장 ✅</button>
         </div>
-        <button class="btn btn-green" onclick="completeWorkout()">운동 완료 저장 ✅</button>
       </div>
     </div>
+
+    <!-- 기본 루틴 버튼 (hidden, for JS compat) -->
+    <div style="display:none"><button id="routine-btn-default" onclick="getRoutine()"></button></div>
   </div>
 </div>
 
 <!-- ===== DASHBOARD ===== -->
 <div class="page" id="page-dash">
-  <div class="page-heading">📊 운동 기록</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div class="page-heading" style="margin-bottom:0">📊 운동 기록</div>
+    <button class="btn btn-outline" style="font-size:12px;padding:7px 12px" onclick="showMissedModal()">😞 못 함 기록</button>
+  </div>
 
   <div class="stats-grid">
     <div class="stats-card"><div class="stats-num" id="d-week">0</div><div class="stats-label">이번 주</div><div class="stats-sub">회</div></div>
@@ -579,8 +815,30 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   </div>
 
   <div class="card">
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="moveCalendar(-1)">‹</button>
+      <span class="cal-month-label" id="cal-month-label"></span>
+      <button class="cal-nav-btn" onclick="moveCalendar(1)">›</button>
+    </div>
+    <div class="cal-weekdays">
+      <div class="cal-weekday">일</div><div class="cal-weekday">월</div><div class="cal-weekday">화</div>
+      <div class="cal-weekday">수</div><div class="cal-weekday">목</div><div class="cal-weekday">금</div><div class="cal-weekday">토</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--green)"></div>운동 완료</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f43f5e30;border:1px solid #f43f5e50"></div>못 함 기록</div>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-title">📅 최근 7일 운동</div>
     <div class="bar-chart" id="week-chart"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔥 세션별 소모 칼로리</div>
+    <div class="bar-chart" id="cal-chart"><div style="font-size:12px;color:var(--muted);padding:4px 0">운동 완료 후 기록이 쌓여요.</div></div>
   </div>
 
   <div class="card">
@@ -613,15 +871,23 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 <div class="page" id="page-analysis">
   <div class="page-heading">📈 AI 분석</div>
 
+  <!-- Routine shortcut -->
+  <div class="card">
+    <div class="card-title">🏋️ 오늘의 루틴</div>
+    <button class="btn btn-primary" onclick="navToRoutine('normal')">💪 맞춤 루틴 짜줘</button>
+    <div class="btn-group">
+      <button class="btn" onclick="navToRoutine('min')" style="background:#6366f1;color:#fff">😮‍💨 최소 실행</button>
+      <button class="btn btn-peak" onclick="navToRoutine('peak')">💥 고점으로 간다</button>
+    </div>
+  </div>
+
   <!-- Failure analysis -->
   <div class="card">
-    <div class="card-title" style="justify-content:space-between">
-      <span>😞 운동 실패 원인 분석</span>
-      <button class="btn-outline btn" style="padding:3px 8px;font-size:11px" onclick="getAnalysis()">분석하기</button>
-    </div>
+    <div class="card-title">😞 운동 실패 원인 분석</div>
     <div id="missed-reason-chart" class="bar-chart" style="margin-bottom:10px">
       <div style="font-size:13px;color:var(--muted);padding:6px 0">기록 탭에서 😞 못 함 기록을 남기면 여기서 패턴을 분석해요.</div>
     </div>
+    <button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="getAnalysis()">🔍 실패 패턴 분석하기</button>
     <div class="loading" id="analysis-loading"><div class="loading-ring"></div><div class="loading-text">실패 패턴 분석 중...</div></div>
     <div id="analysis-result" style="display:none">
       <div class="analysis-stat" id="analysis-summary"></div>
@@ -633,10 +899,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
   <!-- 4주 report -->
   <div class="card">
-    <div class="card-title" style="justify-content:space-between">
-      <span>📈 4주 성장 리포트</span>
-      <button class="btn-outline btn" style="padding:3px 8px;font-size:11px" onclick="getReport()">분석하기</button>
-    </div>
+    <div class="card-title">📈 4주 성장 리포트</div>
+    <button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="getReport()">📊 리포트 생성하기</button>
     <div class="loading" id="report-loading"><div class="loading-ring"></div><div class="loading-text">4주 데이터 분석 중...</div></div>
     <div id="report-result" style="display:none">
       <div class="report-grid">
@@ -655,7 +919,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   <!-- Routine converter -->
   <div class="card">
     <div class="card-title">🔄 상황별 루틴 변환기</div>
-    <div id="no-routine-msg" style="font-size:13px;color:var(--muted);padding:8px 0">
+    <div id="no-routine-msg" style="font-size:13px;color:var(--muted);padding:4px 0 10px">
       먼저 루틴 탭에서 맞춤 루틴을 생성해주세요.
     </div>
     <div id="converter-form" style="display:none">
@@ -683,57 +947,66 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
 <!-- ===== DIET ===== -->
 <div class="page" id="page-diet">
-  <div class="page-heading">🥗 식단 추천</div>
-  <div id="diet-no-profile" class="card" style="text-align:center;padding:24px;display:none">
-    <div style="font-size:13px;color:var(--muted)">프로필을 먼저 설정해주세요</div>
+  <div id="diet-no-profile" class="card" style="text-align:center;padding:28px;display:none">
+    <div style="font-size:36px;margin-bottom:10px">🥗</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px">프로필을 먼저 설정해주세요</div>
+    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('profile')">프로필 설정하기 →</button>
   </div>
   <div id="diet-form">
-    <div class="card">
-      <div class="card-title">📊 칼로리 & 식단 계산</div>
-      <div id="diet-profile-info" style="font-size:12px;color:var(--muted);margin-bottom:12px"></div>
-      <div class="form-grid" style="margin-bottom:10px">
-        <div class="form-group">
-          <label>주당 운동 횟수</label>
-          <select id="diet-days">
-            <option value="1">주 1회</option>
-            <option value="2">주 2회</option>
-            <option value="3" selected>주 3회</option>
-            <option value="4">주 4회</option>
-            <option value="5">주 5회 이상</option>
-          </select>
+    <!-- 식단 step 1: 입력 -->
+    <div class="step-page active" id="diet-step-1">
+      <div class="card">
+        <div class="card-title">🥗 식단 추천받기</div>
+        <div id="diet-profile-info" style="font-size:12px;color:var(--muted);margin-bottom:14px"></div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="form-group">
+            <label>주당 운동 횟수</label>
+            <select id="diet-days">
+              <option value="1">주 1회</option>
+              <option value="2">주 2회</option>
+              <option value="3" selected>주 3회</option>
+              <option value="4">주 4회</option>
+              <option value="5">주 5회 이상</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>선호 식단 스타일</label>
+            <select id="diet-style">
+              <option value="한식">🍚 한식 (밥·국·반찬)</option>
+              <option value="양식">🍝 양식 (파스타·샐러드)</option>
+              <option value="빵/샌드위치">🥪 빵/샌드위치</option>
+              <option value="간편식">🏪 간편식 (편의점)</option>
+              <option value="고단백 위주">💪 고단백 위주</option>
+            </select>
+          </div>
         </div>
-        <div class="form-group">
-          <label>식단 스타일</label>
-          <select id="diet-style">
-            <option value="한식">🍚 한식</option>
-            <option value="양식">🍝 양식</option>
-            <option value="빵/샌드위치">🥪 빵/샌드위치</option>
-            <option value="간편식">🏪 간편식</option>
-            <option value="고단백 위주">💪 고단백 위주</option>
-          </select>
-        </div>
+        <button class="btn btn-primary" onclick="getDiet()" style="margin-top:16px">🥗 식단 추천받기</button>
       </div>
-      <button class="btn btn-primary" onclick="getDiet()">식단 추천받기 🥗</button>
+      <div class="loading" id="diet-loading"><div class="loading-ring"></div><div class="loading-text">칼로리 계산 중...</div></div>
+      <div class="error" id="diet-error"></div>
     </div>
-    <div class="loading" id="diet-loading"><div class="loading-ring"></div><div class="loading-text">식단 계산 중...</div></div>
-    <div class="error" id="diet-error"></div>
-    <div class="diet-result" id="diet-result">
-      <div class="card">
-        <div class="card-title">🔥 하루 칼로리</div>
-        <div class="macro-grid">
-          <div class="macro-card"><div class="macro-num" id="d-calories"></div><div class="macro-unit">kcal</div><div class="macro-label">목표 칼로리</div></div>
-          <div class="macro-card"><div class="macro-num" id="d-protein"></div><div class="macro-unit">g</div><div class="macro-label">단백질</div></div>
-          <div class="macro-card"><div class="macro-num" id="d-carbs"></div><div class="macro-unit">g</div><div class="macro-label">탄수화물</div></div>
-          <div class="macro-card"><div class="macro-num" id="d-fat"></div><div class="macro-unit">g</div><div class="macro-label">지방</div></div>
+
+    <!-- 식단 step 2: 결과 -->
+    <div class="step-page" id="diet-step-2">
+      <button class="step-back" onclick="dietBack()">← 다시 계산</button>
+      <div class="diet-result" id="diet-result">
+        <div class="card">
+          <div class="card-title">🔥 하루 칼로리 & 영양소</div>
+          <div class="macro-grid">
+            <div class="macro-card cal-card"><div class="macro-num" id="d-calories"></div><div class="macro-unit">kcal</div><div class="macro-label">목표 칼로리</div></div>
+            <div class="macro-card pro-card"><div class="macro-num" id="d-protein"></div><div class="macro-unit">g</div><div class="macro-label">단백질</div></div>
+            <div class="macro-card carb-card"><div class="macro-num" id="d-carbs"></div><div class="macro-unit">g</div><div class="macro-label">탄수화물</div></div>
+            <div class="macro-card fat-card"><div class="macro-num" id="d-fat"></div><div class="macro-unit">g</div><div class="macro-label">지방</div></div>
+          </div>
         </div>
-      </div>
-      <div class="card">
-        <div class="card-title">🍽️ 식단 예시</div>
-        <div class="meal-item"><div class="meal-time">🌅 아침</div><div class="meal-text" id="d-breakfast"></div></div>
-        <div class="meal-item"><div class="meal-time">☀️ 점심</div><div class="meal-text" id="d-lunch"></div></div>
-        <div class="meal-item"><div class="meal-time">🌙 저녁</div><div class="meal-text" id="d-dinner"></div></div>
-        <div class="meal-item"><div class="meal-time">🍎 간식</div><div class="meal-text" id="d-snack"></div></div>
-        <div class="advice-box" id="d-tip" style="margin-top:8px;margin-bottom:0"></div>
+        <div class="card">
+          <div class="card-title">🍽️ 오늘의 식단 예시</div>
+          <div class="meal-item"><div class="meal-time">🌅 아침</div><div class="meal-text" id="d-breakfast"></div></div>
+          <div class="meal-item"><div class="meal-time">☀️ 점심</div><div class="meal-text" id="d-lunch"></div></div>
+          <div class="meal-item"><div class="meal-time">🌙 저녁</div><div class="meal-text" id="d-dinner"></div></div>
+          <div class="meal-item"><div class="meal-time">🍎 간식</div><div class="meal-text" id="d-snack"></div></div>
+          <div class="advice-box" id="d-tip" style="margin-top:8px;margin-bottom:0"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -842,8 +1115,10 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
     <div style="font-size:11px;color:var(--muted);margin-top:10px">⚠️ 통증이 심해지면 즉시 중단하고 전문가와 상담하세요.</div>
   </div>
 
-  <button class="btn btn-primary" onclick="saveProfile()">프로필 저장 ✓</button>
-  <div id="profile-saved" style="display:none;text-align:center;color:var(--green);font-size:13px;margin-top:8px;font-weight:700">✅ 저장됐어요!</div>
+  <div style="position:sticky;bottom:16px;z-index:50;padding-top:8px">
+    <button class="btn btn-primary" onclick="saveProfile()" style="box-shadow:0 8px 24px #00000060">프로필 저장 ✓</button>
+    <div id="profile-saved" style="display:none;text-align:center;color:var(--green);font-size:13px;margin-top:8px;font-weight:700">✅ 저장됐어요!</div>
+  </div>
 </div>
 
 </div><!-- /wrap -->
@@ -904,7 +1179,7 @@ function hideErr(id){$(id).classList.remove('show')}
 
 // Capacitor 환경이면 Render 서버로, 아니면 상대경로
 const API = (typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform())
-  ? 'https://ai-fitness-trainer-28oe.onrender.com'
+  ? 'https://ai-fitness-trainer-alpha.vercel.app'
   : '';
 
 // ── Sound & Vibration ─────────────────────────────────────────────────────────
@@ -956,6 +1231,23 @@ function showPage(name){
   if(name==='dash') renderDash();
   if(name==='diet') initDiet();
   if(name==='analysis') renderAnalysisCharts();
+}
+
+function navToRoutine(mode){
+  showPage('home');
+  const riskDone = $('risk-result').innerHTML.trim() !== '';
+  if(!riskDone){
+    goToStep(1);
+    return;
+  }
+  goToStep(2);
+  $('risk-result').style.display='block';
+  $('action-btns').style.display='flex';
+  setTimeout(()=>{
+    if(mode==='peak') goPeak();
+    else if(mode==='min') getMinRoutine();
+    else getRoutine();
+  }, 60);
 }
 
 // ── Profile ──────────────────────────────────────────────────────────────────
@@ -1016,17 +1308,20 @@ function initHome(){
     const injText=p.injury&&p.injury.length?` · 부상: ${p.injury.join(', ')}`:'';
     const nameText=p.name?`<strong>${p.name}</strong> · `:'';
     $('pb-info').innerHTML=`${nameText}<strong>${p.gender}</strong> · <strong>${p.age}세</strong> · ${p.weight}kg / ${p.height}cm · ${p.goal} · ${p.level}${injText}`;
+    goToStep(1);
   }
 }
 
 // ── Risk Prediction ──────────────────────────────────────────────────────────
 async function predictRisk(){
   const p=getProfile();
-  if(!p){showErr('home-error','프로필을 먼저 설정해주세요.');return}
-  hideErr('home-error');
+  if(!p){return}
+  lazyMode=false;
   $('risk-result').style.display='none';
   $('action-btns').style.display='none';
-  $('routine-btn-default').parentElement.style.display='none';
+  $('lazy-section').style.display='none';
+  hideErr('home-error');
+  goToStep(2);
   $('home-loading').classList.add('show');
   $('home-loading-text').textContent='오늘 컨디션 분석 중...';
   $('risk-btn').disabled=true;
@@ -1073,9 +1368,60 @@ function renderRisk(d){
     </div>`;
   $('risk-result').style.display='block';
   $('action-btns').style.display='flex';
-  $('routine-btn-default').parentElement.style.display='none';
   if(score>=60){playWarning();vibrate([120,60,120])}
   else{playTick();vibrate([40])}
+}
+
+// ── Workout Timer ────────────────────────────────────────────────────────────
+let _workoutTimerInterval=null;
+let _workoutTimerStart=null;
+let _workoutTimerPaused=false;
+let _workoutTimerElapsed=0; // accumulated seconds before pause
+
+function startWorkoutTimer(){
+  _workoutTimerStart=Date.now();
+  _workoutTimerPaused=false;
+  _workoutTimerElapsed=0;
+  clearInterval(_workoutTimerInterval);
+  _workoutTimerInterval=setInterval(_tickTimer,1000);
+}
+
+function _tickTimer(){
+  const s=_workoutTimerElapsed+Math.floor((Date.now()-_workoutTimerStart)/1000);
+  const m=Math.floor(s/60).toString().padStart(2,'0');
+  const sec=(s%60).toString().padStart(2,'0');
+  const el=$('workout-elapsed');
+  if(el) el.textContent=`⏱ ${m}:${sec}`;
+}
+
+function toggleWorkoutTimer(){
+  const el=$('workout-elapsed');
+  if(!el) return;
+  if(_workoutTimerPaused){
+    // 재개
+    _workoutTimerStart=Date.now();
+    _workoutTimerPaused=false;
+    _workoutTimerInterval=setInterval(_tickTimer,1000);
+    el.classList.remove('paused');
+    playTick(); vibrate([15]);
+  } else {
+    // 일시정지
+    _workoutTimerElapsed+=Math.floor((Date.now()-_workoutTimerStart)/1000);
+    clearInterval(_workoutTimerInterval);
+    _workoutTimerPaused=true;
+    const s=_workoutTimerElapsed;
+    const m=Math.floor(s/60).toString().padStart(2,'0');
+    const sec=(s%60).toString().padStart(2,'0');
+    el.textContent=`⏸ ${m}:${sec}`;
+    el.classList.add('paused');
+    playTick(); vibrate([15]);
+  }
+}
+
+function stopWorkoutTimer(){
+  clearInterval(_workoutTimerInterval);
+  const total=_workoutTimerElapsed+(_workoutTimerPaused?0:Math.floor((Date.now()-(_workoutTimerStart||Date.now()))/1000));
+  return Math.round(total/60);
 }
 
 // ── Rest Timer ───────────────────────────────────────────────────────────────
@@ -1131,27 +1477,117 @@ function onExCheck(cb){
   playCheck();
   vibrate([25]);
   if(cb.checked) startRestTimer(cb.dataset.name||'운동', cb.dataset.rest||'60초');
-  else if($('r-main').querySelectorAll('input:checked').length===0) stopRestTimer();
+  else stopRestTimer();
+}
+
+// ── Step Navigation ──────────────────────────────────────────────────────────
+function goToStep(n){
+  [1,2,3].forEach(i=>{
+    $('home-step-'+i).classList.toggle('active',i===n);
+    const dot=$('sdot-'+i);
+    dot.className='sdot '+(i<n?'done':i===n?'active':'pending');
+  });
+  [1,2].forEach(i=>{
+    const line=$('sline-'+i);
+    if(line) line.className='sline '+(i<n?'done':'pending');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Sets / Rest Adjuster ─────────────────────────────────────────────────────
+function adjustSets(idx, delta){
+  const el=document.getElementById('sets-'+idx);
+  if(!el) return;
+  const cur=parseInt(el.textContent)||3;
+  const next=Math.max(1,Math.min(10,cur+delta));
+  el.textContent=next;
+  playTick(); vibrate([15]);
+  updateCalories();
+}
+
+function fmtSec(s){
+  if(s<60) return s+'초';
+  const m=Math.floor(s/60), r=s%60;
+  return r?`${m}분 ${r}초`:`${m}분`;
+}
+
+function adjustRest(idx, delta){
+  const el=document.getElementById('rest-sec-'+idx);
+  if(!el) return;
+  const cur=parseInt(el.dataset.sec)||60;
+  const next=Math.max(15,Math.min(300,cur+delta));
+  el.dataset.sec=next;
+  el.textContent=fmtSec(next);
+  const cb=document.querySelector(`input[data-idx="${idx}"]`);
+  if(cb) cb.dataset.rest=next+'초';
+  playTick(); vibrate([15]);
+}
+
+function updateCalories(){
+  const p=getProfile();
+  const bodyKg=p?.weight||70;
+  const gFactor=p?.gender==='여성'?0.85:1.0;
+
+  const items=$('r-main').querySelectorAll('.exercise-item');
+  let total=0;
+  items.forEach((item,i)=>{
+    const sets=parseInt(document.getElementById('sets-'+i)?.textContent)||3;
+    const reps=parseInt(item.dataset.reps)||10;
+    const lifted=parseFloat(document.getElementById('weight-'+i)?.value)||0;
+    const restSec=parseInt(document.getElementById('rest-sec-'+i)?.dataset.sec)||60;
+
+    // MET by relative intensity (lifted / bodyweight)
+    const ratio=lifted/bodyKg;
+    const workMET=ratio>0.6?6.5:ratio>0.3?5.5:lifted>0?4.0:4.5;
+
+    const workH=(sets*reps*3)/3600;   // ~3sec/rep
+    const restH=(sets*restSec)/3600;
+
+    total+=(workMET*workH+1.5*restH)*bodyKg*gFactor;
+  });
+
+  const bar=$('cal-live-bar');
+  const num=$('cal-live-num');
+  if(bar&&num){
+    num.textContent=Math.round(total)+' kcal';
+    bar.style.display='flex';
+    const tag=$('cal-live-tag');
+    if(tag) tag.textContent=p?'(체중·성별·중량 반영)':'(프로필 설정 시 더 정확해져요)';
+  }
+}
+
+// ── Peak Mode ────────────────────────────────────────────────────────────────
+let peakMode=false;
+function goPeak(){
+  peakMode=true;
+  lazyMode=false;
+  getRoutine();
 }
 
 // ── Lazy Mode ────────────────────────────────────────────────────────────────
 let lazyMode=false;
-function toggleLazy(){
-  lazyMode=!lazyMode;
-  $('lazy-section').style.display=lazyMode?'block':'none';
-  document.querySelectorAll('.nav-btn')[0];
+function goLazy(){
+  lazyMode=true;
+  $('risk-result').style.display='none';
+  $('action-btns').style.display='none';
+  $('lazy-section').style.display='block';
+  $('motive-result').classList.remove('show');
+  goToStep(2);
 }
+function toggleLazy(){ goLazy(); }
 
 // ── Get Routine ──────────────────────────────────────────────────────────────
 async function getRoutine(){
   const p=getProfile();
-  if(!p){showErr('home-error','프로필을 먼저 설정해주세요.');return}
-  hideErr('home-error');
+  if(!p){return}
   $('motive-result').classList.remove('show');
   $('routine-result').classList.remove('show');
   $('min-result').classList.remove('show');
-  $('home-loading').classList.add('show');
-  $('home-loading-text').textContent='맞춤 루틴 생성 중...';
+  $('workout-done').style.display='none';
+  hideErr('home-error-3');
+  goToStep(3);
+  $('home-loading-3').style.display='block';
+  $('home-loading-text-3').textContent='맞춤 루틴 생성 중...';
   $('routine-btn').disabled=true;
   if($('routine-btn-default')) $('routine-btn-default').disabled=true;
 
@@ -1166,24 +1602,29 @@ async function getRoutine(){
         equipment:p.equipment||[],
         injury:p.injury||[],
         duration:parseInt($('td-time').value)||60,
-        sleep_hours:parseFloat($('td-sleep').value)||7,
-        fatigue:parseInt($('td-fatigue').value)||5,
-        stress:$('td-stress').value,
-        soreness:$('td-soreness').checked,
-        motivation:$('td-motivation').value
+        sleep_hours:peakMode?9:parseFloat($('td-sleep').value)||7,
+        fatigue:peakMode?1:parseInt($('td-fatigue').value)||5,
+        stress:peakMode?'낮음':$('td-stress').value,
+        soreness:peakMode?false:$('td-soreness').checked,
+        motivation:peakMode?'높음':$('td-motivation').value,
+        condition:peakMode?10:undefined
       })
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
     window._currentRoutine=d;
     window._currentTarget=$('target').value;
+    if(peakMode){
+      d.condition_note='💥 고점 모드 — 최고 강도로 구성된 루틴입니다';
+      peakMode=false;
+    }
     renderRoutine(d);
     // Update converter
     $('no-routine-msg').style.display='none';
     $('converter-form').style.display='block';
-  }catch(e){showErr('home-error',e.message)}
+  }catch(e){showErr('home-error-3',e.message)}
   finally{
-    $('home-loading').classList.remove('show');
+    $('home-loading-3').style.display='none';
     $('routine-btn').disabled=false;
     if($('routine-btn-default')) $('routine-btn-default').disabled=false;
   }
@@ -1206,8 +1647,11 @@ function renderRoutine(d){
       <div class="simple-dur">${w.duration}</div>
     </div>`).join('');
 
-  $('r-main').innerHTML=(d.main||[]).map((ex,i)=>`
-    <div class="exercise-item" id="ex-${i}">
+  $('r-main').innerHTML=(d.main||[]).map((ex,i)=>{
+    const restSec=parseRestSec(ex.rest||'60초');
+    const repsNum=parseInt((ex.reps||'10').match(/\d+/)?.[0])||10;
+    return `
+    <div class="exercise-item" id="ex-${i}" data-reps="${repsNum}">
       <div class="ex-header">
         <div class="ex-name">${ex.name}</div>
         <div class="ex-check">
@@ -1215,20 +1659,34 @@ function renderRoutine(d){
           <input type="checkbox" data-idx="${i}" data-rest="${ex.rest||'60초'}" data-name="${ex.name}" onchange="onExCheck(this)" title="완료">
         </div>
       </div>
-      <div class="ex-detail">
-        <span class="ex-badge">🔁 ${ex.sets}세트 × ${ex.reps}</span>
-        <span class="ex-badge">⏸ ${ex.rest}</span>
-        ${ex.purpose?`<span class="ex-purpose">✦ ${ex.purpose}</span>`:''}
+      <div class="ex-sets-row">
+        <div class="sets-stepper">
+          <button class="sets-btn" onclick="adjustSets(${i},-1)">−</button>
+          <span class="sets-num" id="sets-${i}">${ex.sets}</span>
+          <button class="sets-btn" onclick="adjustSets(${i},+1)">+</button>
+        </div>
+        <span class="sets-label">세트</span>
+        <span class="ex-reps-badge">× ${ex.reps}</span>
       </div>
+      <div class="ex-rest-row">
+        <div class="sets-stepper">
+          <button class="sets-btn" onclick="adjustRest(${i},-15)">−</button>
+          <span class="rest-sec-disp" id="rest-sec-${i}" data-sec="${restSec}">${ex.rest||'60초'}</span>
+          <button class="sets-btn" onclick="adjustRest(${i},+15)">+</button>
+        </div>
+        <span class="sets-label">휴식</span>
+      </div>
+      ${ex.purpose?`<div class="ex-detail"><span class="ex-purpose">✦ ${ex.purpose}</span></div>`:''}
       <div class="ex-tip">💡 ${ex.tip}</div>
       ${ex.caution?`<div class="ex-caution">⚠️ ${ex.caution}</div>`:''}
       ${ex.alternative?`<div class="ex-alt">대체: ${ex.alternative}</div>`:''}
       <div class="ex-weight-row">
         <span class="ex-weight-label">💪 사용 중량</span>
-        <input type="number" class="weight-input" placeholder="0" min="0" max="999" step="0.5">
+        <input type="number" class="weight-input" id="weight-${i}" placeholder="0" min="0" max="999" step="0.5" oninput="updateCalories()">
         <span style="font-size:11px;color:var(--muted)">kg</span>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   $('r-cooldown').innerHTML=(d.cooldown||[]).map(c=>`
     <div class="simple-item">
@@ -1241,6 +1699,8 @@ function renderRoutine(d){
   else{$('r-injury').style.display='none'}
 
   updateProgress();
+  updateCalories();
+  startWorkoutTimer();
   $('routine-result').classList.add('show');
 }
 
@@ -1253,7 +1713,17 @@ function updateProgress(){
   });
   $('done-count').textContent=done;
   $('total-count').textContent=cbs.length;
-  $('done-pct').textContent=cbs.length?Math.round(done/cbs.length*100)+'%':'0%';
+  const pct=cbs.length?Math.round(done/cbs.length*100):0;
+  $('done-pct').textContent=pct+'%';
+
+  const allDone=cbs.length>0&&done===cbs.length;
+  $('complete-section')?.classList.toggle('all-done',allDone);
+  $('all-done-banner')?.classList.toggle('show',allDone);
+  ['stat-done','stat-total','stat-pct'].forEach(id=>{
+    document.getElementById(id)?.classList.toggle('all-done',allDone);
+  });
+  document.getElementById('done-pct')?.classList.toggle('all-done',allDone);
+  if(allDone&&done>0) vibrate([60,30,60,30,200]);
 }
 
 function completeWorkout(){
@@ -1274,6 +1744,9 @@ function completeWorkout(){
     done:cbs[i]?.checked||false
   }));
 
+  const durationMin=stopWorkoutTimer();
+  const calNum=parseInt(($('cal-live-num')?.textContent||'0').replace(/[^0-9]/g,''))||0;
+
   const log={
     date:new Date().toLocaleDateString('ko-KR'),
     target:window._currentTarget||$('target').value,
@@ -1281,26 +1754,61 @@ function completeWorkout(){
     exercise_detail,
     done,total,rate,fatigue,
     condition_sleep:sleep,condition_fatigue:fatiguePre,
+    kcal:calNum, duration_min:durationMin,
     skipped:false,ts:Date.now()
   };
   const logs=getLogs();
   logs.unshift(log);
   if(logs.length>100) logs.pop();
   localStorage.setItem('fitness_logs',JSON.stringify(logs));
+
+  // Streak from updated logs
+  let streak=0;
+  const today2=new Date();today2.setHours(0,0,0,0);
+  for(let i=0;i<30;i++){
+    const dd=new Date(today2);dd.setDate(today2.getDate()-i);
+    const has=logs.some(l=>{const ld=new Date(l.ts);ld.setHours(0,0,0,0);return ld.getTime()===dd.getTime()});
+    if(has) streak++;
+    else if(i>0) break;
+  }
+
+  // Calorie from live bar
+  const calText=$('cal-live-num')?.textContent||'0 kcal';
+  const cal=calText.replace(' kcal','');
+
+  // Populate done screen
+  $('ds-rate').textContent=rate+'%';
+  $('ds-done').textContent=done+'/'+total;
+  $('ds-cal').textContent=cal;
+  $('ds-streak').textContent=streak;
+  $('ds-target').textContent=(window._currentTarget||'오늘의 루틴')+' 완료 ✓';
+
+  // Switch view
+  $('routine-result').classList.remove('show');
+  $('workout-done').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
   playComplete();
   vibrate([80,40,80,40,300]);
-  alert(`운동 완료! 완료율 ${rate}% · 피로도 ${fatigue}/10 저장됐어요 💪`);
+}
+
+function startNewRoutine(){
+  $('workout-done').style.display='none';
+  $('routine-result').classList.remove('show');
+  peakMode=false; lazyMode=false;
+  goToStep(1);
 }
 
 // ── Min Routine ──────────────────────────────────────────────────────────────
 async function getMinRoutine(){
   const p=getProfile();
-  if(!p){showErr('home-error','프로필을 먼저 설정해주세요.');return}
-  hideErr('home-error');
+  if(!p){return}
   $('routine-result').classList.remove('show');
   $('min-result').classList.remove('show');
-  $('home-loading').classList.add('show');
-  $('home-loading-text').textContent='최소 실행 루틴 생성 중...';
+  $('workout-done').style.display='none';
+  hideErr('home-error-3');
+  goToStep(3);
+  $('home-loading-3').style.display='block';
+  $('home-loading-text-3').textContent='최소 실행 루틴 생성 중...';
 
   const reason=$('lazy-reason')?.value||'귀찮음';
   try{
@@ -1320,8 +1828,8 @@ async function getMinRoutine(){
     if(!res.ok) throw new Error(d.detail||'오류');
     window._currentMinRoutine=d;
     renderMinRoutine(d);
-  }catch(e){showErr('home-error',e.message)}
-  finally{$('home-loading').classList.remove('show')}
+  }catch(e){showErr('home-error-3',e.message)}
+  finally{$('home-loading-3').style.display='none'}
 }
 
 function renderMinRoutine(d){
@@ -1344,22 +1852,39 @@ function renderMinRoutine(d){
 function saveMinWorkout(){
   const d=window._currentMinRoutine;
   if(!d) return;
+  const total=(d.steps||[]).length;
   const log={
     date:new Date().toLocaleDateString('ko-KR'),
     target:window._currentTarget||$('target').value,
     exercises:(d.steps||[]).map(s=>s.name),
     exercise_detail:[],
-    done:(d.steps||[]).length,total:(d.steps||[]).length,
-    rate:100,fatigue:parseInt($('td-fatigue').value)||5,
-    is_min:true,skipped:false,ts:Date.now()
+    done:total,total,rate:100,
+    fatigue:parseInt($('td-fatigue').value)||5,
+    kcal:0,is_min:true,skipped:false,ts:Date.now()
   };
   const logs=getLogs();
   logs.unshift(log);
   if(logs.length>100) logs.pop();
   localStorage.setItem('fitness_logs',JSON.stringify(logs));
+
+  let streak=0;
+  const t=new Date();t.setHours(0,0,0,0);
+  for(let i=0;i<30;i++){
+    const dd=new Date(t);dd.setDate(t.getDate()-i);
+    const has=logs.some(l=>{const ld=new Date(l.ts);ld.setHours(0,0,0,0);return ld.getTime()===dd.getTime()});
+    if(has) streak++; else if(i>0) break;
+  }
+
+  $('ds-rate').textContent='100%';
+  $('ds-done').textContent=total+'/'+total;
+  $('ds-cal').textContent='최소실행';
+  $('ds-streak').textContent=streak;
+  $('ds-target').textContent='최소 실행 완료 ✓';
+  $('min-result').classList.remove('show');
+  $('workout-done').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
   playComplete();
   vibrate([60,40,60,40,200]);
-  alert('최소 실행 루틴 완료! 오늘 0일을 막았어요 🔥');
 }
 
 // ── Motivation ───────────────────────────────────────────────────────────────
@@ -1385,7 +1910,61 @@ async function getMotivation(){
 }
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
+// ── Calendar ─────────────────────────────────────────────────────────────────
+let _calYear=new Date().getFullYear();
+let _calMonth=new Date().getMonth();
+
+function moveCalendar(delta){
+  _calMonth+=delta;
+  if(_calMonth>11){_calMonth=0;_calYear++}
+  if(_calMonth<0){_calMonth=11;_calYear--}
+  renderCalendar();
+}
+
+function renderCalendar(){
+  const logs=getLogs();
+  const missed=getMissedLogs();
+  const now=new Date();
+
+  // Build sets of date strings
+  const doneDates=new Set(logs.filter(l=>!l.skipped).map(l=>{
+    const d=new Date(l.ts);return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  }));
+  const missedDates=new Set(missed.map(l=>{
+    const d=new Date(l.ts);return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  }));
+
+  const y=_calYear,m=_calMonth;
+  $('cal-month-label').textContent=`${y}년 ${m+1}월`;
+
+  const firstDay=new Date(y,m,1).getDay(); // 0=Sun
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const daysInPrev=new Date(y,m,0).getDate();
+
+  let html='';
+  // Previous month padding
+  for(let i=firstDay-1;i>=0;i--){
+    html+=`<div class="cal-day other-month">${daysInPrev-i}</div>`;
+  }
+  // Current month days
+  for(let d=1;d<=daysInMonth;d++){
+    const key=`${y}-${m}-${d}`;
+    const isToday=d===now.getDate()&&m===now.getMonth()&&y===now.getFullYear();
+    const isDone=doneDates.has(key);
+    const isMissed=!isDone&&missedDates.has(key);
+    const cls=['cal-day',isDone?'done':'',isMissed?'missed':'',isToday?'today':''].filter(Boolean).join(' ');
+    html+=`<div class="${cls}">${d}</div>`;
+  }
+  // Next month padding
+  const totalCells=Math.ceil((firstDay+daysInMonth)/7)*7;
+  for(let d=1;d<=totalCells-firstDay-daysInMonth;d++){
+    html+=`<div class="cal-day other-month">${d}</div>`;
+  }
+  $('cal-grid').innerHTML=html;
+}
+
 function renderDash(){
+  renderCalendar();
   const logs=getLogs();
   const missed=getMissedLogs();
   const now=new Date();
@@ -1476,6 +2055,10 @@ function renderDash(){
     const condText=l.condition_fatigue!=null?`<span class="log-stat-tag">피로 ${l.condition_fatigue}/10</span>`:'';
     const fatText=l.fatigue!=null?`<span class="log-stat-tag">운동 후 피로 ${l.fatigue}/10</span>`:'';
     const minTag=l.is_min?`<span style="font-size:10px;color:var(--blue);background:#6366f115;padding:2px 6px;border-radius:4px">최소루틴</span>`:'';
+    const calTag=l.kcal?`<span class="log-stat-tag">🔥 ${l.kcal}kcal</span>`:'';
+    const durTag=l.duration_min?`<span class="log-stat-tag">⏱ ${l.duration_min}분</span>`:'';
+    const weightItems=(l.exercise_detail||[]).filter(e=>e.weight>0).map(e=>`${e.name} ${e.weight}kg`);
+    const weightRow=weightItems.length?`<div class="log-weights">🏋️ ${weightItems.join(' · ')}</div>`:'';
     return `
       <div class="log-item">
         <div class="log-header">
@@ -1483,12 +2066,28 @@ function renderDash(){
           <div style="display:flex;gap:5px;align-items:center"><div class="log-target">${l.target}</div>${minTag}</div>
         </div>
         <div class="log-exercises">${(l.exercises||[]).join(' · ')}</div>
+        ${weightRow}
         <div class="log-meta">
           <div class="log-complete">✅ ${l.done}/${l.total} 완료 (${l.rate}%)</div>
-          ${condText}${fatText}
+          ${calTag}${durTag}${condText}${fatText}
         </div>
       </div>`;
   }).join('');
+
+  // 칼로리 차트 (최근 7회)
+  const calLogs=logs.filter(l=>l.kcal>0).slice(0,7).reverse();
+  if(calLogs.length){
+    const maxCal=Math.max(...calLogs.map(l=>l.kcal),1);
+    $('cal-chart').innerHTML=calLogs.map(l=>{
+      const pct=Math.round(l.kcal/maxCal*100);
+      const label=l.date.replace(/\d{4}\. /,'').replace(' .','');
+      return `<div class="cal-bar-row">
+        <div class="cal-bar-label">${label}</div>
+        <div class="cal-bar-track"><div class="cal-bar-fill" style="width:${pct}%"></div></div>
+        <div class="cal-bar-val">${l.kcal}kcal</div>
+      </div>`;
+    }).join('');
+  }
 }
 
 function calcBalance(logs){
@@ -1666,6 +2265,11 @@ function initDiet(){
   $('diet-profile-info').textContent=`${p.gender} · ${p.age}세 · ${p.weight}kg · ${p.height}cm · 목표: ${p.goal}`;
 }
 
+function dietBack(){
+  $('diet-step-1').classList.add('active');
+  $('diet-step-2').classList.remove('active');
+}
+
 async function getDiet(){
   const p=getProfile();
   if(!p) return;
@@ -1689,8 +2293,23 @@ async function getDiet(){
     $('d-snack').textContent=d.meals.snack;
     $('d-tip').textContent=d.tip;
     $('diet-result').classList.add('show');
-  }catch(e){showErr('diet-error',e.message)}
-  finally{$('diet-loading').classList.remove('show')}
+    $('diet-loading').classList.remove('show');
+    $('diet-step-1').classList.remove('active');
+    $('diet-step-2').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(e){showErr('diet-error',e.message);$('diet-loading').classList.remove('show')}
+}
+
+// ── Splash ───────────────────────────────────────────────────────────────────
+function enterApp(){
+  const splash=$('splash');
+  splash.classList.add('hide');
+  setTimeout(()=>splash.style.display='none',520);
+  sessionStorage.setItem('nzd_entered','1');
+}
+if(sessionStorage.getItem('nzd_entered')){
+  const splash=$('splash');
+  if(splash) splash.style.display='none';
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────

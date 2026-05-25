@@ -10,14 +10,7 @@ from app.config import settings
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost",
-        "https://localhost",
-        "capacitor://localhost",
-        "ionic://localhost",
-        "http://localhost:3000",
-        "http://localhost:8100",
-    ],
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -116,6 +109,50 @@ class CaloriesRequest(BaseModel):
 @app.get("/")
 async def root():
     return FileResponse(BASE / "static/index.html")
+
+
+@app.get("/privacy")
+async def privacy():
+    html = """<!DOCTYPE html>
+<html lang="ko">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>개인정보 처리방침 — No-Zero-Day</title>
+<style>
+  body{font-family:-apple-system,sans-serif;max-width:720px;margin:0 auto;padding:40px 24px;background:#06080f;color:#cbd5e1;line-height:1.8}
+  h1{color:#f97316;font-size:24px;margin-bottom:8px}
+  h2{color:#f8fafc;font-size:17px;margin-top:32px;margin-bottom:8px}
+  p,li{font-size:15px;color:#94a3b8}
+  a{color:#f97316}
+  .badge{font-size:12px;color:#64748b;margin-top:48px}
+</style>
+</head>
+<body>
+<h1>개인정보 처리방침</h1>
+<p>No-Zero-Day (이하 "앱")는 사용자의 개인정보를 소중히 여기며 다음과 같이 처리합니다.</p>
+
+<h2>1. 수집하는 정보</h2>
+<p>앱은 서버에 개인정보를 저장하지 않습니다. 프로필(이름·나이·성별·체중·신장·운동 목표 등) 및 운동 기록은 사용자 기기의 <strong>로컬 저장소(localStorage)</strong>에만 저장됩니다.</p>
+
+<h2>2. AI 서비스 이용</h2>
+<p>맞춤 루틴 생성 시 컨디션·목표·장비 등 <strong>개인 식별 정보가 포함되지 않는</strong> 운동 관련 데이터가 OpenAI API로 전송될 수 있습니다. OpenAI의 개인정보 처리방침은 <a href="https://openai.com/privacy" target="_blank">openai.com/privacy</a>에서 확인하실 수 있습니다.</p>
+
+<h2>3. 제3자 제공</h2>
+<p>앱은 사용자의 데이터를 제3자에게 판매하거나 제공하지 않습니다.</p>
+
+<h2>4. 데이터 삭제</h2>
+<p>앱 삭제 시 기기에 저장된 모든 데이터가 함께 삭제됩니다. 프로필 탭에서 데이터를 직접 초기화할 수도 있습니다.</p>
+
+<h2>5. 저작권</h2>
+<p>© 2026 이진혁 (sauuri). No-Zero-Day 앱 및 관련 콘텐츠의 저작권은 개발자에게 있습니다. 무단 복제 및 재배포를 금합니다.</p>
+
+<h2>6. 문의</h2>
+<p>개인정보 처리방침에 관한 문의: <a href="mailto:dlwjdghks9729@gmail.com">dlwjdghks9729@gmail.com</a></p>
+
+<p class="badge">최종 업데이트: 2026년 5월 25일</p>
+</body>
+</html>"""
+    from fastapi.responses import HTMLResponse
+    return HTMLResponse(html)
 
 
 @app.post("/routine")
