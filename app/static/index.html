@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>No-Zero-Day | AI 운동 실패 방지 코치</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -128,7 +128,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .loading.show{display:block}
 .loading-ring{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);
   border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 8px}
-.loading-text{font-size:12px;color:var(--muted)}
+.loading-text{font-size:12px;color:var(--muted);transition:opacity .2s ease}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .error{display:none;background:#f43f5e10;border:1px solid #f43f5e30;border-radius:10px;
@@ -755,7 +755,9 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           </div>
           <div class="condition-note" id="r-condition-note" style="display:none"></div>
           <div class="workout-timer-row">
-            <span class="workout-elapsed" id="workout-elapsed" onclick="toggleWorkoutTimer()" title="탭하여 일시정지">⏱ 00:00</span>
+            <span style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.5px">총 운동 시간</span>
+            <span class="workout-elapsed" id="workout-elapsed" onclick="toggleWorkoutTimer()" title="탭하여 일시정지/재개">⏱ 00:00</span>
+            <span style="font-size:10px;color:var(--muted)">(탭하면 일시정지)</span>
           </div>
         </div>
         <div class="section-label">🔥 워밍업</div>
@@ -1274,7 +1276,10 @@ function saveProfile(){
   };
   localStorage.setItem('fitness_profile',JSON.stringify(profile));
   $('profile-saved').style.display='block';
-  setTimeout(()=>{$('profile-saved').style.display='none'},2000);
+  setTimeout(()=>{
+    $('profile-saved').style.display='none';
+    showPage('home');
+  },900);
   initHome();
 }
 
@@ -1323,7 +1328,7 @@ async function predictRisk(){
   hideErr('home-error');
   goToStep(2);
   $('home-loading').classList.add('show');
-  $('home-loading-text').textContent='오늘 컨디션 분석 중...';
+  startLoadingMessages('home-loading-text',['오늘 컨디션 분석 중...','수면 · 피로도 파악 중...','실패 위험도 계산 중...','거의 다 됐어요...']);
   $('risk-btn').disabled=true;
 
   try{
@@ -1343,7 +1348,7 @@ async function predictRisk(){
     const d=await res.json();
     renderRisk(d);
   }catch(e){showErr('home-error',e.message)}
-  finally{$('home-loading').classList.remove('show');$('risk-btn').disabled=false}
+  finally{stopLoadingMessages();$('home-loading').classList.remove('show');$('risk-btn').disabled=false}
 }
 
 function renderRisk(d){
@@ -1587,7 +1592,7 @@ async function getRoutine(){
   hideErr('home-error-3');
   goToStep(3);
   $('home-loading-3').style.display='block';
-  $('home-loading-text-3').textContent='맞춤 루틴 생성 중...';
+  startLoadingMessages('home-loading-text-3',['맞춤 루틴 구성 중...','운동 순서 최적화 중...','컨디션 반영 중...','난이도 조정 중...','마무리 다듬는 중...']);
   $('routine-btn').disabled=true;
   if($('routine-btn-default')) $('routine-btn-default').disabled=true;
 
@@ -1624,6 +1629,7 @@ async function getRoutine(){
     $('converter-form').style.display='block';
   }catch(e){showErr('home-error-3',e.message)}
   finally{
+    stopLoadingMessages();
     $('home-loading-3').style.display='none';
     $('routine-btn').disabled=false;
     if($('routine-btn-default')) $('routine-btn-default').disabled=false;
@@ -1642,9 +1648,13 @@ function renderRoutine(d){
   } else {$('r-condition-note').style.display='none'}
 
   $('r-warmup').innerHTML=(d.warmup||[]).map(w=>`
-    <div class="simple-item">
+    <div class="simple-item" id="warmup-${w.name.replace(/\s/g,'')}">
       <div><div class="simple-name">${w.name}</div><div class="simple-desc">${w.desc||''}</div></div>
-      <div class="simple-dur">${w.duration}</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="simple-dur">${w.duration}</div>
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--green);cursor:pointer;flex-shrink:0"
+          onchange="this.closest('.simple-item').style.opacity=this.checked?'0.5':'1';this.closest('.simple-item').style.borderColor=this.checked?'#10b98140':'';playCheck();vibrate([25])">
+      </div>
     </div>`).join('');
 
   $('r-main').innerHTML=(d.main||[]).map((ex,i)=>{
@@ -1691,7 +1701,11 @@ function renderRoutine(d){
   $('r-cooldown').innerHTML=(d.cooldown||[]).map(c=>`
     <div class="simple-item">
       <div><div class="simple-name">${c.name}</div><div class="simple-desc">${c.desc||''}</div></div>
-      <div class="simple-dur">${c.duration}</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="simple-dur">${c.duration}</div>
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--green);cursor:pointer;flex-shrink:0"
+          onchange="this.closest('.simple-item').style.opacity=this.checked?'0.5':'1';this.closest('.simple-item').style.borderColor=this.checked?'#10b98140':'';playCheck();vibrate([25])">
+      </div>
     </div>`).join('');
 
   $('r-advice').textContent=`✅ ${d.advice}`;
@@ -1724,6 +1738,59 @@ function updateProgress(){
   });
   document.getElementById('done-pct')?.classList.toggle('all-done',allDone);
   if(allDone&&done>0) vibrate([60,30,60,30,200]);
+}
+
+let _loadingMsgInterval=null;
+function startLoadingMessages(elId, messages, ms=1800){
+  let i=0;
+  const el=$(elId);
+  if(el) el.textContent=messages[0];
+  clearInterval(_loadingMsgInterval);
+  _loadingMsgInterval=setInterval(()=>{
+    i=(i+1)%messages.length;
+    const el=$(elId);
+    if(el){el.style.opacity='0';setTimeout(()=>{el.textContent=messages[i];el.style.opacity='1'},200)}
+  },ms);
+}
+function stopLoadingMessages(){
+  clearInterval(_loadingMsgInterval);
+  _loadingMsgInterval=null;
+}
+
+function launchConfetti(){
+  const canvas=document.createElement('canvas');
+  canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:9000;pointer-events:none';
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  document.body.appendChild(canvas);
+  const ctx=canvas.getContext('2d');
+  const colors=['#f97316','#10b981','#6366f1','#f43f5e','#f59e0b','#ffffff','#fb923c','#34d399'];
+  const pieces=Array.from({length:140},()=>({
+    x:Math.random()*canvas.width,
+    y:-10-Math.random()*canvas.height*0.4,
+    r:4+Math.random()*6,
+    c:colors[Math.floor(Math.random()*colors.length)],
+    vx:(Math.random()-0.5)*5,
+    vy:2+Math.random()*5,
+    rot:Math.random()*360,
+    vrot:(Math.random()-0.5)*10,
+    shape:Math.random()>0.5?'rect':'circle'
+  }));
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.rot+=p.vrot;p.vy+=0.1;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.c;ctx.globalAlpha=Math.max(0,1-frame/160);
+      if(p.shape==='rect'){ctx.fillRect(-p.r/2,-p.r*0.3,p.r,p.r*0.6)}
+      else{ctx.beginPath();ctx.arc(0,0,p.r/2,0,Math.PI*2);ctx.fill()}
+      ctx.restore();
+    });
+    frame++;
+    if(frame<180) requestAnimationFrame(draw);
+    else document.body.removeChild(canvas);
+  }
+  draw();
 }
 
 function completeWorkout(){
@@ -1789,6 +1856,7 @@ function completeWorkout(){
   window.scrollTo({top:0,behavior:'smooth'});
   playComplete();
   vibrate([80,40,80,40,300]);
+  launchConfetti();
 }
 
 function startNewRoutine(){
@@ -1808,7 +1876,7 @@ async function getMinRoutine(){
   hideErr('home-error-3');
   goToStep(3);
   $('home-loading-3').style.display='block';
-  $('home-loading-text-3').textContent='최소 실행 루틴 생성 중...';
+  startLoadingMessages('home-loading-text-3',['최소 루틴 찾는 중...','5분 코스 구성 중...','0일 방지 플랜 완성 중...']);
 
   const reason=$('lazy-reason')?.value||'귀찮음';
   try{
@@ -1829,7 +1897,7 @@ async function getMinRoutine(){
     window._currentMinRoutine=d;
     renderMinRoutine(d);
   }catch(e){showErr('home-error-3',e.message)}
-  finally{$('home-loading-3').style.display='none'}
+  finally{stopLoadingMessages();$('home-loading-3').style.display='none'}
 }
 
 function renderMinRoutine(d){
@@ -1885,6 +1953,7 @@ function saveMinWorkout(){
   window.scrollTo({top:0,behavior:'smooth'});
   playComplete();
   vibrate([60,40,60,40,200]);
+  launchConfetti();
 }
 
 // ── Motivation ───────────────────────────────────────────────────────────────
