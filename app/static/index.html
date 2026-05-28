@@ -255,8 +255,12 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .min-tagline{font-size:12px;color:var(--blue);margin-bottom:14px;font-weight:700}
 .min-steps{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
 .min-step{background:#0a0f1a;border:1px solid #6366f125;border-radius:10px;padding:10px 13px;
+  cursor:pointer;transition:all .2s;user-select:none;-webkit-user-select:none}
   display:flex;align-items:center;gap:10px}
 .min-step-num{font-size:12px;font-weight:800;color:var(--blue);min-width:20px}
+.min-step.done{border-color:#10b981;background:#10b98110;}
+.min-step.done .min-step-num{color:var(--green)}
+.min-step.done .min-step-name{color:#6ee7b7}
 .min-step-name{font-size:13px;color:#fff;font-weight:600}
 .min-step-detail{font-size:11px;color:var(--muted);margin-top:1px}
 .min-success{background:#10b98112;border:1px solid #10b98130;border-radius:10px;
@@ -1791,6 +1795,14 @@ function stopLoadingMessages(){
   _loadingMsgInterval=null;
 }
 
+
+function toggleMinStep(el){
+  el.classList.toggle('done');
+  const check = el.querySelector('.min-step-check');
+  if(check) check.style.opacity = el.classList.contains('done') ? '1' : '0';
+  playCheck(); vibrate([25]);
+}
+
 function launchConfetti(){
   const canvas=document.createElement('canvas');
   canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:9000;pointer-events:none';
@@ -1940,12 +1952,13 @@ function renderMinRoutine(d){
   $('min-tagline').textContent=d.tagline||'';
   $('min-time').textContent=`⏱ ${d.total_time}`;
   $('min-steps').innerHTML=(d.steps||[]).map(s=>`
-    <div class="min-step">
+    <div class="min-step" onclick="toggleMinStep(this)">
       <div class="min-step-num">${s.step}</div>
-      <div>
+      <div style="flex:1">
         <div class="min-step-name">${s.name}${s.reps?` · ${s.reps}`:s.duration?` · ${s.duration}`:''}</div>
         <div class="min-step-detail">${s.desc||''}</div>
       </div>
+      <span class="min-step-check" style="font-size:18px;opacity:0;transition:opacity .2s">✓</span>
     </div>`).join('');
   $('min-success').textContent=d.success_message||'';
   $('min-upgrade').textContent=d.upgrade_prompt||'';
