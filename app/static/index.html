@@ -22,14 +22,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .cold-notice{position:sticky;top:0;z-index:50;background:#0c1220;border-bottom:1px solid #1e2d42;
   color:#7a9cc0;font-size:12px;text-align:center;padding:8px 16px;display:flex;align-items:center;justify-content:center;gap:8px}
 .cold-notice strong{color:#a0c0e0}
-.sound-toggle{background:none;border:1px solid #1e2d42;border-radius:6px;color:#7a9cc0;
-  font-size:13px;cursor:pointer;padding:2px 7px;line-height:1;transition:all .2s;margin-left:8px}
+.sound-toggle{background:none;border:none;color:#7a9cc0;
+  font-size:10px;cursor:pointer;padding:8px 4px;line-height:1;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:3px;touch-action:manipulation;width:44px}
 .sound-toggle:hover{border-color:var(--accent);color:var(--accent)}
 
 .nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#06080fcc;backdrop-filter:blur(12px);
   border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 8px;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
-.nav-btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:700;
-  background:transparent;color:var(--muted);transition:all .2s;white-space:nowrap;touch-action:manipulation;flex:1;text-align:center}
+.nav-btn{padding:8px 4px;border-radius:10px;border:none;cursor:pointer;font-size:10px;font-weight:600;
+  background:transparent;color:var(--muted);transition:all .2s;touch-action:manipulation;flex:1;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:3px;line-height:1}
 .nav-btn.active{background:#f9731618;color:var(--accent)}
 
 .wrap{max-width:680px;margin:0 auto;padding:20px 14px 100px;position:relative;z-index:1}
@@ -517,12 +519,12 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 </div>
 
 <nav class="nav">
-  <button class="nav-btn active" onclick="showPage('home')">🏋️ 루틴</button>
-  <button class="nav-btn" onclick="showPage('dash')">📊 기록</button>
-  <button class="nav-btn" onclick="showPage('analysis')">📈 분석</button>
-  <button class="nav-btn" onclick="showPage('diet')">🥗 식단</button>
-  <button class="nav-btn" onclick="showPage('profile')">⚙️ 프로필</button>
-  <button class="sound-toggle" id="sound-btn" onclick="toggleSound()" title="효과음 on/off">🔔</button>
+  <button class="nav-btn active" onclick="showPage('home')"><span style="font-size:20px">🏋️</span><span>루틴</span></button>
+  <button class="nav-btn" onclick="showPage('dash')"><span style="font-size:20px">📊</span><span>기록</span></button>
+  <button class="nav-btn" onclick="showPage('analysis')"><span style="font-size:20px">📈</span><span>분석</span></button>
+  <button class="nav-btn" onclick="showPage('diet')"><span style="font-size:20px">🥗</span><span>식단</span></button>
+  <button class="nav-btn" onclick="showPage('profile')"><span style="font-size:20px">⚙️</span><span>프로필</span></button>
+  <button class="sound-toggle" id="sound-btn" onclick="toggleSound()"><span style="font-size:20px" id="sound-icon">🔔</span><span>소리</span></button>
 </nav>
 
 <div class="wrap">
@@ -1237,7 +1239,7 @@ function playComplete(){
 }
 function toggleSound(){
   soundOn=!soundOn;
-  $('sound-btn').textContent=soundOn?'🔔':'🔕';
+  $('sound-icon').textContent=soundOn?'🔔':'🔕';
   if(soundOn) playTick();
 }
 
