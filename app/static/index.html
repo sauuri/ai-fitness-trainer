@@ -1122,6 +1122,12 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
     <div id="profile-saved" style="display:none;text-align:center;color:var(--green);font-size:13px;margin-top:8px;font-weight:700">✅ 저장됐어요!</div>
   </div>
 
+  <div class="card" style="margin-top:8px">
+    <div class="card-title">🔄 앱 캐시 삭제</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">운동 기록은 유지하고 앱을 최신 버전으로 새로 불러와요. 업데이트 후 화면이 이상할 때 사용하세요.</div>
+    <button class="btn btn-outline" style="width:100%;touch-action:manipulation" onclick="clearAppCache()">🔄 캐시 삭제 후 재시작</button>
+  </div>
+
   <div class="card" style="border-color:#f43f5e30;margin-top:8px">
     <div class="card-title" style="color:#f43f5e">⚠️ 전체 초기화</div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">
@@ -2380,6 +2386,14 @@ async function getDiet(){
 }
 
 // ── Reset ────────────────────────────────────────────────────────────────────
+function clearAppCache(){
+  if('caches' in window){
+    caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k)))).then(()=>location.reload(true));
+  } else {
+    location.reload(true);
+  }
+}
+
 function confirmReset(){
   if($('reset-confirm').value.trim()!=='초기화'){
     alert('"초기화"를 정확히 입력해주세요.');
