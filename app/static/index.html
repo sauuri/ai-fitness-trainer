@@ -29,7 +29,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .nav{position:sticky;top:0;z-index:100;background:#06080fcc;backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);display:flex;justify-content:center;gap:2px;padding:8px 12px}
 .nav-btn{padding:7px 10px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;
-  background:transparent;color:var(--muted);transition:all .2s;white-space:nowrap}
+  background:transparent;color:var(--muted);transition:all .2s;white-space:nowrap;touch-action:manipulation}
 .nav-btn.active{background:#f9731618;color:var(--accent)}
 
 .wrap{max-width:680px;margin:0 auto;padding:20px 14px 80px;position:relative;z-index:1}
@@ -1120,6 +1120,16 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   <div style="position:sticky;bottom:16px;z-index:50;padding-top:8px">
     <button class="btn btn-primary" onclick="saveProfile()" style="box-shadow:0 8px 24px #00000060">프로필 저장 ✓</button>
     <div id="profile-saved" style="display:none;text-align:center;color:var(--green);font-size:13px;margin-top:8px;font-weight:700">✅ 저장됐어요!</div>
+  </div>
+
+  <div class="card" style="border-color:#f43f5e30;margin-top:8px">
+    <div class="card-title" style="color:#f43f5e">⚠️ 전체 초기화</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">
+      모든 운동 기록, 프로필, 식단 데이터가 <strong style="color:#f87191">영구 삭제</strong>됩니다.<br>
+      확인하려면 아래에 <strong style="color:var(--text)">초기화</strong> 를 입력하세요.
+    </div>
+    <input type="text" id="reset-confirm" placeholder="초기화" style="margin-bottom:10px">
+    <button class="btn" style="background:#f43f5e15;color:#f43f5e;border:1px solid #f43f5e40;width:100%;touch-action:manipulation" onclick="confirmReset()">전체 초기화</button>
   </div>
 </div>
 
@@ -2367,6 +2377,16 @@ async function getDiet(){
     $('diet-step-2').classList.add('active');
     window.scrollTo({top:0,behavior:'smooth'});
   }catch(e){showErr('diet-error',e.message);$('diet-loading').classList.remove('show')}
+}
+
+// ── Reset ────────────────────────────────────────────────────────────────────
+function confirmReset(){
+  if($('reset-confirm').value.trim()!=='초기화'){
+    alert('"초기화"를 정확히 입력해주세요.');
+    return;
+  }
+  localStorage.clear();
+  location.reload();
 }
 
 // ── Splash ───────────────────────────────────────────────────────────────────
