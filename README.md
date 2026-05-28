@@ -1,7 +1,7 @@
 # NZD AI Fitness — No-Zero-Day
 
 <p align="center">
-  <img src="https://img.shields.io/badge/App%20Store-심사%20중-f97316?style=flat-square&logo=apple&logoColor=white"/>
+  <img src="https://img.shields.io/badge/App%20Store-출시됨-f97316?style=flat-square&logo=apple&logoColor=white"/>
   <img src="https://img.shields.io/badge/Platform-iOS-000000?style=flat-square&logo=apple"/>
   <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white"/>
   <img src="https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai&logoColor=white"/>
@@ -41,9 +41,11 @@
 - **iOS 패키징**: Capacitor
 - **배포**: Vercel (서버리스)
 
-## 데모
+## 다운로드 & 데모
 
-🌐 [웹 버전 실행](https://ai-fitness-trainer-alpha.vercel.app)
+📱 [App Store에서 다운로드](https://apps.apple.com/kr/app/no-zero-day/id6773026197)
+
+🌐 [웹 버전 실행](https://nzd-web.vercel.app)
 
 ## 로컬 실행
 
