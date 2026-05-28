@@ -1124,7 +1124,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
   <div class="card" style="margin-top:8px">
     <div class="card-title">🔄 앱 캐시 삭제</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">운동 기록은 유지하고 앱을 최신 버전으로 새로 불러와요. 업데이트 후 화면이 이상할 때 사용하세요.</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">운동 기록은 유지하고 앱을 최신 버전으로 새로 불러와요. 업데이트 후 화면이 이상할 때 사용하세요.<br>확인하려면 <strong style="color:var(--text)">확인했습니다</strong> 를 입력하세요.</div>
+    <input type="text" id="cache-confirm" placeholder="확인했습니다" style="margin-bottom:10px">
     <button class="btn btn-outline" style="width:100%;touch-action:manipulation" onclick="clearAppCache()">🔄 캐시 삭제 후 재시작</button>
   </div>
 
@@ -1132,9 +1133,9 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
     <div class="card-title" style="color:#f43f5e">⚠️ 전체 초기화</div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">
       모든 운동 기록, 프로필, 식단 데이터가 <strong style="color:#f87191">영구 삭제</strong>됩니다.<br>
-      확인하려면 아래에 <strong style="color:var(--text)">초기화</strong> 를 입력하세요.
+      확인하려면 아래에 <strong style="color:var(--text)">확인했습니다</strong> 를 입력하세요.
     </div>
-    <input type="text" id="reset-confirm" placeholder="초기화" style="margin-bottom:10px">
+    <input type="text" id="reset-confirm" placeholder="확인했습니다" style="margin-bottom:10px">
     <button class="btn" style="background:#f43f5e15;color:#f43f5e;border:1px solid #f43f5e40;width:100%;touch-action:manipulation" onclick="confirmReset()">전체 초기화</button>
   </div>
 </div>
@@ -2387,6 +2388,10 @@ async function getDiet(){
 
 // ── Reset ────────────────────────────────────────────────────────────────────
 function clearAppCache(){
+  if($('cache-confirm').value.trim()!=='확인했습니다'){
+    alert('"확인했습니다"를 정확히 입력해주세요.');
+    return;
+  }
   if('caches' in window){
     caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k)))).then(()=>location.reload(true));
   } else {
@@ -2395,8 +2400,8 @@ function clearAppCache(){
 }
 
 function confirmReset(){
-  if($('reset-confirm').value.trim()!=='초기화'){
-    alert('"초기화"를 정확히 입력해주세요.');
+  if($('reset-confirm').value.trim()!=='확인했습니다'){
+    alert('"확인했습니다"를 정확히 입력해주세요.');
     return;
   }
   localStorage.clear();
