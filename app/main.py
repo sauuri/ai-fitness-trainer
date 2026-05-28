@@ -111,6 +111,65 @@ async def root():
     return FileResponse(BASE / "static/index.html")
 
 
+@app.get("/support")
+async def support():
+    html = """<!DOCTYPE html>
+<html lang="ko">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>지원 — No-Zero-Day</title>
+<style>
+  body{font-family:-apple-system,sans-serif;max-width:720px;margin:0 auto;padding:40px 24px;background:#06080f;color:#cbd5e1;line-height:1.8}
+  h1{color:#f97316;font-size:24px;margin-bottom:4px}
+  h2{color:#f8fafc;font-size:17px;margin-top:32px;margin-bottom:8px}
+  p,li{font-size:15px;color:#94a3b8}
+  a{color:#f97316;text-decoration:none}
+  .card{background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:20px 24px;margin-top:12px}
+  .badge{font-size:12px;color:#64748b;margin-top:48px}
+</style>
+</head>
+<body>
+<h1>No-Zero-Day 지원</h1>
+<p>앱 사용 중 문제가 생기셨나요? 아래에서 도움을 받으세요.</p>
+
+<h2>📧 문의하기</h2>
+<div class="card">
+  <p>이메일로 문의 주시면 24시간 내에 답변드립니다.<br>
+  <a href="mailto:dlwjdghks9729@gmail.com">dlwjdghks9729@gmail.com</a></p>
+</div>
+
+<h2>❓ 자주 묻는 질문</h2>
+<div class="card">
+  <p><strong>Q. 운동 기록이 사라졌어요.</strong><br>
+  앱 데이터는 기기 로컬에 저장됩니다. 앱 삭제 시 데이터도 함께 삭제됩니다. 앱 삭제 전 백업을 권장합니다.</p>
+</div>
+<div class="card">
+  <p><strong>Q. AI 루틴 생성이 안 돼요.</strong><br>
+  인터넷 연결 상태를 확인해 주세요. 문제가 지속되면 이메일로 문의해 주세요.</p>
+</div>
+<div class="card">
+  <p><strong>Q. 칼로리 계산이 정확한가요?</strong><br>
+  MET(운동 대사당량) 기반으로 계산되며 개인차가 있을 수 있습니다. 참고용으로 활용해 주세요.</p>
+</div>
+<div class="card">
+  <p><strong>Q. 개인 정보는 어떻게 처리되나요?</strong><br>
+  모든 운동 기록은 기기에만 저장되며 서버에 저장되지 않습니다.<br>
+  <a href="/privacy">개인정보 처리방침 보기 →</a></p>
+</div>
+
+<h2>🛠 앱 정보</h2>
+<div class="card">
+  <p>개발자: 이정환 (sauuri)<br>
+  버전: 1.0<br>
+  플랫폼: iOS</p>
+</div>
+
+<p class="badge">© 2026 이정환 (sauuri). 최종 업데이트: 2026년 5월 26일</p>
+</body>
+</html>"""
+    from fastapi.responses import HTMLResponse
+    return HTMLResponse(html)
+
+
 @app.get("/privacy")
 async def privacy():
     html = """<!DOCTYPE html>

@@ -1,6 +1,6 @@
 {
   "appId": "com.sauuri.nozeroday",
-  "appName": "No-Zero-Day",
+  "appName": "NZD AI Fitness",
   "webDir": "app/static",
   "server": {
     "androidScheme": "https"
