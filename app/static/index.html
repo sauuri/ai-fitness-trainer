@@ -441,6 +441,20 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .cal-day.done{background:var(--green);color:#fff;font-weight:800;box-shadow:0 2px 8px #10b98140}
 .cal-day.missed{background:#f43f5e20;border:1px solid #f43f5e40;color:#f87191}
 .cal-day.done.today{box-shadow:0 2px 8px #10b98160,0 0 0 2px var(--accent)}
+
+/* DAY DETAIL MODAL */
+.day-modal-date{font-size:13px;color:var(--accent);font-weight:700;margin-bottom:14px}
+.day-modal-empty{text-align:center;padding:16px 0}
+.day-modal-empty-icon{font-size:36px;margin-bottom:8px}
+.day-modal-empty-text{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.day-stat-row{display:flex;gap:8px;margin-bottom:12px}
+.day-stat{flex:1;background:#0a0f1a;border-radius:10px;padding:10px;text-align:center}
+.day-stat-num{font-size:18px;font-weight:800;color:var(--accent)}
+.day-stat-label{font-size:10px;color:var(--muted);margin-top:2px}
+.day-exlist{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:12px}
+.day-missed-reason{background:#f43f5e10;border:1px solid #f43f5e30;border-radius:10px;
+  padding:11px 14px;font-size:13px;color:#f87191;margin-bottom:12px}
+
 .cal-legend{display:flex;gap:14px;margin-top:10px;justify-content:center}
 .cal-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
 .cal-legend-dot{width:10px;height:10px;border-radius:50%}
@@ -2043,7 +2057,7 @@ function renderCalendar(){
     const isDone=doneDates.has(key);
     const isMissed=!isDone&&missedDates.has(key);
     const cls=['cal-day',isDone?'done':'',isMissed?'missed':'',isToday?'today':''].filter(Boolean).join(' ');
-    html+=`<div class="${cls}">${d}</div>`;
+    html+=`<div class="${cls}" onclick="showDayDetail(${y},${m},${d})" style="cursor:pointer">${d}</div>`;
   }
   // Next month padding
   const totalCells=Math.ceil((firstDay+daysInMonth)/7)*7;
@@ -2412,6 +2426,65 @@ function confirmReset(){
   location.reload();
 }
 
+
+// ── Day Detail ────────────────────────────────────────────────────────────────
+function showDayDetail(y, m, d){
+  const logs = getLogs();
+  const missed = getMissedLogs();
+  const key = `${y}-${m}-${d}`;
+
+  const dayLogs = logs.filter(l => {
+    const ld = new Date(l.ts);
+    return `${ld.getFullYear()}-${ld.getMonth()}-${ld.getDate()}` === key;
+  });
+  const dayMissed = missed.filter(l => {
+    const ld = new Date(l.ts);
+    return `${ld.getFullYear()}-${ld.getMonth()}-${ld.getDate()}` === key;
+  });
+
+  const dateStr = `${y}년 ${m+1}월 ${d}일`;
+  $('day-modal-date').textContent = dateStr;
+
+  let html = '';
+  if(dayLogs.length > 0){
+    dayLogs.forEach(log => {
+      const minTag = log.is_min ? ' <span style="font-size:10px;color:var(--blue);background:#6366f115;padding:1px 6px;border-radius:4px">최소루틴</span>' : '';
+      html += `<div class="day-stat-row">
+        <div class="day-stat"><div class="day-stat-num">${log.rate}%</div><div class="day-stat-label">완료율</div></div>
+        <div class="day-stat"><div class="day-stat-num">${log.done}/${log.total}</div><div class="day-stat-label">운동 수</div></div>
+        ${log.kcal?`<div class="day-stat"><div class="day-stat-num">${log.kcal}</div><div class="day-stat-label">kcal</div></div>`:''}
+        ${log.duration_min?`<div class="day-stat"><div class="day-stat-num">${log.duration_min}분</div><div class="day-stat-label">운동 시간</div></div>`:''}
+      </div>`;
+      if(log.target) html += `<div style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:6px">${log.target}${minTag}</div>`;
+      if((log.exercises||[]).length){
+        html += `<div class="day-exlist">${log.exercises.join(' · ')}</div>`;
+      }
+    });
+  } else if(dayMissed.length > 0){
+    html += `<div class="day-missed-reason">😞 운동 못 함 — ${dayMissed[0].reason||'기타'}</div>`;
+    html += `<button class="btn btn-primary" style="margin-top:0" onclick="$('day-modal').classList.remove('show');showMissedModal()">이유 다시 기록하기</button>`;
+  } else {
+    const now = new Date(); now.setHours(0,0,0,0);
+    const sel = new Date(y, m, d);
+    const isFuture = sel > now;
+    if(isFuture){
+      html = `<div class="day-modal-empty">
+        <div class="day-modal-empty-icon">📅</div>
+        <div class="day-modal-empty-text">아직 오지 않은 날이에요.</div>
+      </div>`;
+    } else {
+      html = `<div class="day-modal-empty">
+        <div class="day-modal-empty-icon">💭</div>
+        <div class="day-modal-empty-text">이날 기록이 없어요.<br>최소 실행이라도 기록으로 남길까요?</div>
+        <button class="btn" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;width:100%;margin-top:0" onclick="$('day-modal').classList.remove('show');showMissedModal()">😞 못 했어요, 이유 남기기</button>
+      </div>`;
+    }
+  }
+
+  $('day-modal-body').innerHTML = html;
+  $('day-modal').classList.add('show');
+}
+
 // ── Splash ───────────────────────────────────────────────────────────────────
 function enterApp(){
   const splash=$('splash');
@@ -2429,5 +2502,14 @@ loadProfileForm();
 initHome();
 if(!getProfile()) showPage('profile');
 </script>
+<!-- DAY DETAIL MODAL -->
+<div class="modal-bg" id="day-modal" onclick="if(event.target===this)$('day-modal').classList.remove('show')">
+  <div class="modal">
+    <div class="day-modal-date" id="day-modal-date"></div>
+    <div id="day-modal-body"></div>
+    <button class="btn btn-outline" style="width:100%;margin-top:4px" onclick="$('day-modal').classList.remove('show')">닫기</button>
+  </div>
+</div>
+
 </body>
 </html>
