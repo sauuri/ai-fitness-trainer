@@ -501,7 +501,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   <div class="splash-features">
     <div class="splash-feat">
       <div class="splash-feat-icon">🔮</div>
-      <div class="splash-feat-text"><strong>실패 위험도 예측</strong>오늘 컨디션 분석 후 운동 포기 확률 계산</div>
+      <div class="splash-feat-text"><strong>오늘 0일 위험도 예측</strong>오늘 컨디션 분석 후 운동 포기 확률 계산</div>
     </div>
     <div class="splash-feat">
       <div class="splash-feat-icon">💪</div>
@@ -629,8 +629,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
           <button class="btn btn-primary" id="risk-btn" onclick="predictRisk()" style="margin-top:0">🔮 오늘 컨디션 분석하기</button>
-          <button class="btn btn-peak" onclick="goPeak()">💥 고점 모드 — 오늘 전력으로 간다</button>
-          <button class="lazy-link" onclick="goLazy()" style="padding:8px 0">😩 오늘 솔직히 가기 싫어</button>
+          <button class="btn" onclick="goLazy()" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;margin-top:0;touch-action:manipulation">😮‍💨 오늘 0만 피하면 돼 — 최소만 할게</button>
+          <button class="btn btn-peak" onclick="goPeak()" style="margin-top:0">💥 고점 모드 — 오늘 전력으로 간다</button>
         </div>
       </div>
     </div>
@@ -1169,7 +1169,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 <!-- MISSED WORKOUT MODAL -->
 <div class="modal-bg" id="missed-modal" onclick="if(event.target===this)hideMissedModal()">
   <div class="modal">
-    <div class="modal-title">😞 오늘 운동 못 한 이유</div>
+    <div class="modal-title">괜찮아요. 이유만 남겨요 💙</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">오늘 못 한 것도 기록이에요. 이유가 쌓이면 더 좋은 루틴을 만들 수 있어요.</div>
     <div class="form-group" style="margin-bottom:12px">
       <label>이유 선택</label>
       <select id="missed-reason">
@@ -1186,7 +1187,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
     </div>
     <div class="btn-group">
       <button class="btn btn-outline" onclick="hideMissedModal()" style="flex:1;margin-top:0">취소</button>
-      <button class="btn btn-primary" onclick="saveMissedWorkout()" style="flex:2;margin-top:0">기록하기</button>
+      <button class="btn btn-primary" onclick="saveMissedWorkout()" style="flex:2;margin-top:0">오늘 기록 남기기 ✓</button>
     </div>
   </div>
 </div>
@@ -1381,8 +1382,8 @@ function renderRisk(d){
       <div class="risk-score-row">
         <div class="risk-score-num ${numCls}">${score}<span style="font-size:20px">%</span></div>
         <div>
-          <div class="risk-level-badge">오늘 실패 위험도 ${d.risk_level||''}</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px">운동 건너뛸 가능성</div>
+          <div class="risk-level-badge">오늘 0일 위험도 ${d.risk_level||''}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">오늘 0일이 될 위험</div>
         </div>
       </div>
       <ul class="risk-reasons">${reasons}</ul>
