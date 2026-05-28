@@ -27,9 +27,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sound-toggle:hover{border-color:var(--accent);color:var(--accent)}
 
 .nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#06080fcc;backdrop-filter:blur(12px);
-  border-top:1px solid var(--border);display:flex;justify-content:center;gap:2px;padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
-.nav-btn{padding:7px 10px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;
-  background:transparent;color:var(--muted);transition:all .2s;white-space:nowrap;touch-action:manipulation}
+  border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 8px;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+.nav-btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:700;
+  background:transparent;color:var(--muted);transition:all .2s;white-space:nowrap;touch-action:manipulation;flex:1;text-align:center}
 .nav-btn.active{background:#f9731618;color:var(--accent)}
 
 .wrap{max-width:680px;margin:0 auto;padding:20px 14px 100px;position:relative;z-index:1}
