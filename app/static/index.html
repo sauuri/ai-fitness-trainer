@@ -1749,12 +1749,12 @@ function updateProgress(){
   $('done-pct').textContent=pct+'%';
 
   const allDone=cbs.length>0&&done===cbs.length;
-  $('complete-section')?.classList.toggle('all-done',allDone);
-  $('all-done-banner')?.classList.toggle('show',allDone);
+  $('complete-section')?.classList[allDone?'add':'remove']('all-done');
+  $('all-done-banner')?.classList[allDone?'add':'remove']('show');
   ['stat-done','stat-total','stat-pct'].forEach(id=>{
-    document.getElementById(id)?.classList.toggle('all-done',allDone);
+    document.getElementById(id)?.classList[allDone?'add':'remove']('all-done');
   });
-  document.getElementById('done-pct')?.classList.toggle('all-done',allDone);
+  document.getElementById('done-pct')?.classList[allDone?'add':'remove']('all-done');
   if(allDone&&done>0) vibrate([60,30,60,30,200]);
 }
 
@@ -1869,6 +1869,7 @@ function completeWorkout(){
   $('ds-target').textContent=(window._currentTarget||'오늘의 루틴')+' 완료 ✓';
 
   // Switch view
+  stopRestTimer();
   $('routine-result').classList.remove('show');
   $('workout-done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
