@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>No-Zero-Day | AI 운동 실패 방지 코치</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -11,7 +11,19 @@
   --border:#1a2436;--text:#c8d8f0;--muted:#5a7898;
   --green:#10b981;--red:#f43f5e;--blue:#6366f1;--yellow:#f59e0b;
 }
-body{background:var(--bg);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;color:var(--text);min-height:100vh;padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;color:var(--text);min-height:100vh;padding-top:calc(44px + env(safe-area-inset-top,0px))}
+#top-bar{position:fixed;top:0;left:0;right:0;z-index:200;
+  height:calc(44px + env(safe-area-inset-top,0px));
+  padding-top:env(safe-area-inset-top,0px);
+  background:#06080fdd;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:6px;padding-left:16px;padding-right:12px}
+#top-bar .app-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px}
+#top-bar .app-name span{color:var(--accent)}
+#top-sound-btn{background:none;border:1px solid var(--border);border-radius:10px;
+  color:var(--muted);font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;
+  display:flex;align-items:center;gap:5px;transition:all .2s}
+#top-sound-btn:hover{border-color:var(--accent);color:var(--accent)}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:radial-gradient(ellipse at 10% 20%,#f9731618 0%,transparent 45%),
              radial-gradient(ellipse at 90% 80%,#fb923c10 0%,transparent 45%)}
@@ -392,7 +404,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 /* SPLASH */
 #splash{position:fixed;inset:0;z-index:9999;background:var(--bg);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:40px 28px;transition:opacity .5s ease,transform .5s ease}
+  padding:max(40px, calc(20px + env(safe-area-inset-top,0px))) 28px max(40px, calc(20px + env(safe-area-inset-bottom,0px)));
+  transition:opacity .5s ease,transform .5s ease}
 #splash.hide{opacity:0;transform:scale(1.04);pointer-events:none}
 .splash-icon{font-size:64px;margin-bottom:20px;animation:splashPop .6s ease}
 @keyframes splashPop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
@@ -536,13 +549,17 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   <button class="splash-skip" onclick="enterApp()">건너뛰기</button>
 </div>
 
+<div id="top-bar">
+  <div class="app-name">No<span>Zero</span>Day</div>
+  <button id="top-sound-btn" onclick="toggleSound()"><span id="sound-icon">🔔</span><span>소리</span></button>
+</div>
+
 <nav class="nav">
   <button class="nav-btn active" onclick="showPage('home')"><span style="font-size:20px">🏋️</span><span>루틴</span></button>
   <button class="nav-btn" onclick="showPage('dash')"><span style="font-size:20px">📊</span><span>기록</span></button>
   <button class="nav-btn" onclick="showPage('analysis')"><span style="font-size:20px">📈</span><span>분석</span></button>
   <button class="nav-btn" onclick="showPage('diet')"><span style="font-size:20px">🥗</span><span>식단</span></button>
   <button class="nav-btn" onclick="showPage('profile')"><span style="font-size:20px">⚙️</span><span>프로필</span></button>
-  <button class="sound-toggle" id="sound-btn" onclick="toggleSound()"><span style="font-size:20px" id="sound-icon">🔔</span><span>소리</span></button>
 </nav>
 
 <div class="wrap">
@@ -1258,6 +1275,8 @@ function playComplete(){
 function toggleSound(){
   soundOn=!soundOn;
   $('sound-icon').textContent=soundOn?'🔔':'🔕';
+  document.getElementById('top-sound-btn').style.color=soundOn?'':'var(--red)';
+  document.getElementById('top-sound-btn').style.borderColor=soundOn?'':'var(--red)';
   if(soundOn) playTick();
 }
 
