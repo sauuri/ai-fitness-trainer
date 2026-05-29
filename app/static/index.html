@@ -1224,7 +1224,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
     </div>
     <div class="btn-group">
       <button class="btn btn-outline" onclick="hideMissedModal()" style="flex:1;margin-top:0">취소</button>
-      <button class="btn btn-primary" onclick="saveMissedWorkout()" style="flex:2;margin-top:0">오늘 기록 남기기 ✓</button>
+      <button class="btn btn-primary" onclick="saveMissedWorkout()" style="flex:2;margin-top:0" id="missed-save-btn">오늘 기록 남기기 ✓</button>
     </div>
   </div>
 </div>
@@ -2245,13 +2245,21 @@ function calcBalance(logs){
 }
 
 // ── Missed Workout Modal ──────────────────────────────────────────────────────
-function showMissedModal(){$('missed-modal').classList.add('show')}
-function hideMissedModal(){$('missed-modal').classList.remove('show')}
+function showMissedModal(y,m,d){
+  window._missedDate=(y!==undefined)?new Date(y,m,d,12,0,0):null;
+  const btn=$('missed-save-btn');
+  if(btn) btn.textContent=window._missedDate
+    ?`${window._missedDate.getFullYear()}년 ${window._missedDate.getMonth()+1}월 ${window._missedDate.getDate()}일 기록 남기기 ✓`
+    :'오늘 기록 남기기 ✓';
+  $('missed-modal').classList.add('show');
+}
+function hideMissedModal(){window._missedDate=null;$('missed-modal').classList.remove('show')}
 function saveMissedWorkout(){
+  const dt=window._missedDate||new Date();
   const log={
-    date:new Date().toLocaleDateString('ko-KR'),
+    date:dt.toLocaleDateString('ko-KR'),
     reason:$('missed-reason').value,
-    ts:Date.now()
+    ts:dt.getTime()
   };
   const missed=getMissedLogs();
   missed.unshift(log);
@@ -2494,7 +2502,7 @@ function showDayDetail(y, m, d){
     });
   } else if(dayMissed.length > 0){
     html += `<div class="day-missed-reason">😞 운동 못 함 — ${dayMissed[0].reason||'기타'}</div>`;
-    html += `<button class="btn btn-primary" style="margin-top:0" onclick="$('day-modal').classList.remove('show');showMissedModal()">이유 다시 기록하기</button>`;
+    html += `<button class="btn btn-primary" style="margin-top:0" onclick="$('day-modal').classList.remove('show');showMissedModal(${y},${m},${d})">이유 다시 기록하기</button>`;
   } else {
     const now = new Date(); now.setHours(0,0,0,0);
     const sel = new Date(y, m, d);
@@ -2508,7 +2516,7 @@ function showDayDetail(y, m, d){
       html = `<div class="day-modal-empty">
         <div class="day-modal-empty-icon">💭</div>
         <div class="day-modal-empty-text">이날 기록이 없어요.<br>최소 실행이라도 기록으로 남길까요?</div>
-        <button class="btn" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;width:100%;margin-top:0" onclick="$('day-modal').classList.remove('show');showMissedModal()">😞 못 했어요, 이유 남기기</button>
+        <button class="btn" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;width:100%;margin-top:0" onclick="$('day-modal').classList.remove('show');showMissedModal(${y},${m},${d})">😞 못 했어요, 이유 남기기</button>
       </div>`;
     }
   }
