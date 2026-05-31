@@ -1260,7 +1260,16 @@ function tone(freq, dur, vol=0.25, type='sine', delay=0){
     osc.start(t); osc.stop(t+dur);
   }catch(e){}
 }
-function vibrate(pattern){ if('vibrate' in navigator) navigator.vibrate(pattern) }
+function vibrate(pattern){
+  if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform()){
+    const H=Capacitor.Plugins.Haptics;
+    const total=Array.isArray(pattern)?pattern.reduce((a,b)=>a+b,0):pattern;
+    if(total>=200) H.notification({type:'SUCCESS'}).catch(()=>{});
+    else if(total>=80) H.impact({style:'HEAVY'}).catch(()=>{});
+    else if(total>=40) H.impact({style:'MEDIUM'}).catch(()=>{});
+    else H.impact({style:'LIGHT'}).catch(()=>{});
+  } else if('vibrate' in navigator){ navigator.vibrate(pattern) }
+}
 
 function playCheck(){ tone(880,0.08,0.15) }
 function playTick(){ tone(660,0.12,0.2) }
@@ -1378,6 +1387,7 @@ function initHome(){
 async function predictRisk(){
   const p=getProfile();
   if(!p){return}
+  vibrate([40]);
   lazyMode=false;
   $('risk-result').style.display='none';
   $('action-btns').style.display='none';
@@ -1642,6 +1652,7 @@ function toggleLazy(){ goLazy(); }
 async function getRoutine(){
   const p=getProfile();
   if(!p){return}
+  vibrate([40]);
   $('motive-result').classList.remove('show');
   $('routine-result').classList.remove('show');
   $('min-result').classList.remove('show');
@@ -1936,6 +1947,7 @@ function startNewRoutine(){
 async function getMinRoutine(){
   const p=getProfile();
   if(!p){return}
+  vibrate([40]);
   $('routine-result').classList.remove('show');
   $('min-result').classList.remove('show');
   $('workout-done').style.display='none';
@@ -2025,6 +2037,7 @@ function saveMinWorkout(){
 
 // ── Motivation ───────────────────────────────────────────────────────────────
 async function getMotivation(){
+  vibrate([25]);
   hideErr('home-error');
   $('motive-result').classList.remove('show');
   $('home-loading').classList.add('show');
@@ -2527,6 +2540,7 @@ function showDayDetail(y, m, d){
 
 // ── Splash ───────────────────────────────────────────────────────────────────
 function enterApp(){
+  vibrate([40]);
   const splash=$('splash');
   splash.classList.add('hide');
   setTimeout(()=>splash.style.display='none',520);
