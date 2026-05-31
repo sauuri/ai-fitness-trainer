@@ -1478,6 +1478,8 @@ function toggleWorkoutTimer(){
     _workoutTimerInterval=setInterval(_tickTimer,1000);
     el.classList.remove('paused');
     playTick(); vibrate([15]);
+    if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform())
+      Capacitor.Plugins.TimerBridge?.resumeTimer({elapsedSeconds:_workoutTimerElapsed}).catch(()=>{});
   } else {
     // 일시정지
     _workoutTimerElapsed+=Math.floor((Date.now()-_workoutTimerStart)/1000);
@@ -1489,6 +1491,8 @@ function toggleWorkoutTimer(){
     el.textContent=`⏸ ${m}:${sec}`;
     el.classList.add('paused');
     playTick(); vibrate([15]);
+    if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform())
+      Capacitor.Plugins.TimerBridge?.pauseTimer({elapsedSeconds:_workoutTimerElapsed}).catch(()=>{});
   }
 }
 
