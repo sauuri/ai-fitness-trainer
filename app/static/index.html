@@ -1456,6 +1456,8 @@ function startWorkoutTimer(){
   _workoutTimerElapsed=0;
   clearInterval(_workoutTimerInterval);
   _workoutTimerInterval=setInterval(_tickTimer,1000);
+  if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform())
+    Capacitor.Plugins.TimerBridge?.setTimer({exerciseName:'',currentSet:0,totalSets:0}).catch(()=>{});
 }
 
 function _tickTimer(){
@@ -1554,8 +1556,18 @@ function onExCheck(cb){
   updateProgress();
   playCheck();
   vibrate([25]);
-  if(cb.checked) startRestTimer(cb.dataset.name||'운동', cb.dataset.rest||'60초');
-  else stopRestTimer();
+  if(cb.checked){
+    startRestTimer(cb.dataset.name||'운동', cb.dataset.rest||'60초');
+    if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform()){
+      const allCbs=document.querySelectorAll('#r-main input[type=checkbox]');
+      const done=[...allCbs].filter(c=>c.checked).length;
+      Capacitor.Plugins.TimerBridge?.updateTimer({
+        exerciseName:cb.dataset.name||'운동',
+        currentSet:done,
+        totalSets:allCbs.length
+      }).catch(()=>{});
+    }
+  } else stopRestTimer();
 }
 
 // ── Step Navigation ──────────────────────────────────────────────────────────
@@ -1894,6 +1906,8 @@ function completeWorkout(){
   }));
 
   const durationMin=stopWorkoutTimer();
+  if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform())
+    Capacitor.Plugins.TimerBridge?.clearTimer().catch(()=>{});
   const calNum=parseInt(($('cal-live-num')?.textContent||'0').replace(/[^0-9]/g,''))||0;
 
   const log={
