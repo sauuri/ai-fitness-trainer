@@ -598,7 +598,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
             <div class="slider-row">
               <span class="slider-hint">4h</span>
               <input type="range" id="td-sleep" min="4" max="12" step="0.5" value="7"
-                oninput="$('sleep-val').textContent=this.value">
+                oninput="$('sleep-val').textContent=this.value;const _v=+this.value;if(_v===4||_v===12)vibrate([80]);else vibrate([15])">
               <span class="slider-hint">12h</span>
             </div>
           </div>
@@ -607,7 +607,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
             <div class="slider-row">
               <span class="slider-hint">😌 1</span>
               <input type="range" id="td-fatigue" min="1" max="10" value="5"
-                oninput="$('fatigue-pre-val').textContent=this.value">
+                oninput="$('fatigue-pre-val').textContent=this.value;const _v=+this.value;if(_v===1||_v===10)vibrate([80]);else vibrate([15])">
               <span class="slider-hint">10 😵</span>
             </div>
           </div>
@@ -821,7 +821,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
             <div class="slider-row">
               <span class="slider-hint">😌 1</span>
               <input type="range" id="fatigue" min="1" max="10" value="5" style="accent-color:var(--red)"
-                oninput="$('fatigue-val').textContent=this.value">
+                oninput="$('fatigue-val').textContent=this.value;const _v=+this.value;if(_v===1||_v===10)vibrate([80]);else vibrate([15])">
               <span class="slider-hint">10 😵</span>
             </div>
           </div>
