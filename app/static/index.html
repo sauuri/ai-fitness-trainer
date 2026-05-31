@@ -1514,6 +1514,10 @@ function startRestTimer(name, restStr){
   updateTimerUI();
   $('rest-timer').classList.add('show');
   clearInterval(_restInterval);
+  // 위젯에 타이머 종료 시각 전달
+  const endMs = Date.now() + _restTotal * 1000;
+  if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform())
+    Capacitor.Plugins.TimerBridge?.setTimer({endTime:endMs,label:name}).catch(()=>{});
   _restInterval = setInterval(()=>{
     _restRemain--;
     updateTimerUI();
@@ -1536,6 +1540,8 @@ function updateTimerUI(){
 function stopRestTimer(){
   clearInterval(_restInterval);
   $('rest-timer').classList.remove('show');
+  if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform())
+    Capacitor.Plugins.TimerBridge?.clearTimer().catch(()=>{});
 }
 function skipRest(){ stopRestTimer(); playTick(); }
 function addRestTime(sec){
