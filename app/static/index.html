@@ -2237,6 +2237,7 @@ function showPage(name){
   if(name==='dash') renderDash();
   if(name==='diet') initDiet();
   if(name==='analysis') renderAnalysisCharts();
+  if(name==='profile') loadNotiSettings(); // 프로필 탭 열 때마다 localStorage에서 복원
 }
 
 function navToRoutine(mode){
@@ -3791,6 +3792,13 @@ initHome();
 if(!getProfile()) showPage('profile');
 applyLang();
 initNotifications();
+
+// 앱 포그라운드 복귀 시 알림 재스케줄 + 설정 복원
+document.addEventListener('resume',()=>{
+  loadNotiSettings();
+  const s=getNotiSettings();
+  if(s.enabled) scheduleRiskNotification();
+},false);
 </script>
 <!-- DAY DETAIL MODAL -->
 <div class="modal-bg" id="day-modal" onclick="if(event.target===this)$('day-modal').classList.remove('show')">
