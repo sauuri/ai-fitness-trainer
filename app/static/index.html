@@ -530,36 +530,39 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   <div class="splash-badge">✦ AI FITNESS COACH</div>
   <div class="splash-icon">🔥</div>
   <div class="splash-title">No-Zero-Day</div>
-  <div class="splash-sub">포기하지 않게 만드는 AI 운동 코치<br>오늘도 0일은 없다</div>
+  <div class="splash-sub" data-i18n-html="splashSub">포기하지 않게 만드는 AI 운동 코치<br>오늘도 0일은 없다</div>
   <div class="splash-features">
     <div class="splash-feat">
       <div class="splash-feat-icon">🔮</div>
-      <div class="splash-feat-text"><strong>오늘 0일 위험도 예측</strong>오늘 컨디션 분석 후 운동 포기 확률 계산</div>
+      <div class="splash-feat-text" id="splash-feat-0"><strong>오늘 0일 위험도 예측</strong>오늘 컨디션 분석 후 운동 포기 확률 계산</div>
     </div>
     <div class="splash-feat">
       <div class="splash-feat-icon">💪</div>
-      <div class="splash-feat-text"><strong>맞춤 루틴 생성</strong>수면·피로·스트레스 반영한 오늘만의 루틴</div>
+      <div class="splash-feat-text" id="splash-feat-1"><strong>맞춤 루틴 생성</strong>수면·피로·스트레스 반영한 오늘만의 루틴</div>
     </div>
     <div class="splash-feat">
       <div class="splash-feat-icon">😮‍💨</div>
-      <div class="splash-feat-text"><strong>가기 싫어도 OK</strong>5분 최소 실행 루틴으로 제로데이 방지</div>
+      <div class="splash-feat-text" id="splash-feat-2"><strong>가기 싫어도 OK</strong>5분 최소 실행 루틴으로 제로데이 방지</div>
     </div>
   </div>
-  <button class="splash-cta" onclick="enterApp()">시작하기 →</button>
-  <button class="splash-skip" onclick="enterApp()">건너뛰기</button>
+  <button class="splash-cta" onclick="enterApp()" data-i18n="splashStart">시작하기 →</button>
+  <button class="splash-skip" onclick="enterApp()" data-i18n="splashSkip">건너뛰기</button>
 </div>
 
 <div id="top-bar">
   <div class="app-name">No<span>Zero</span>Day</div>
-  <button id="top-sound-btn" onclick="toggleSound()"><span id="sound-icon">🔔</span><span>소리</span></button>
+  <div style="display:flex;gap:6px;align-items:center">
+    <button id="lang-btn" onclick="toggleLang()" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;transition:all .2s">🌐 EN</button>
+    <button id="top-sound-btn" onclick="toggleSound()"><span id="sound-icon">🔔</span><span id="sound-label">소리</span></button>
+  </div>
 </div>
 
 <nav class="nav">
-  <button class="nav-btn active" onclick="showPage('home')"><span style="font-size:20px">🏋️</span><span>루틴</span></button>
-  <button class="nav-btn" onclick="showPage('dash')"><span style="font-size:20px">📊</span><span>기록</span></button>
-  <button class="nav-btn" onclick="showPage('analysis')"><span style="font-size:20px">📈</span><span>분석</span></button>
-  <button class="nav-btn" onclick="showPage('diet')"><span style="font-size:20px">🥗</span><span>식단</span></button>
-  <button class="nav-btn" onclick="showPage('profile')"><span style="font-size:20px">⚙️</span><span>프로필</span></button>
+  <button class="nav-btn active" onclick="showPage('home')"><span style="font-size:20px">🏋️</span><span data-i18n="nav.0">루틴</span></button>
+  <button class="nav-btn" onclick="showPage('dash')"><span style="font-size:20px">📊</span><span data-i18n="nav.1">기록</span></button>
+  <button class="nav-btn" onclick="showPage('analysis')"><span style="font-size:20px">📈</span><span data-i18n="nav.2">분석</span></button>
+  <button class="nav-btn" onclick="showPage('diet')"><span style="font-size:20px">🥗</span><span data-i18n="nav.3">식단</span></button>
+  <button class="nav-btn" onclick="showPage('profile')"><span style="font-size:20px">⚙️</span><span data-i18n="nav.4">프로필</span></button>
 </nav>
 
 <div class="wrap">
@@ -569,32 +572,32 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
   <div id="profile-bar" class="profile-bar" style="display:none">
     <span id="pb-info"></span>
-    <button class="profile-edit-btn" onclick="showPage('profile')">수정 →</button>
+    <button class="profile-edit-btn" onclick="showPage('profile')" data-i18n="editProfileBtn">수정 →</button>
   </div>
   <div id="no-profile-msg" class="card" style="text-align:center;padding:28px">
     <div style="font-size:36px;margin-bottom:10px">🏋️</div>
     <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">No-Zero-Day</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:16px">포기하지 않게 만드는 AI 운동 코치<br>먼저 프로필을 설정해주세요</div>
-    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('profile')">프로필 설정하기 →</button>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px" data-i18n-html="noProfileMsg">포기하지 않게 만드는 AI 운동 코치<br>먼저 프로필을 설정해주세요</div>
+    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('profile')" data-i18n="setProfileBtn">프로필 설정하기 →</button>
   </div>
 
   <div id="home-form" style="display:none">
     <!-- Step indicator -->
     <div class="step-indicator">
-      <div class="step-col"><div class="sdot active" id="sdot-1">1</div><div class="step-label">컨디션</div></div>
+      <div class="step-col"><div class="sdot active" id="sdot-1">1</div><div class="step-label" data-i18n="steps.0">컨디션</div></div>
       <div class="sline pending" id="sline-1"></div>
-      <div class="step-col"><div class="sdot pending" id="sdot-2">2</div><div class="step-label">분석</div></div>
+      <div class="step-col"><div class="sdot pending" id="sdot-2">2</div><div class="step-label" data-i18n="steps.1">분석</div></div>
       <div class="sline pending" id="sline-2"></div>
-      <div class="step-col"><div class="sdot pending" id="sdot-3">3</div><div class="step-label">루틴</div></div>
+      <div class="step-col"><div class="sdot pending" id="sdot-3">3</div><div class="step-label" data-i18n="steps.2">루틴</div></div>
     </div>
 
     <!-- ── STEP 1: 컨디션 입력 ── -->
     <div class="step-page active" id="home-step-1">
       <div class="card">
-        <div class="card-title">🌡️ 오늘 컨디션 입력</div>
+        <div class="card-title" data-i18n="conditionTitle">🌡️ 오늘 컨디션 입력</div>
         <div style="display:flex;flex-direction:column;gap:14px">
           <div class="form-group">
-            <label>수면 시간 <span id="sleep-val" style="color:var(--accent);font-size:13px">7</span>h</label>
+            <label><span data-i18n="sleepLabel">수면 시간</span> <span id="sleep-val" style="color:var(--accent);font-size:13px">7</span>h</label>
             <div class="slider-row">
               <span class="slider-hint">4h</span>
               <input type="range" id="td-sleep" min="4" max="12" step="0.5" value="7"
@@ -603,7 +606,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
             </div>
           </div>
           <div class="form-group">
-            <label>피로도 <span id="fatigue-pre-val" style="color:var(--red);font-size:13px">5</span>/10</label>
+            <label><span data-i18n="fatigueLabel">피로도</span> <span id="fatigue-pre-val" style="color:var(--red);font-size:13px">5</span>/10</label>
             <div class="slider-row">
               <span class="slider-hint">😌 1</span>
               <input type="range" id="td-fatigue" min="1" max="10" value="5"
@@ -613,16 +616,16 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           </div>
           <div class="form-grid">
             <div class="form-group">
-              <label>스트레스</label>
-              <select id="td-stress">
+              <label data-i18n="stressLabel">스트레스</label>
+              <select id="td-stress" data-i18n-opt="stressOpts">
                 <option value="낮음">낮음 😌</option>
                 <option value="보통" selected>보통 😐</option>
                 <option value="높음">높음 😫</option>
               </select>
             </div>
             <div class="form-group">
-              <label>운동 의욕</label>
-              <select id="td-motivation">
+              <label data-i18n="motivLabel">운동 의욕</label>
+              <select id="td-motivation" data-i18n-opt="motivOpts">
                 <option value="낮음">낮음 😔</option>
                 <option value="보통" selected>보통 😐</option>
                 <option value="높음">높음 🔥</option>
@@ -631,9 +634,9 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           </div>
           <div class="form-grid">
             <div class="form-group">
-              <label>근육통</label>
+              <label data-i18n="sorenessLabel">근육통</label>
               <div class="toggle-row" style="padding:8px 0">
-                <span style="font-size:13px;color:var(--text)">근육통 있음</span>
+                <span style="font-size:13px;color:var(--text)" data-i18n="sorenessCheck">근육통 있음</span>
                 <label class="toggle-switch">
                   <input type="checkbox" id="td-soreness">
                   <span class="toggle-slider"></span>
@@ -641,8 +644,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
               </div>
             </div>
             <div class="form-group">
-              <label>가능한 시간</label>
-              <select id="td-time">
+              <label data-i18n="timeLabel">가능한 시간</label>
+              <select id="td-time" data-i18n-opt="timeOpts">
                 <option value="10">10분</option>
                 <option value="20">20분</option>
                 <option value="40">40분</option>
@@ -652,8 +655,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
             </div>
           </div>
           <div class="form-group">
-            <label>오늘 운동 부위</label>
-            <select id="target">
+            <label data-i18n="targetLabel">오늘 운동 부위</label>
+            <select id="target" data-i18n-opt="targetOpts">
               <option value="전신">전신 (풀바디)</option>
               <option value="가슴+삼두">가슴 + 삼두</option>
               <option value="등+이두">등 + 이두</option>
@@ -665,16 +668,16 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
-          <button class="btn btn-primary" id="risk-btn" onclick="predictRisk()" style="margin-top:0">🔮 오늘 컨디션 분석하기</button>
-          <button class="btn" onclick="goLazy()" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;margin-top:0;touch-action:manipulation">😮‍💨 오늘 0만 피하면 돼 — 최소만 할게</button>
-          <button class="btn btn-peak" onclick="goPeak()" style="margin-top:0">💥 고점 모드 — 오늘 전력으로 간다</button>
+          <button class="btn btn-primary" id="risk-btn" onclick="predictRisk()" style="margin-top:0" data-i18n="analyzeBtn">🔮 오늘 컨디션 분석하기</button>
+          <button class="btn" onclick="goLazy()" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;margin-top:0;touch-action:manipulation" data-i18n="lazyBtn">😮‍💨 오늘 0만 피하면 돼 — 최소만 할게</button>
+          <button class="btn btn-peak" onclick="goPeak()" style="margin-top:0" data-i18n="peakBtn">💥 고점 모드 — 오늘 전력으로 간다</button>
         </div>
       </div>
     </div>
 
     <!-- ── STEP 2: 분석 결과 ── -->
     <div class="step-page" id="home-step-2">
-      <button class="step-back" onclick="goToStep(1)">← 다시 입력</button>
+      <button class="step-back" onclick="goToStep(1)" data-i18n="backStep2">← 다시 입력</button>
       <div class="loading" id="home-loading">
         <div class="loading-ring"></div>
         <div class="loading-text" id="home-loading-text">분석 중...</div>
@@ -684,20 +687,20 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <!-- 위험도 분석 결과 -->
       <div id="risk-result" style="display:none"></div>
       <div id="action-btns" style="display:none;flex-direction:column;gap:8px">
-        <button class="btn btn-primary" id="routine-btn" onclick="getRoutine()" style="margin-top:0">💪 맞춤 루틴 짜줘</button>
+        <button class="btn btn-primary" id="routine-btn" onclick="getRoutine()" style="margin-top:0" data-i18n="routineBtn">💪 맞춤 루틴 짜줘</button>
         <div class="btn-group" style="margin-top:0">
-          <button class="btn" style="background:#6366f1;color:#fff" id="min-btn" onclick="getMinRoutine()">😮‍💨 최소 실행</button>
-          <button class="btn btn-peak" onclick="goPeak()">💥 고점으로 간다</button>
+          <button class="btn" style="background:#6366f1;color:#fff" id="min-btn" onclick="getMinRoutine()" data-i18n="minBtn">😮‍💨 최소 실행</button>
+          <button class="btn btn-peak" onclick="goPeak()" data-i18n="peakGoBtn">💥 고점으로 간다</button>
         </div>
       </div>
 
       <!-- 가기 싫어 경로 -->
       <div id="lazy-section" style="display:none">
         <div class="card">
-          <div class="card-title">😩 오늘 하기 싫은 이유</div>
+          <div class="card-title" data-i18n="lazyTitle">😩 오늘 하기 싫은 이유</div>
           <div class="form-group" style="margin-bottom:12px">
-            <label>이유 선택</label>
-            <select id="lazy-reason">
+            <label data-i18n="lazyReasonLabel">이유 선택</label>
+            <select id="lazy-reason" data-i18n-opt="lazyReasonOpts">
               <option value="너무 피곤함">너무 피곤함 😴</option>
               <option value="귀찮음">그냥 귀찮음 🛋️</option>
               <option value="시간 없음">시간이 없음 ⏰</option>
@@ -707,7 +710,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
               <option value="비 와서">비 와서 나가기 싫음 🌧️</option>
             </select>
           </div>
-          <button class="btn btn-primary" onclick="getMotivation()">동기부여 받기 🔥</button>
+          <button class="btn btn-primary" onclick="getMotivation()" data-i18n="motivateBtn">동기부여 받기 🔥</button>
         </div>
         <div class="motive-result" id="motive-result">
           <div class="motive-card">
@@ -716,14 +719,14 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
             <div class="motive-quote" id="m-quote"></div>
             <div class="motive-challenge" id="m-challenge"></div>
           </div>
-          <button class="btn btn-primary" onclick="getMinRoutine()">그래도 최소한 해볼게 💨</button>
+          <button class="btn btn-primary" onclick="getMinRoutine()" data-i18n="minAnywayBtn">그래도 최소한 해볼게 💨</button>
         </div>
       </div>
     </div>
 
     <!-- ── STEP 3: 루틴 결과 ── -->
     <div class="step-page" id="home-step-3">
-      <button class="step-back" onclick="goToStep(2)">← 뒤로</button>
+      <button class="step-back" onclick="goToStep(2)" data-i18n="backStep3">← 뒤로</button>
       <div class="loading" id="home-loading-3" style="display:none">
         <div class="loading-ring"></div>
         <div class="loading-text" id="home-loading-text-3">루틴 생성 중...</div>
@@ -734,33 +737,33 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <div id="workout-done">
         <div class="done-hero">
           <span class="done-icon">🏆</span>
-          <div class="done-title">운동 완료!</div>
-          <div class="done-sub">오늘도 제로데이를 막았어요<br>꾸준함이 최고의 능력이에요</div>
+          <div class="done-title" data-i18n="workoutDoneTitle">운동 완료!</div>
+          <div class="done-sub" data-i18n-html="workoutDoneSub">오늘도 제로데이를 막았어요<br>꾸준함이 최고의 능력이에요</div>
         </div>
         <div class="done-stats">
           <div class="done-stat-box">
             <div class="done-stat-num" id="ds-rate">0%</div>
-            <div class="done-stat-label">완료율</div>
+            <div class="done-stat-label" data-i18n="statRate">완료율</div>
           </div>
           <div class="done-stat-box">
             <div class="done-stat-num" id="ds-done">0/0</div>
-            <div class="done-stat-label">완료 운동</div>
+            <div class="done-stat-label" data-i18n="statDone">완료 운동</div>
           </div>
           <div class="done-stat-box">
             <div class="done-stat-num" id="ds-cal">0</div>
-            <div class="done-stat-label">kcal 소모</div>
+            <div class="done-stat-label" data-i18n="statKcal">kcal 소모</div>
           </div>
           <div class="done-stat-box">
             <div class="done-stat-num" id="ds-streak">0</div>
-            <div class="done-stat-label">연속 운동일 🔥</div>
+            <div class="done-stat-label" data-i18n="statStreak">연속 운동일 🔥</div>
           </div>
         </div>
         <div style="text-align:center;margin-bottom:18px">
-          <span class="done-target-tag" id="ds-target">오늘의 루틴</span>
+          <span class="done-target-tag" id="ds-target" data-i18n="todayRoutine">오늘의 루틴</span>
         </div>
         <div class="done-actions">
-          <button class="btn btn-primary" style="margin-top:0" onclick="showPage('dash')">📊 기록 확인하기</button>
-          <button class="btn" style="background:#1a2436;color:var(--text);width:100%" onclick="startNewRoutine()">💪 새 루틴 짜기</button>
+          <button class="btn btn-primary" style="margin-top:0" onclick="showPage('dash')" data-i18n="viewLogBtn">📊 기록 확인하기</button>
+          <button class="btn" style="background:#1a2436;color:var(--text);width:100%" onclick="startNewRoutine()" data-i18n="newRoutineBtn">💪 새 루틴 짜기</button>
         </div>
       </div>
 
@@ -775,8 +778,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           <div class="min-upgrade" id="min-upgrade"></div>
         </div>
         <div class="btn-group" style="margin-top:8px">
-          <button class="btn btn-primary" onclick="getRoutine()">더 하고 싶어졌어 💪</button>
-          <button class="btn btn-green" onclick="saveMinWorkout()">완료 저장 ✅</button>
+          <button class="btn btn-primary" onclick="getRoutine()" data-i18n="wantMoreBtn">더 하고 싶어졌어 💪</button>
+          <button class="btn btn-green" onclick="saveMinWorkout()" data-i18n="saveMinBtn">완료 저장 ✅</button>
         </div>
       </div>
 
@@ -792,32 +795,32 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           </div>
           <div class="condition-note" id="r-condition-note" style="display:none"></div>
           <div class="workout-timer-row">
-            <span style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.5px">총 운동 시간</span>
+            <span style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.5px" data-i18n="totalTime">총 운동 시간</span>
             <span class="workout-elapsed" id="workout-elapsed" onclick="toggleWorkoutTimer()" title="탭하여 일시정지/재개">⏱ 00:00</span>
-            <span style="font-size:10px;color:var(--muted)">(탭하면 일시정지)</span>
+            <span style="font-size:10px;color:var(--muted)" data-i18n="tapPause">(탭하면 일시정지)</span>
           </div>
         </div>
-        <div class="section-label">🔥 워밍업</div>
+        <div class="section-label" data-i18n="warmupLabel">🔥 워밍업</div>
         <div class="simple-list" id="r-warmup"></div>
-        <div class="section-label">💪 메인 운동</div>
+        <div class="section-label" data-i18n="mainLabel">💪 메인 운동</div>
         <div class="exercise-list" id="r-main"></div>
         <div class="cal-live-bar" id="cal-live-bar" style="display:none">
-          <span class="cal-live-label">🔥 예상 소모 칼로리 <span id="cal-live-tag" style="font-size:10px;opacity:.7">(체중·성별·중량 반영)</span></span>
+          <span class="cal-live-label"><span data-i18n="calLiveLabel">🔥 예상 소모 칼로리</span> <span id="cal-live-tag" style="font-size:10px;opacity:.7">(체중·성별·중량 반영)</span></span>
           <span class="cal-live-num" id="cal-live-num">0 kcal</span>
         </div>
-        <div class="section-label">🧘 마무리 스트레칭</div>
+        <div class="section-label" data-i18n="cooldownLabel">🧘 마무리 스트레칭</div>
         <div class="simple-list" id="r-cooldown"></div>
         <div id="r-advice" class="advice-box"></div>
         <div id="r-injury" class="injury-box" style="display:none"></div>
         <div class="complete-section" id="complete-section">
-          <div class="all-done-banner" id="all-done-banner">🎉 오늘 운동 전부 완료! 제로데이 방지 성공 💪</div>
+          <div class="all-done-banner" id="all-done-banner" data-i18n="allDoneBanner">🎉 오늘 운동 전부 완료! 제로데이 방지 성공 💪</div>
           <div class="complete-stats">
-            <div class="stat-box" id="stat-done"><div class="stat-num" id="done-count">0</div><div class="stat-label">완료한 운동</div></div>
-            <div class="stat-box" id="stat-total"><div class="stat-num" id="total-count">0</div><div class="stat-label">전체 운동</div></div>
-            <div class="stat-box" id="stat-pct"><div class="stat-num" id="done-pct">0%</div><div class="stat-label">완료율</div></div>
+            <div class="stat-box" id="stat-done"><div class="stat-num" id="done-count">0</div><div class="stat-label" data-i18n="statDoneLabel">완료한 운동</div></div>
+            <div class="stat-box" id="stat-total"><div class="stat-num" id="total-count">0</div><div class="stat-label" data-i18n="statTotalLabel">전체 운동</div></div>
+            <div class="stat-box" id="stat-pct"><div class="stat-num" id="done-pct">0%</div><div class="stat-label" data-i18n="statPctLabel">완료율</div></div>
           </div>
           <div class="form-group" style="margin:10px 0 12px">
-            <label>오늘 피로도 <span id="fatigue-val" style="color:var(--red);font-size:13px">5</span>/10</label>
+            <label><span data-i18n="postFatigueLabel">오늘 피로도</span> <span id="fatigue-val" style="color:var(--red);font-size:13px">5</span>/10</label>
             <div class="slider-row">
               <span class="slider-hint">😌 1</span>
               <input type="range" id="fatigue" min="1" max="10" value="5" style="accent-color:var(--red)"
@@ -825,7 +828,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
               <span class="slider-hint">10 😵</span>
             </div>
           </div>
-          <button class="btn btn-green" onclick="completeWorkout()">운동 완료 저장 ✅</button>
+          <button class="btn btn-green" onclick="completeWorkout()" data-i18n="saveWorkoutBtn">운동 완료 저장 ✅</button>
         </div>
       </div>
     </div>
@@ -838,19 +841,19 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 <!-- ===== DASHBOARD ===== -->
 <div class="page" id="page-dash">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-    <div class="page-heading" style="margin-bottom:0">📊 운동 기록</div>
-    <button class="btn btn-outline" style="font-size:12px;padding:7px 12px" onclick="showMissedModal()">😞 못 함 기록</button>
+    <div class="page-heading" style="margin-bottom:0" data-i18n="dashHeading">📊 운동 기록</div>
+    <button class="btn btn-outline" style="font-size:12px;padding:7px 12px" onclick="showMissedModal()" data-i18n="missedBtn">😞 못 함 기록</button>
   </div>
 
   <div class="stats-grid">
-    <div class="stats-card"><div class="stats-num" id="d-week">0</div><div class="stats-label">이번 주</div><div class="stats-sub">회</div></div>
-    <div class="stats-card"><div class="stats-num" id="d-month">0</div><div class="stats-label">이번 달</div><div class="stats-sub">회</div></div>
-    <div class="stats-card"><div class="stats-num" id="d-rate">0%</div><div class="stats-label">평균 완료율</div><div class="stats-sub">최근 10회</div></div>
+    <div class="stats-card"><div class="stats-num" id="d-week">0</div><div class="stats-label" data-i18n="dWeekLabel">이번 주</div><div class="stats-sub" data-i18n="dWeekSub">회</div></div>
+    <div class="stats-card"><div class="stats-num" id="d-month">0</div><div class="stats-label" data-i18n="dMonthLabel">이번 달</div><div class="stats-sub" data-i18n="dMonthSub">회</div></div>
+    <div class="stats-card"><div class="stats-num" id="d-rate">0%</div><div class="stats-label" data-i18n="dRateLabel">평균 완료율</div><div class="stats-sub" data-i18n="dRateSub">최근 10회</div></div>
   </div>
   <div class="stats-grid">
-    <div class="stats-card"><div class="stats-num" id="d-streak">0</div><div class="stats-label">연속 운동일</div><div class="stats-sub">일</div></div>
-    <div class="stats-card"><div class="stats-num" id="d-balance">-</div><div class="stats-label">균형 점수</div><div class="stats-sub">/ 100</div></div>
-    <div class="stats-card"><div class="stats-num" id="d-total">0</div><div class="stats-label">총 운동 횟수</div><div class="stats-sub">회</div></div>
+    <div class="stats-card"><div class="stats-num" id="d-streak">0</div><div class="stats-label" data-i18n="dStreakLabel">연속 운동일</div><div class="stats-sub" data-i18n="dStreakSub">일</div></div>
+    <div class="stats-card"><div class="stats-num" id="d-balance">-</div><div class="stats-label" data-i18n="dBalanceLabel">균형 점수</div><div class="stats-sub" data-i18n="dBalanceSub">/ 100</div></div>
+    <div class="stats-card"><div class="stats-num" id="d-total">0</div><div class="stats-label" data-i18n="dTotalLabel">총 운동 횟수</div><div class="stats-sub" data-i18n="dTotalSub">회</div></div>
   </div>
 
   <div class="card">
@@ -859,41 +862,41 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <span class="cal-month-label" id="cal-month-label"></span>
       <button class="cal-nav-btn" onclick="moveCalendar(1)">›</button>
     </div>
-    <div class="cal-weekdays">
+    <div class="cal-weekdays" id="cal-weekdays">
       <div class="cal-weekday">일</div><div class="cal-weekday">월</div><div class="cal-weekday">화</div>
       <div class="cal-weekday">수</div><div class="cal-weekday">목</div><div class="cal-weekday">금</div><div class="cal-weekday">토</div>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
     <div class="cal-legend">
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--green)"></div>운동 완료</div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f43f5e30;border:1px solid #f43f5e50"></div>못 함 기록</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--green)"></div><span data-i18n="calLegendDone">운동 완료</span></div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f43f5e30;border:1px solid #f43f5e50"></div><span data-i18n="calLegendMissed">못 함 기록</span></div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">📅 최근 7일 운동</div>
+    <div class="card-title" data-i18n="weekChartTitle">📅 최근 7일 운동</div>
     <div class="bar-chart" id="week-chart"></div>
   </div>
 
   <div class="card">
-    <div class="card-title">🔥 세션별 소모 칼로리</div>
-    <div class="bar-chart" id="cal-chart"><div style="font-size:12px;color:var(--muted);padding:4px 0">운동 완료 후 기록이 쌓여요.</div></div>
+    <div class="card-title" data-i18n="calChartTitle">🔥 세션별 소모 칼로리</div>
+    <div class="bar-chart" id="cal-chart"><div style="font-size:12px;color:var(--muted);padding:4px 0" data-i18n="calChartEmpty">운동 완료 후 기록이 쌓여요.</div></div>
   </div>
 
   <div class="card">
-    <div class="card-title">🏋️ 부위별 운동 균형</div>
+    <div class="card-title" data-i18n="targetChartTitle">🏋️ 부위별 운동 균형</div>
     <div class="bar-chart" id="target-chart"></div>
   </div>
 
   <div class="card">
     <div class="card-title" style="justify-content:space-between">
-      <span>📋 운동 로그</span>
+      <span data-i18n="logTitle">📋 운동 로그</span>
       <div style="display:flex;gap:6px">
-        <button class="btn-outline btn" style="padding:3px 8px;font-size:11px" onclick="showMissedModal()">😞 못 함 기록</button>
-        <button class="btn-outline btn" style="padding:3px 8px;font-size:11px" onclick="getFeedback()">🤖 AI 피드백</button>
+        <button class="btn-outline btn" style="padding:3px 8px;font-size:11px" onclick="showMissedModal()" data-i18n="missedBtn">😞 못 함 기록</button>
+        <button class="btn-outline btn" style="padding:3px 8px;font-size:11px" onclick="getFeedback()" data-i18n="feedbackBtn">🤖 AI 피드백</button>
       </div>
     </div>
-    <div class="loading" id="fb-loading"><div class="loading-ring"></div><div class="loading-text">AI 분석 중...</div></div>
+    <div class="loading" id="fb-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="aiAnalyzing">AI 분석 중...</div></div>
     <div id="feedback-result" style="display:none" class="feedback-card">
       <div class="fb-summary" id="fb-summary"></div>
       <div class="fb-list" id="fb-good"></div>
@@ -908,26 +911,26 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
 <!-- ===== ANALYSIS ===== -->
 <div class="page" id="page-analysis">
-  <div class="page-heading">📈 AI 분석</div>
+  <div class="page-heading" data-i18n="analysisHeading">📈 AI 분석</div>
 
   <!-- Routine shortcut -->
   <div class="card">
-    <div class="card-title">🏋️ 오늘의 루틴</div>
-    <button class="btn btn-primary" onclick="navToRoutine('normal')">💪 맞춤 루틴 짜줘</button>
+    <div class="card-title" data-i18n="todayRoutineCard">🏋️ 오늘의 루틴</div>
+    <button class="btn btn-primary" onclick="navToRoutine('normal')" data-i18n="routineBtn">💪 맞춤 루틴 짜줘</button>
     <div class="btn-group">
-      <button class="btn" onclick="navToRoutine('min')" style="background:#6366f1;color:#fff">😮‍💨 최소 실행</button>
-      <button class="btn btn-peak" onclick="navToRoutine('peak')">💥 고점으로 간다</button>
+      <button class="btn" onclick="navToRoutine('min')" style="background:#6366f1;color:#fff" data-i18n="minBtn">😮‍💨 최소 실행</button>
+      <button class="btn btn-peak" onclick="navToRoutine('peak')" data-i18n="peakGoBtn">💥 고점으로 간다</button>
     </div>
   </div>
 
   <!-- Failure analysis -->
   <div class="card">
-    <div class="card-title">😞 운동 실패 원인 분석</div>
+    <div class="card-title" data-i18n="failureTitle">😞 운동 실패 원인 분석</div>
     <div id="missed-reason-chart" class="bar-chart" style="margin-bottom:10px">
-      <div style="font-size:13px;color:var(--muted);padding:6px 0">기록 탭에서 😞 못 함 기록을 남기면 여기서 패턴을 분석해요.</div>
+      <div style="font-size:13px;color:var(--muted);padding:6px 0" data-i18n="failureChartEmpty">기록 탭에서 😞 못 함 기록을 남기면 여기서 패턴을 분석해요.</div>
     </div>
-    <button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="getAnalysis()">🔍 실패 패턴 분석하기</button>
-    <div class="loading" id="analysis-loading"><div class="loading-ring"></div><div class="loading-text">실패 패턴 분석 중...</div></div>
+    <button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="getAnalysis()" data-i18n="analyzeFailBtn">🔍 실패 패턴 분석하기</button>
+    <div class="loading" id="analysis-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadFailure">실패 패턴 분석 중...</div></div>
     <div id="analysis-result" style="display:none">
       <div class="analysis-stat" id="analysis-summary"></div>
       <div class="advice-box" id="analysis-text" style="margin-bottom:10px"></div>
@@ -938,15 +941,15 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
   <!-- 4주 report -->
   <div class="card">
-    <div class="card-title">📈 4주 성장 리포트</div>
-    <button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="getReport()">📊 리포트 생성하기</button>
-    <div class="loading" id="report-loading"><div class="loading-ring"></div><div class="loading-text">4주 데이터 분석 중...</div></div>
+    <div class="card-title" data-i18n="reportTitle">📈 4주 성장 리포트</div>
+    <button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="getReport()" data-i18n="genReportBtn">📊 리포트 생성하기</button>
+    <div class="loading" id="report-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadReport">4주 데이터 분석 중...</div></div>
     <div id="report-result" style="display:none">
       <div class="report-grid">
-        <div class="report-stat"><div class="report-num" id="rp-sessions">-</div><div class="report-label">총 운동 횟수</div></div>
-        <div class="report-stat"><div class="report-num" id="rp-completion">-</div><div class="report-label">평균 완료율</div></div>
-        <div class="report-stat"><div class="report-num" id="rp-streak">-</div><div class="report-label">연속 운동일</div></div>
-        <div class="report-stat"><div class="report-num" id="rp-most">-</div><div class="report-label">가장 많이 한 부위</div></div>
+        <div class="report-stat"><div class="report-num" id="rp-sessions">-</div><div class="report-label" data-i18n="reportSessions">총 운동 횟수</div></div>
+        <div class="report-stat"><div class="report-num" id="rp-completion">-</div><div class="report-label" data-i18n="reportCompletion">평균 완료율</div></div>
+        <div class="report-stat"><div class="report-num" id="rp-streak">-</div><div class="report-label" data-i18n="reportStreak">연속 운동일</div></div>
+        <div class="report-stat"><div class="report-num" id="rp-most">-</div><div class="report-label" data-i18n="reportMost">가장 많이 한 부위</div></div>
       </div>
       <div class="report-summary" id="rp-summary"></div>
       <div id="rp-achievements" style="margin-bottom:8px"></div>
@@ -957,14 +960,14 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
   <!-- Routine converter -->
   <div class="card">
-    <div class="card-title">🔄 상황별 루틴 변환기</div>
-    <div id="no-routine-msg" style="font-size:13px;color:var(--muted);padding:4px 0 10px">
+    <div class="card-title" data-i18n="converterTitle">🔄 상황별 루틴 변환기</div>
+    <div id="no-routine-msg" style="font-size:13px;color:var(--muted);padding:4px 0 10px" data-i18n="noRoutineMsg">
       먼저 루틴 탭에서 맞춤 루틴을 생성해주세요.
     </div>
     <div id="converter-form" style="display:none">
       <div class="form-group" style="margin-bottom:10px">
-        <label>변환 유형</label>
-        <select id="convert-type">
+        <label data-i18n="convertTypeLabel">변환 유형</label>
+        <select id="convert-type" data-i18n-opt="convertOpts">
           <option value="home">🏠 집 운동으로 변환</option>
           <option value="short">⚡ 짧게 (15분 이내)</option>
           <option value="recovery">💆 회복 루틴으로</option>
@@ -972,9 +975,9 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           <option value="knee_safe">🦵 무릎 보호 루틴으로</option>
         </select>
       </div>
-      <button class="btn btn-primary" onclick="convertRoutine()" style="margin-top:0">변환하기 🔄</button>
+      <button class="btn btn-primary" onclick="convertRoutine()" style="margin-top:0" data-i18n="convertBtn">변환하기 🔄</button>
     </div>
-    <div class="loading" id="convert-loading"><div class="loading-ring"></div><div class="loading-text">루틴 변환 중...</div></div>
+    <div class="loading" id="convert-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadConvert">루틴 변환 중...</div></div>
     <div id="convert-result" style="display:none;margin-top:12px">
       <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px" id="cv-title"></div>
       <div class="advice-box" id="cv-summary" style="margin-bottom:10px"></div>
@@ -988,19 +991,19 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 <div class="page" id="page-diet">
   <div id="diet-no-profile" class="card" style="text-align:center;padding:28px;display:none">
     <div style="font-size:36px;margin-bottom:10px">🥗</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:12px">프로필을 먼저 설정해주세요</div>
-    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('profile')">프로필 설정하기 →</button>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px" data-i18n="dietNoProfile">프로필을 먼저 설정해주세요</div>
+    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('profile')" data-i18n="setProfileBtn">프로필 설정하기 →</button>
   </div>
   <div id="diet-form">
     <!-- 식단 step 1: 입력 -->
     <div class="step-page active" id="diet-step-1">
       <div class="card">
-        <div class="card-title">🥗 식단 추천받기</div>
+        <div class="card-title" data-i18n="dietCardTitle">🥗 식단 추천받기</div>
         <div id="diet-profile-info" style="font-size:12px;color:var(--muted);margin-bottom:14px"></div>
         <div style="display:flex;flex-direction:column;gap:14px">
           <div class="form-group">
-            <label>주당 운동 횟수</label>
-            <select id="diet-days">
+            <label data-i18n="dietWeekLabel">주당 운동 횟수</label>
+            <select id="diet-days" data-i18n-opt="dietWeekOpts">
               <option value="1">주 1회</option>
               <option value="2">주 2회</option>
               <option value="3" selected>주 3회</option>
@@ -1009,8 +1012,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
             </select>
           </div>
           <div class="form-group">
-            <label>선호 식단 스타일</label>
-            <select id="diet-style">
+            <label data-i18n="dietStyleLabel">선호 식단 스타일</label>
+            <select id="diet-style" data-i18n-opt="dietStyleOpts">
               <option value="한식">🍚 한식 (밥·국·반찬)</option>
               <option value="양식">🍝 양식 (파스타·샐러드)</option>
               <option value="빵/샌드위치">🥪 빵/샌드위치</option>
@@ -1019,31 +1022,31 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
             </select>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="getDiet()" style="margin-top:16px">🥗 식단 추천받기</button>
+        <button class="btn btn-primary" onclick="getDiet()" style="margin-top:16px" data-i18n="dietBtn">🥗 식단 추천받기</button>
       </div>
-      <div class="loading" id="diet-loading"><div class="loading-ring"></div><div class="loading-text">칼로리 계산 중...</div></div>
+      <div class="loading" id="diet-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadCalories">칼로리 계산 중...</div></div>
       <div class="error" id="diet-error"></div>
     </div>
 
     <!-- 식단 step 2: 결과 -->
     <div class="step-page" id="diet-step-2">
-      <button class="step-back" onclick="dietBack()">← 다시 계산</button>
+      <button class="step-back" onclick="dietBack()" data-i18n="dietBackBtn">← 다시 계산</button>
       <div class="diet-result" id="diet-result">
         <div class="card">
-          <div class="card-title">🔥 하루 칼로리 & 영양소</div>
+          <div class="card-title" data-i18n="macroTitle">🔥 하루 칼로리 & 영양소</div>
           <div class="macro-grid">
-            <div class="macro-card cal-card"><div class="macro-num" id="d-calories"></div><div class="macro-unit">kcal</div><div class="macro-label">목표 칼로리</div></div>
-            <div class="macro-card pro-card"><div class="macro-num" id="d-protein"></div><div class="macro-unit">g</div><div class="macro-label">단백질</div></div>
-            <div class="macro-card carb-card"><div class="macro-num" id="d-carbs"></div><div class="macro-unit">g</div><div class="macro-label">탄수화물</div></div>
-            <div class="macro-card fat-card"><div class="macro-num" id="d-fat"></div><div class="macro-unit">g</div><div class="macro-label">지방</div></div>
+            <div class="macro-card cal-card"><div class="macro-num" id="d-calories"></div><div class="macro-unit">kcal</div><div class="macro-label" data-i18n="macroCalLabel">목표 칼로리</div></div>
+            <div class="macro-card pro-card"><div class="macro-num" id="d-protein"></div><div class="macro-unit">g</div><div class="macro-label" data-i18n="macroProteinLabel">단백질</div></div>
+            <div class="macro-card carb-card"><div class="macro-num" id="d-carbs"></div><div class="macro-unit">g</div><div class="macro-label" data-i18n="macroCarbLabel">탄수화물</div></div>
+            <div class="macro-card fat-card"><div class="macro-num" id="d-fat"></div><div class="macro-unit">g</div><div class="macro-label" data-i18n="macroFatLabel">지방</div></div>
           </div>
         </div>
         <div class="card">
-          <div class="card-title">🍽️ 오늘의 식단 예시</div>
-          <div class="meal-item"><div class="meal-time">🌅 아침</div><div class="meal-text" id="d-breakfast"></div></div>
-          <div class="meal-item"><div class="meal-time">☀️ 점심</div><div class="meal-text" id="d-lunch"></div></div>
-          <div class="meal-item"><div class="meal-time">🌙 저녁</div><div class="meal-text" id="d-dinner"></div></div>
-          <div class="meal-item"><div class="meal-time">🍎 간식</div><div class="meal-text" id="d-snack"></div></div>
+          <div class="card-title" data-i18n="mealTitle">🍽️ 오늘의 식단 예시</div>
+          <div class="meal-item"><div class="meal-time" data-i18n="mealBreakfast">🌅 아침</div><div class="meal-text" id="d-breakfast"></div></div>
+          <div class="meal-item"><div class="meal-time" data-i18n="mealLunch">☀️ 점심</div><div class="meal-text" id="d-lunch"></div></div>
+          <div class="meal-item"><div class="meal-time" data-i18n="mealDinner">🌙 저녁</div><div class="meal-text" id="d-dinner"></div></div>
+          <div class="meal-item"><div class="meal-time" data-i18n="mealSnack">🍎 간식</div><div class="meal-text" id="d-snack"></div></div>
           <div class="advice-box" id="d-tip" style="margin-top:8px;margin-bottom:0"></div>
         </div>
       </div>
@@ -1053,46 +1056,46 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
 <!-- ===== PROFILE ===== -->
 <div class="page" id="page-profile">
-  <div class="page-heading">⚙️ 내 프로필</div>
+  <div class="page-heading" data-i18n="profileHeading">⚙️ 내 프로필</div>
   <div class="card">
-    <div class="card-title">👤 기본 정보</div>
+    <div class="card-title" data-i18n="basicInfoTitle">👤 기본 정보</div>
     <div class="form-grid">
       <div class="form-group full">
-        <label>이름 (선택)</label>
-        <input type="text" id="p-name" placeholder="이름을 입력해주세요">
+        <label data-i18n="nameLabel">이름 (선택)</label>
+        <input type="text" id="p-name" placeholder="이름을 입력해주세요" data-i18n-ph="namePlaceholder">
       </div>
       <div class="form-group">
-        <label>성별</label>
-        <select id="p-gender">
+        <label data-i18n="genderLabel">성별</label>
+        <select id="p-gender" data-i18n-opt="genderOpts">
           <option value="남성">남성</option>
           <option value="여성">여성</option>
         </select>
       </div>
       <div class="form-group">
-        <label>나이</label>
+        <label data-i18n="ageLabel">나이</label>
         <input type="number" id="p-age" placeholder="25" min="15" max="80">
       </div>
       <div class="form-group">
-        <label>키 (cm)</label>
+        <label data-i18n="heightLabel">키 (cm)</label>
         <input type="number" id="p-height" placeholder="175" min="130" max="230">
       </div>
       <div class="form-group">
-        <label>몸무게 (kg)</label>
+        <label data-i18n="weightLabel2">몸무게 (kg)</label>
         <input type="number" id="p-weight" placeholder="70" min="30" max="200" step="0.1">
       </div>
       <div class="form-group full">
-        <label>목표 체중 (kg, 선택)</label>
+        <label data-i18n="targetWeightLabel">목표 체중 (kg, 선택)</label>
         <input type="number" id="p-target-weight" placeholder="65" min="30" max="200" step="0.1">
       </div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">🎯 운동 정보</div>
+    <div class="card-title" data-i18n="fitnessInfoTitle">🎯 운동 정보</div>
     <div class="form-grid">
       <div class="form-group">
-        <label>목표</label>
-        <select id="p-goal">
+        <label data-i18n="goalLabel">목표</label>
+        <select id="p-goal" data-i18n-opt="goalOpts">
           <option value="증량">증량 (근육 키우기)</option>
           <option value="감량">감량 (다이어트)</option>
           <option value="체력 향상">체력 향상</option>
@@ -1100,24 +1103,24 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         </select>
       </div>
       <div class="form-group">
-        <label>운동 경험</label>
-        <select id="p-level">
+        <label data-i18n="levelLabel">운동 경험</label>
+        <select id="p-level" data-i18n-opt="levelOpts">
           <option value="초급">초급 (헬린이)</option>
           <option value="중급">중급 (1년 이상)</option>
           <option value="고급">고급 (3년 이상)</option>
         </select>
       </div>
       <div class="form-group">
-        <label>운동 장소</label>
-        <select id="p-location">
+        <label data-i18n="locationLabel">운동 장소</label>
+        <select id="p-location" data-i18n-opt="locationOpts">
           <option value="헬스장">헬스장</option>
           <option value="집">집</option>
           <option value="야외">야외</option>
         </select>
       </div>
       <div class="form-group">
-        <label>주당 운동 가능 횟수</label>
-        <select id="p-weekly">
+        <label data-i18n="weeklyLabel">주당 운동 가능 횟수</label>
+        <select id="p-weekly" data-i18n-opt="weeklyOpts">
           <option value="1">주 1회</option>
           <option value="2">주 2회</option>
           <option value="3" selected>주 3회</option>
@@ -1129,51 +1132,51 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   </div>
 
   <div class="card">
-    <div class="card-title">🔧 보유 장비</div>
-    <div class="check-group">
-      <label class="check-item"><input type="checkbox" name="equip" value="덤벨"> 덤벨</label>
-      <label class="check-item"><input type="checkbox" name="equip" value="바벨"> 바벨</label>
-      <label class="check-item"><input type="checkbox" name="equip" value="머신"> 머신</label>
-      <label class="check-item"><input type="checkbox" name="equip" value="케이블"> 케이블</label>
-      <label class="check-item"><input type="checkbox" name="equip" value="밴드"> 밴드</label>
-      <label class="check-item"><input type="checkbox" name="equip" value="풀업바"> 풀업바</label>
-      <label class="check-item"><input type="checkbox" name="equip" value="맨몸"> 맨몸만</label>
+    <div class="card-title" data-i18n="equipTitle">🔧 보유 장비</div>
+    <div class="check-group" id="equip-group">
+      <label class="check-item"><input type="checkbox" name="equip" value="덤벨"> <span data-i18n="equipItems.0">덤벨</span></label>
+      <label class="check-item"><input type="checkbox" name="equip" value="바벨"> <span data-i18n="equipItems.1">바벨</span></label>
+      <label class="check-item"><input type="checkbox" name="equip" value="머신"> <span data-i18n="equipItems.2">머신</span></label>
+      <label class="check-item"><input type="checkbox" name="equip" value="케이블"> <span data-i18n="equipItems.3">케이블</span></label>
+      <label class="check-item"><input type="checkbox" name="equip" value="밴드"> <span data-i18n="equipItems.4">밴드</span></label>
+      <label class="check-item"><input type="checkbox" name="equip" value="풀업바"> <span data-i18n="equipItems.5">풀업바</span></label>
+      <label class="check-item"><input type="checkbox" name="equip" value="맨몸"> <span data-i18n="equipItems.6">맨몸만</span></label>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">🩹 부상 부위 <span style="font-size:10px;color:var(--muted);font-weight:400">(해당 부위 운동 자동 제외)</span></div>
-    <div class="check-group">
-      <label class="check-item"><input type="checkbox" name="injury" value="허리"> 허리</label>
-      <label class="check-item"><input type="checkbox" name="injury" value="무릎"> 무릎</label>
-      <label class="check-item"><input type="checkbox" name="injury" value="어깨"> 어깨</label>
-      <label class="check-item"><input type="checkbox" name="injury" value="손목"> 손목</label>
-      <label class="check-item"><input type="checkbox" name="injury" value="목"> 목</label>
-      <label class="check-item"><input type="checkbox" name="injury" value="발목"> 발목</label>
+    <div class="card-title"><span data-i18n="injuryTitle">🩹 부상 부위</span> <span style="font-size:10px;color:var(--muted);font-weight:400" data-i18n="injuryNote">(해당 부위 운동 자동 제외)</span></div>
+    <div class="check-group" id="injury-group">
+      <label class="check-item"><input type="checkbox" name="injury" value="허리"> <span data-i18n="injuryItems.0">허리</span></label>
+      <label class="check-item"><input type="checkbox" name="injury" value="무릎"> <span data-i18n="injuryItems.1">무릎</span></label>
+      <label class="check-item"><input type="checkbox" name="injury" value="어깨"> <span data-i18n="injuryItems.2">어깨</span></label>
+      <label class="check-item"><input type="checkbox" name="injury" value="손목"> <span data-i18n="injuryItems.3">손목</span></label>
+      <label class="check-item"><input type="checkbox" name="injury" value="목"> <span data-i18n="injuryItems.4">목</span></label>
+      <label class="check-item"><input type="checkbox" name="injury" value="발목"> <span data-i18n="injuryItems.5">발목</span></label>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:10px">⚠️ 통증이 심해지면 즉시 중단하고 전문가와 상담하세요.</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:10px" data-i18n="injuryWarning">⚠️ 통증이 심해지면 즉시 중단하고 전문가와 상담하세요.</div>
   </div>
 
   <div style="position:sticky;bottom:16px;z-index:50;padding-top:8px">
-    <button class="btn btn-primary" onclick="saveProfile()" style="box-shadow:0 8px 24px #00000060">프로필 저장 ✓</button>
-    <div id="profile-saved" style="display:none;text-align:center;color:var(--green);font-size:13px;margin-top:8px;font-weight:700">✅ 저장됐어요!</div>
+    <button class="btn btn-primary" onclick="saveProfile()" style="box-shadow:0 8px 24px #00000060" data-i18n="saveProfileBtn">프로필 저장 ✓</button>
+    <div id="profile-saved" style="display:none;text-align:center;color:var(--green);font-size:13px;margin-top:8px;font-weight:700" data-i18n="savedMsg">✅ 저장됐어요!</div>
   </div>
 
   <div class="card" style="margin-top:8px">
-    <div class="card-title">🔄 앱 캐시 삭제</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">운동 기록은 유지하고 앱을 최신 버전으로 새로 불러와요. 업데이트 후 화면이 이상할 때 사용하세요.<br>확인하려면 <strong style="color:var(--text)">확인했습니다</strong> 를 입력하세요.</div>
-    <input type="text" id="cache-confirm" placeholder="확인했습니다" style="margin-bottom:10px">
-    <button class="btn btn-outline" style="width:100%;touch-action:manipulation" onclick="clearAppCache()">🔄 캐시 삭제 후 재시작</button>
+    <div class="card-title" data-i18n="cacheTitle">🔄 앱 캐시 삭제</div>
+    <div id="cache-desc" style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6" data-i18n-html="cacheDesc">운동 기록은 유지하고 앱을 최신 버전으로 새로 불러와요. 업데이트 후 화면이 이상할 때 사용하세요.<br>확인하려면 <strong style="color:var(--text)">확인했습니다</strong> 를 입력하세요.</div>
+    <input type="text" id="cache-confirm" placeholder="확인했습니다" data-i18n-ph="cachePlaceholder" style="margin-bottom:10px">
+    <button class="btn btn-outline" style="width:100%;touch-action:manipulation" onclick="clearAppCache()" data-i18n="cacheBtn">🔄 캐시 삭제 후 재시작</button>
   </div>
 
   <div class="card" style="border-color:#f43f5e30;margin-top:8px">
-    <div class="card-title" style="color:#f43f5e">⚠️ 전체 초기화</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">
+    <div class="card-title" style="color:#f43f5e" data-i18n="resetTitle">⚠️ 전체 초기화</div>
+    <div id="reset-desc" style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6" data-i18n-html="resetDesc">
       모든 운동 기록, 프로필, 식단 데이터가 <strong style="color:#f87191">영구 삭제</strong>됩니다.<br>
       확인하려면 아래에 <strong style="color:var(--text)">확인했습니다</strong> 를 입력하세요.
     </div>
-    <input type="text" id="reset-confirm" placeholder="확인했습니다" style="margin-bottom:10px">
-    <button class="btn" style="background:#f43f5e15;color:#f43f5e;border:1px solid #f43f5e40;width:100%;touch-action:manipulation" onclick="confirmReset()">전체 초기화</button>
+    <input type="text" id="reset-confirm" placeholder="확인했습니다" data-i18n-ph="resetPlaceholder" style="margin-bottom:10px">
+    <button class="btn" style="background:#f43f5e15;color:#f43f5e;border:1px solid #f43f5e40;width:100%;touch-action:manipulation" onclick="confirmReset()" data-i18n="resetBtn">전체 초기화</button>
   </div>
 </div>
 
@@ -1193,11 +1196,11 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <div class="rest-num" id="rt-num">60</div>
     </div>
     <div class="rest-info">
-      <div class="rest-ex-name" id="rt-ex">휴식 중</div>
-      <div class="rest-label">😤 다음 세트까지</div>
+      <div class="rest-ex-name" id="rt-ex" data-i18n="restingLabel">휴식 중</div>
+      <div class="rest-label" data-i18n="untilNextSet">😤 다음 세트까지</div>
       <div class="rest-btns">
-        <button class="rest-btn rest-btn-skip" onclick="skipRest()">건너뛰기</button>
-        <button class="rest-btn rest-btn-add" onclick="addRestTime(30)">+30초</button>
+        <button class="rest-btn rest-btn-skip" onclick="skipRest()" data-i18n="skipBtn">건너뛰기</button>
+        <button class="rest-btn rest-btn-add" onclick="addRestTime(30)" data-i18n="add30">+30초</button>
       </div>
     </div>
   </div>
@@ -1206,11 +1209,11 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 <!-- MISSED WORKOUT MODAL -->
 <div class="modal-bg" id="missed-modal" onclick="if(event.target===this)hideMissedModal()">
   <div class="modal">
-    <div class="modal-title">괜찮아요. 이유만 남겨요 💙</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">오늘 못 한 것도 기록이에요. 이유가 쌓이면 더 좋은 루틴을 만들 수 있어요.</div>
+    <div class="modal-title" data-i18n="missedTitle">괜찮아요. 이유만 남겨요 💙</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6" data-i18n="missedDesc">오늘 못 한 것도 기록이에요. 이유가 쌓이면 더 좋은 루틴을 만들 수 있어요.</div>
     <div class="form-group" style="margin-bottom:12px">
-      <label>이유 선택</label>
-      <select id="missed-reason">
+      <label data-i18n="missedReasonLabel">이유 선택</label>
+      <select id="missed-reason" data-i18n-opt="missedReasonOpts">
         <option value="피곤함">피곤함 😴</option>
         <option value="시간 부족">시간 부족 ⏰</option>
         <option value="귀찮음">귀찮음 🛋️</option>
@@ -1223,8 +1226,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       </select>
     </div>
     <div class="btn-group">
-      <button class="btn btn-outline" onclick="hideMissedModal()" style="flex:1;margin-top:0">취소</button>
-      <button class="btn btn-primary" onclick="saveMissedWorkout()" style="flex:2;margin-top:0" id="missed-save-btn">오늘 기록 남기기 ✓</button>
+      <button class="btn btn-outline" onclick="hideMissedModal()" style="flex:1;margin-top:0" data-i18n="cancelBtn">취소</button>
+      <button class="btn btn-primary" onclick="saveMissedWorkout()" style="flex:2;margin-top:0" id="missed-save-btn" data-i18n="missedSaveBtn">오늘 기록 남기기 ✓</button>
     </div>
   </div>
 </div>
@@ -1233,6 +1236,320 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 const $ = id => document.getElementById(id);
 function showErr(id,msg){const el=$(id);el.textContent=msg;el.classList.add('show')}
 function hideErr(id){$(id).classList.remove('show')}
+
+// ── i18n ──────────────────────────────────────────────────────────────────────
+let LANG = localStorage.getItem('nzd_lang') || 'ko';
+const TRANS = {
+  ko: {
+    appTitle:'No-Zero-Day | AI 운동 실패 방지 코치',
+    sound:'소리',
+    nav:['루틴','기록','분석','식단','프로필'],
+    splashSub:'포기하지 않게 만드는 AI 운동 코치<br>오늘도 0일은 없다',
+    feat:[['오늘 0일 위험도 예측','오늘 컨디션 분석 후 운동 포기 확률 계산'],['맞춤 루틴 생성','수면·피로·스트레스 반영한 오늘만의 루틴'],['가기 싫어도 OK','5분 최소 실행 루틴으로 제로데이 방지']],
+    splashStart:'시작하기 →',splashSkip:'건너뛰기',
+    noProfileMsg:'포기하지 않게 만드는 AI 운동 코치<br>먼저 프로필을 설정해주세요',
+    setProfileBtn:'프로필 설정하기 →',editProfileBtn:'수정 →',
+    steps:['컨디션','분석','루틴'],
+    conditionTitle:'🌡️ 오늘 컨디션 입력',
+    sleepLabel:'수면 시간',fatigueLabel:'피로도',
+    stressLabel:'스트레스',stressOpts:['낮음 😌','보통 😐','높음 😫'],
+    motivLabel:'운동 의욕',motivOpts:['낮음 😔','보통 😐','높음 🔥'],
+    sorenessLabel:'근육통',sorenessCheck:'근육통 있음',
+    timeLabel:'가능한 시간',timeOpts:['10분','20분','40분','60분','90분'],
+    targetLabel:'오늘 운동 부위',
+    targetOpts:['전신 (풀바디)','가슴 + 삼두','등 + 이두','어깨 (숄더데이)','하체 (스쿼트·레그프레스·런지)','코어 (복근·허리)','유산소 (런닝·자전거)'],
+    analyzeBtn:'🔮 오늘 컨디션 분석하기',lazyBtn:'😮‍💨 오늘 0만 피하면 돼 — 최소만 할게',peakBtn:'💥 고점 모드 — 오늘 전력으로 간다',
+    backStep2:'← 다시 입력',backStep3:'← 뒤로',backDiet:'← 다시 계산',
+    lazyTitle:'😩 오늘 하기 싫은 이유',lazyReasonLabel:'이유 선택',
+    lazyReasonOpts:['너무 피곤함 😴','그냥 귀찮음 🛋️','시간이 없음 ⏰','근육통 있음 😣','기분이 안 좋음 😞','스트레스가 큼 🤯','비 와서 나가기 싫음 🌧️'],
+    motivateBtn:'동기부여 받기 🔥',minAnywayBtn:'그래도 최소한 해볼게 💨',
+    routineBtn:'💪 맞춤 루틴 짜줘',minBtn:'😮‍💨 최소 실행',peakGoBtn:'💥 고점으로 간다',
+    workoutDoneTitle:'운동 완료!',workoutDoneSub:'오늘도 제로데이를 막았어요<br>꾸준함이 최고의 능력이에요',
+    statRate:'완료율',statDone:'완료 운동',statKcal:'kcal 소모',statStreak:'연속 운동일 🔥',
+    todayRoutine:'오늘의 루틴',viewLogBtn:'📊 기록 확인하기',newRoutineBtn:'💪 새 루틴 짜기',
+    wantMoreBtn:'더 하고 싶어졌어 💪',saveMinBtn:'완료 저장 ✅',
+    totalTime:'총 운동 시간',tapPause:'(탭하면 일시정지)',
+    warmupLabel:'🔥 워밍업',mainLabel:'💪 메인 운동',cooldownLabel:'🧘 마무리 스트레칭',
+    allDoneBanner:'🎉 오늘 운동 전부 완료! 제로데이 방지 성공 💪',
+    statDoneLabel:'완료한 운동',statTotalLabel:'전체 운동',statPctLabel:'완료율',
+    postFatigueLabel:'오늘 피로도',saveWorkoutBtn:'운동 완료 저장 ✅',
+    setsLabel:'세트',restLabel:'휴식',weightLabel:'💪 사용 중량',altPrefix:'대체: ',
+    calLiveLabel:'🔥 예상 소모 칼로리',calLiveTag:'(체중·성별·중량 반영)',calLiveTagNoProfile:'(프로필 설정 시 더 정확해져요)',
+    dashHeading:'📊 운동 기록',missedBtn:'😞 못 함 기록',
+    dWeekLabel:'이번 주',dWeekSub:'회',dMonthLabel:'이번 달',dMonthSub:'회',
+    dRateLabel:'평균 완료율',dRateSub:'최근 10회',
+    dStreakLabel:'연속 운동일',dStreakSub:'일',dBalanceLabel:'균형 점수',dBalanceSub:'/ 100',
+    dTotalLabel:'총 운동 횟수',dTotalSub:'회',
+    calWeekdays:['일','월','화','수','목','금','토'],
+    calLegendDone:'운동 완료',calLegendMissed:'못 함 기록',
+    weekChartTitle:'📅 최근 7일 운동',calChartTitle:'🔥 세션별 소모 칼로리',
+    targetChartTitle:'🏋️ 부위별 운동 균형',logTitle:'📋 운동 로그',
+    feedbackBtn:'🤖 AI 피드백',calChartEmpty:'운동 완료 후 기록이 쌓여요.',aiAnalyzing:'AI 분석 중...',
+    analysisHeading:'📈 AI 분석',todayRoutineCard:'🏋️ 오늘의 루틴',
+    failureTitle:'😞 운동 실패 원인 분석',failureChartEmpty:'기록 탭에서 😞 못 함 기록을 남기면 여기서 패턴을 분석해요.',
+    analyzeFailBtn:'🔍 실패 패턴 분석하기',loadFailure:'실패 패턴 분석 중...',
+    reportTitle:'📈 4주 성장 리포트',genReportBtn:'📊 리포트 생성하기',loadReport:'4주 데이터 분석 중...',
+    reportSessions:'총 운동 횟수',reportCompletion:'평균 완료율',reportStreak:'연속 운동일',reportMost:'가장 많이 한 부위',
+    converterTitle:'🔄 상황별 루틴 변환기',noRoutineMsg:'먼저 루틴 탭에서 맞춤 루틴을 생성해주세요.',
+    convertTypeLabel:'변환 유형',convertBtn:'변환하기 🔄',loadConvert:'루틴 변환 중...',
+    convertOpts:['🏠 집 운동으로 변환','⚡ 짧게 (15분 이내)','💆 회복 루틴으로','🤸 맨몸 운동으로','🦵 무릎 보호 루틴으로'],
+    dietNoProfile:'프로필을 먼저 설정해주세요',dietCardTitle:'🥗 식단 추천받기',
+    dietWeekLabel:'주당 운동 횟수',dietWeekOpts:['주 1회','주 2회','주 3회','주 4회','주 5회 이상'],
+    dietStyleLabel:'선호 식단 스타일',
+    dietStyleOpts:['🍚 한식 (밥·국·반찬)','🍝 양식 (파스타·샐러드)','🥪 빵/샌드위치','🏪 간편식 (편의점)','💪 고단백 위주'],
+    dietBtn:'🥗 식단 추천받기',dietBackBtn:'← 다시 계산',loadCalories:'칼로리 계산 중...',
+    macroTitle:'🔥 하루 칼로리 & 영양소',macroCalLabel:'목표 칼로리',macroProteinLabel:'단백질',macroCarbLabel:'탄수화물',macroFatLabel:'지방',
+    mealTitle:'🍽️ 오늘의 식단 예시',mealBreakfast:'🌅 아침',mealLunch:'☀️ 점심',mealDinner:'🌙 저녁',mealSnack:'🍎 간식',
+    profileHeading:'⚙️ 내 프로필',basicInfoTitle:'👤 기본 정보',
+    nameLabel:'이름 (선택)',namePlaceholder:'이름을 입력해주세요',
+    genderLabel:'성별',genderOpts:['남성','여성'],ageLabel:'나이',heightLabel:'키 (cm)',
+    weightLabel2:'몸무게 (kg)',targetWeightLabel:'목표 체중 (kg, 선택)',
+    fitnessInfoTitle:'🎯 운동 정보',goalLabel:'목표',
+    goalOpts:['증량 (근육 키우기)','감량 (다이어트)','체력 향상','건강 관리'],
+    levelLabel:'운동 경험',levelOpts:['초급 (헬린이)','중급 (1년 이상)','고급 (3년 이상)'],
+    locationLabel:'운동 장소',locationOpts:['헬스장','집','야외'],
+    weeklyLabel:'주당 운동 가능 횟수',weeklyOpts:['주 1회','주 2회','주 3회','주 4회','주 5회 이상'],
+    equipTitle:'🔧 보유 장비',equipItems:['덤벨','바벨','머신','케이블','밴드','풀업바','맨몸만'],
+    injuryTitle:'🩹 부상 부위',injuryNote:'(해당 부위 운동 자동 제외)',
+    injuryItems:['허리','무릎','어깨','손목','목','발목'],
+    injuryWarning:'⚠️ 통증이 심해지면 즉시 중단하고 전문가와 상담하세요.',
+    saveProfileBtn:'프로필 저장 ✓',savedMsg:'✅ 저장됐어요!',
+    cacheTitle:'🔄 앱 캐시 삭제',
+    cacheDesc:'운동 기록은 유지하고 앱을 최신 버전으로 새로 불러와요. 업데이트 후 화면이 이상할 때 사용하세요.<br>확인하려면 <strong style="color:var(--text)">확인했습니다</strong> 를 입력하세요.',
+    cachePlaceholder:'확인했습니다',cacheBtn:'🔄 캐시 삭제 후 재시작',
+    resetTitle:'⚠️ 전체 초기화',
+    resetDesc:'모든 운동 기록, 프로필, 식단 데이터가 <strong style="color:#f87191">영구 삭제</strong>됩니다.<br>확인하려면 아래에 <strong style="color:var(--text)">확인했습니다</strong> 를 입력하세요.',
+    resetPlaceholder:'확인했습니다',resetBtn:'전체 초기화',
+    confirmWord:'확인했습니다',confirmWordError:'"확인했습니다"를 정확히 입력해주세요.',
+    restingLabel:'휴식 중',untilNextSet:'😤 다음 세트까지',skipBtn:'건너뛰기',add30:'+30초',
+    missedTitle:'괜찮아요. 이유만 남겨요 💙',
+    missedDesc:'오늘 못 한 것도 기록이에요. 이유가 쌓이면 더 좋은 루틴을 만들 수 있어요.',
+    missedReasonLabel:'이유 선택',
+    missedReasonOpts:['피곤함 😴','시간 부족 ⏰','귀찮음 🛋️','근육통 😣','스트레스 🤯','기분 저하 😞','날씨 🌧️','약속/일정 📅','통증 🤕'],
+    cancelBtn:'취소',missedSaveBtn:'오늘 기록 남기기 ✓',closeBtn:'닫기',
+    loadAnalyze:['오늘 컨디션 분석 중...','수면 · 피로도 파악 중...','실패 위험도 계산 중...','거의 다 됐어요...'],
+    loadRoutine:['맞춤 루틴 구성 중...','운동 순서 최적화 중...','컨디션 반영 중...','난이도 조정 중...','마무리 다듬는 중...'],
+    loadMin:['최소 루틴 찾는 중...','5분 코스 구성 중...','0일 방지 플랜 완성 중...'],
+    loadMotivation:'동기부여 준비 중...',
+    onboardTitle:'첫 운동을 기록해봐요!',
+    onboardDesc:'루틴을 완료하면 여기에 기록이 쌓여요.<br>기록이 쌓일수록 AI 분석도 정확해져요.',
+    onboardStep1:'프로필 탭에서 내 정보 입력',onboardStep2:'루틴 탭에서 컨디션 입력 후 루틴 생성',onboardStep3:'운동 완료 후 저장 버튼 클릭',
+    onboardBtn:'첫 루틴 짜러 가기 💪',
+    alertNeedLogs2:'운동 기록이 2개 이상 있어야 피드백을 받을 수 있어요.',
+    alertNeedLogs:'기록이 더 필요해요.',alertNeedLogs4:'4주 리포트는 운동 기록이 4개 이상 있어야 해요.',
+    logMissedLabel:'😞 운동 못 함',logReasonPrefix:'이유: ',
+    logPreFatigue:'피로',logPostFatigue:'운동 후 피로',logMinTag:'최소루틴',logComplete:'완료',
+    analysisSummaryTpl:(t,m,r,reason)=>`총 운동 ${t}회 · 건너뜀 ${m}회 · 완료율 ${r}% · 주요 실패 원인: ${reason}`,
+    calMonthTpl:(y,m)=>`${y}년 ${m}월`,
+    riskBadge:'오늘 0일 위험도',riskSubtext:'오늘 0일이 될 위험',
+    todayLabel:'(오늘)',minSaved:'최소실행',minDoneTarget:'최소 실행 완료 ✓',
+    displayGender:{'남성':'남성','여성':'여성'},
+    displayGoal:{'증량':'증량','감량':'감량','체력 향상':'체력 향상','건강 관리':'건강 관리'},
+    displayLevel:{'초급':'초급','중급':'중급','고급':'고급'},
+    displayLocation:{'헬스장':'헬스장','집':'집','야외':'야외'},
+    injuryDisplay:'부상: ',ageUnit:'세',dietGoalPrefix:'목표: ',
+    origPrefix:'원래: ',peakConditionNote:'💥 고점 모드 — 최고 강도로 구성된 루틴입니다',
+    missedSaveDateTpl:(y,m,d)=>`${y}년 ${m}월 ${d}일 기록 남기기 ✓`,
+    futureDay:'아직 오지 않은 날이에요.',
+    emptyDay:'이날 기록이 없어요.<br>최소 실행이라도 기록으로 남길까요?',
+    missedReasonLog:'😞 운동 못 함 — ',relogBtn:'이유 다시 기록하기',logMissedBtn:'😞 못 했어요, 이유 남기기',
+    dayStatRate:'완료율',dayStatCount:'운동 수',dayStatKcal:'kcal',dayStatTime:'운동 시간',
+    splitLabel:{'가슴+삼두':'가슴','등+이두':'등','어깨':'어깨','하체':'하체','코어':'코어','유산소':'유산소','전신':'전신'},
+    noCalData:'운동 완료 후 기록이 쌓여요.',noMissedData:'운동 못 한 기록이 없어요',
+    fmtMin:(m,s)=>s?`${m}분 ${s}초`:`${m}분`,fmtSec:(s)=>`${s}초`,
+  },
+  en: {
+    appTitle:'No-Zero-Day | AI Fitness Coach',
+    sound:'Sound',
+    nav:['Routine','Log','Analysis','Diet','Profile'],
+    splashSub:'The AI coach that keeps you going<br>No zero days, ever',
+    feat:[["Today's Zero-Day Risk",'Analyzes your condition & predicts dropout probability'],['Personalized Routine','Tailored to your sleep, fatigue & stress'],['Even when you hate it','5-min minimal routine to prevent zero days']],
+    splashStart:'Get Started →',splashSkip:'Skip',
+    noProfileMsg:'The AI coach that keeps you going<br>Set up your profile first',
+    setProfileBtn:'Set Up Profile →',editProfileBtn:'Edit →',
+    steps:['Condition','Analysis','Routine'],
+    conditionTitle:"🌡️ Today's Condition",
+    sleepLabel:'Sleep',fatigueLabel:'Fatigue',
+    stressLabel:'Stress',stressOpts:['Low 😌','Medium 😐','High 😫'],
+    motivLabel:'Motivation',motivOpts:['Low 😔','Medium 😐','High 🔥'],
+    sorenessLabel:'Soreness',sorenessCheck:'Sore muscles',
+    timeLabel:'Available Time',timeOpts:['10 min','20 min','40 min','60 min','90 min'],
+    targetLabel:'Target Muscle Group',
+    targetOpts:['Full Body','Chest + Triceps','Back + Biceps','Shoulders','Legs (Squats, Leg Press, Lunges)','Core (Abs, Lower Back)','Cardio (Running, Cycling)'],
+    analyzeBtn:"🔮 Analyze Today's Condition",lazyBtn:'😮‍💨 Just avoid zero — minimal only',peakBtn:'💥 Peak Mode — Go all out today',
+    backStep2:'← Re-enter',backStep3:'← Back',backDiet:'← Recalculate',
+    lazyTitle:"😩 Why You Don't Feel Like It",lazyReasonLabel:'Select Reason',
+    lazyReasonOpts:['Too tired 😴','Just lazy 🛋️','No time ⏰','Sore muscles 😣','Bad mood 😞','Too stressed 🤯','Bad weather 🌧️'],
+    motivateBtn:'Get Motivated 🔥',minAnywayBtn:"I'll try the minimum 💨",
+    routineBtn:'💪 Build My Routine',minBtn:'😮‍💨 Minimal Workout',peakGoBtn:'💥 Peak Mode',
+    workoutDoneTitle:'Workout Complete!',workoutDoneSub:'Zero day prevented again!<br>Consistency is your greatest strength',
+    statRate:'Completion',statDone:'Exercises Done',statKcal:'kcal Burned',statStreak:'Day Streak 🔥',
+    todayRoutine:"Today's Routine",viewLogBtn:'📊 View Log',newRoutineBtn:'💪 New Routine',
+    wantMoreBtn:'I want to do more 💪',saveMinBtn:'Save Complete ✅',
+    totalTime:'Total Time',tapPause:'(tap to pause)',
+    warmupLabel:'🔥 Warm-up',mainLabel:'💪 Main Workout',cooldownLabel:'🧘 Cool-down',
+    allDoneBanner:'🎉 All exercises done! Zero day prevented 💪',
+    statDoneLabel:'Done',statTotalLabel:'Total',statPctLabel:'Rate',
+    postFatigueLabel:'Post-workout Fatigue',saveWorkoutBtn:'Save Workout ✅',
+    setsLabel:'sets',restLabel:'rest',weightLabel:'💪 Weight Used',altPrefix:'Alt: ',
+    calLiveLabel:'🔥 Est. Calories Burned',calLiveTag:'(weight, gender & load)',calLiveTagNoProfile:'(set profile for better accuracy)',
+    dashHeading:'📊 Workout Log',missedBtn:'😞 Log Missed',
+    dWeekLabel:'This Week',dWeekSub:'sessions',dMonthLabel:'This Month',dMonthSub:'sessions',
+    dRateLabel:'Avg Completion',dRateSub:'Last 10',
+    dStreakLabel:'Streak',dStreakSub:'days',dBalanceLabel:'Balance',dBalanceSub:'/ 100',
+    dTotalLabel:'Total Sessions',dTotalSub:'sessions',
+    calWeekdays:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    calLegendDone:'Workout Done',calLegendMissed:'Missed',
+    weekChartTitle:'📅 Last 7 Days',calChartTitle:'🔥 Calories per Session',
+    targetChartTitle:'🏋️ Muscle Group Balance',logTitle:'📋 Workout Log',
+    feedbackBtn:'🤖 AI Feedback',calChartEmpty:'Records appear after completing workouts.',aiAnalyzing:'AI Analyzing...',
+    analysisHeading:'📈 AI Analysis',todayRoutineCard:"🏋️ Today's Routine",
+    failureTitle:'😞 Workout Failure Analysis',failureChartEmpty:'Log missed workouts in the Log tab to analyze patterns here.',
+    analyzeFailBtn:'🔍 Analyze Failure Patterns',loadFailure:'Analyzing failure patterns...',
+    reportTitle:'📈 4-Week Growth Report',genReportBtn:'📊 Generate Report',loadReport:'Analyzing 4-week data...',
+    reportSessions:'Total Sessions',reportCompletion:'Avg Completion',reportStreak:'Streak',reportMost:'Most Trained',
+    converterTitle:'🔄 Routine Converter',noRoutineMsg:'Generate a routine first in the Routine tab.',
+    convertTypeLabel:'Convert Type',convertBtn:'Convert 🔄',loadConvert:'Converting routine...',
+    convertOpts:['🏠 Home Workout','⚡ Shorter (under 15 min)','💆 Recovery Routine','🤸 Bodyweight Only','🦵 Knee-safe Routine'],
+    dietNoProfile:'Please set up your profile first',dietCardTitle:'🥗 Get Diet Recommendation',
+    dietWeekLabel:'Weekly Workouts',dietWeekOpts:['1x / week','2x / week','3x / week','4x / week','5+ / week'],
+    dietStyleLabel:'Diet Style',
+    dietStyleOpts:['🍚 Korean (rice & sides)','🍝 Western (pasta & salad)','🥪 Bread / Sandwiches','🏪 Convenience Store','💪 High Protein'],
+    dietBtn:'🥗 Get Recommendation',dietBackBtn:'← Recalculate',loadCalories:'Calculating calories...',
+    macroTitle:'🔥 Daily Calories & Nutrition',macroCalLabel:'Target',macroProteinLabel:'Protein',macroCarbLabel:'Carbs',macroFatLabel:'Fat',
+    mealTitle:"🍽️ Today's Sample Meals",mealBreakfast:'🌅 Breakfast',mealLunch:'☀️ Lunch',mealDinner:'🌙 Dinner',mealSnack:'🍎 Snack',
+    profileHeading:'⚙️ My Profile',basicInfoTitle:'👤 Basic Info',
+    nameLabel:'Name (optional)',namePlaceholder:'Enter your name',
+    genderLabel:'Gender',genderOpts:['Male','Female'],ageLabel:'Age',heightLabel:'Height (cm)',
+    weightLabel2:'Weight (kg)',targetWeightLabel:'Goal Weight (kg, optional)',
+    fitnessInfoTitle:'🎯 Fitness Info',goalLabel:'Goal',
+    goalOpts:['Muscle Gain','Weight Loss','Fitness','Health'],
+    levelLabel:'Experience',levelOpts:['Beginner','Intermediate (1+ yr)','Advanced (3+ yr)'],
+    locationLabel:'Location',locationOpts:['Gym','Home','Outdoor'],
+    weeklyLabel:'Available Days / Week',weeklyOpts:['1x / week','2x / week','3x / week','4x / week','5+ / week'],
+    equipTitle:'🔧 Equipment',equipItems:['Dumbbells','Barbell','Machine','Cable','Bands','Pull-up Bar','Bodyweight'],
+    injuryTitle:'🩹 Injury Areas',injuryNote:'(exercises automatically excluded)',
+    injuryItems:['Lower Back','Knee','Shoulder','Wrist','Neck','Ankle'],
+    injuryWarning:'⚠️ Stop immediately if pain worsens and consult a professional.',
+    saveProfileBtn:'Save Profile ✓',savedMsg:'✅ Saved!',
+    cacheTitle:'🔄 Clear App Cache',
+    cacheDesc:'Reloads the app while keeping your workout data. Use when the display looks broken after an update.<br>Type <strong style="color:var(--text)">confirm</strong> to proceed.',
+    cachePlaceholder:'confirm',cacheBtn:'🔄 Clear Cache & Restart',
+    resetTitle:'⚠️ Reset All Data',
+    resetDesc:'All workout logs, profile & diet data will be <strong style="color:#f87191">permanently deleted</strong>.<br>Type <strong style="color:var(--text)">confirm</strong> below to proceed.',
+    resetPlaceholder:'confirm',resetBtn:'Reset All',
+    confirmWord:'confirm',confirmWordError:'Please type "confirm" exactly.',
+    restingLabel:'Resting',untilNextSet:'😤 Until Next Set',skipBtn:'Skip',add30:'+30s',
+    missedTitle:"It's okay. Just log the reason 💙",
+    missedDesc:'Not working out is still worth logging. Patterns help build better routines.',
+    missedReasonLabel:'Select Reason',
+    missedReasonOpts:['Too tired 😴','No time ⏰','Lazy 🛋️','Sore muscles 😣','Stress 🤯','Bad mood 😞','Weather 🌧️','Schedule 📅','Pain 🤕'],
+    cancelBtn:'Cancel',missedSaveBtn:'Log Today ✓',closeBtn:'Close',
+    loadAnalyze:["Analyzing today's condition...",'Checking sleep & fatigue...','Calculating risk score...','Almost done...'],
+    loadRoutine:['Building your routine...','Optimizing exercise order...','Adjusting for condition...','Fine-tuning difficulty...','Finishing up...'],
+    loadMin:['Finding minimal routine...','Putting together 5-min plan...','Completing zero-day plan...'],
+    loadMotivation:'Preparing motivation...',
+    onboardTitle:'Log your first workout!',
+    onboardDesc:'Records appear here after completing routines.<br>More data = more accurate AI analysis.',
+    onboardStep1:'Enter your info in the Profile tab',onboardStep2:'Input condition & generate a routine in the Routine tab',onboardStep3:'Tap Save after completing your workout',
+    onboardBtn:'Go build a routine 💪',
+    alertNeedLogs2:'You need at least 2 workout logs to get AI feedback.',
+    alertNeedLogs:'More records needed.',alertNeedLogs4:'The 4-week report requires at least 4 workout logs.',
+    logMissedLabel:'😞 Missed Workout',logReasonPrefix:'Reason: ',
+    logPreFatigue:'pre-fatigue',logPostFatigue:'post-fatigue',logMinTag:'Minimal',logComplete:'done',
+    analysisSummaryTpl:(t,m,r,reason)=>`${t} sessions · ${m} skipped · ${r}% completion · Top reason: ${reason}`,
+    calMonthTpl:(y,m)=>{const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return `${mn[m-1]} ${y}`},
+    riskBadge:"Today's Zero-Day Risk",riskSubtext:'Risk of skipping today',
+    todayLabel:'(Today)',minSaved:'Minimal',minDoneTarget:'Minimal Workout Done ✓',
+    displayGender:{'남성':'Male','여성':'Female'},
+    displayGoal:{'증량':'Muscle Gain','감량':'Weight Loss','체력 향상':'Fitness','건강 관리':'Health'},
+    displayLevel:{'초급':'Beginner','중급':'Intermediate','고급':'Advanced'},
+    displayLocation:{'헬스장':'Gym','집':'Home','야외':'Outdoor'},
+    injuryDisplay:'Injuries: ',ageUnit:'yo',dietGoalPrefix:'Goal: ',
+    origPrefix:'From: ',peakConditionNote:'💥 Peak Mode — Max intensity routine',
+    missedSaveDateTpl:(y,m,d)=>{const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return `Log ${mn[m-1]} ${d}, ${y} ✓`},
+    futureDay:"This day hasn't come yet.",
+    emptyDay:"No record for this day.<br>Want to log a minimal workout?",
+    missedReasonLog:'😞 Missed — ',relogBtn:'Re-log Reason',logMissedBtn:'😞 Missed, log reason',
+    dayStatRate:'Rate',dayStatCount:'Exercises',dayStatKcal:'kcal',dayStatTime:'Duration',
+    splitLabel:{'가슴+삼두':'Chest','등+이두':'Back','어깨':'Shoulder','하체':'Legs','코어':'Core','유산소':'Cardio','전신':'Full'},
+    noCalData:'Records appear after completing workouts.',noMissedData:'No missed workout records',
+    fmtMin:(m,s)=>s?`${m}m ${s}s`:`${m}m`,fmtSec:(s)=>`${s}s`,
+  }
+};
+
+function t(key){
+  const keys=key.split('.');
+  let val=TRANS[LANG];
+  for(const k of keys){val=val?.[k]}
+  if(val===undefined){
+    let fb=TRANS.ko;
+    for(const k of keys){fb=fb?.[k]}
+    return fb??key;
+  }
+  return val;
+}
+
+function applyLang(){
+  const L=TRANS[LANG];
+  document.title=L.appTitle;
+  document.documentElement.lang=LANG==='ko'?'ko':'en';
+  const lb=$('lang-btn');
+  if(lb) lb.textContent=LANG==='ko'?'🌐 EN':'🌐 KR';
+  const sl=$('sound-label');
+  if(sl) sl.textContent=L.sound;
+  // Splash features
+  L.feat.forEach((f,i)=>{
+    const el=$('splash-feat-'+i);
+    if(el) el.innerHTML=`<strong>${f[0]}</strong>${f[1]}`;
+  });
+  // Cal weekdays
+  const wd=$('cal-weekdays');
+  if(wd){
+    const divs=wd.querySelectorAll('.cal-weekday');
+    L.calWeekdays.forEach((d,i)=>{if(divs[i])divs[i].textContent=d});
+  }
+  // data-i18n text
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    const keys=key.split('.');
+    let val=L;
+    for(const k of keys){val=val?.[k]}
+    if(val!==undefined&&typeof val==='string') el.textContent=val;
+  });
+  // data-i18n-html
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{
+    const key=el.getAttribute('data-i18n-html');
+    const keys=key.split('.');
+    let val=L;
+    for(const k of keys){val=val?.[k]}
+    if(val!==undefined&&typeof val==='string') el.innerHTML=val;
+  });
+  // data-i18n-opt (select options labels only, values unchanged)
+  document.querySelectorAll('[data-i18n-opt]').forEach(sel=>{
+    const key=sel.getAttribute('data-i18n-opt');
+    const keys=key.split('.');
+    let arr=L;
+    for(const k of keys){arr=arr?.[k]}
+    if(Array.isArray(arr)){
+      [...sel.options].forEach((opt,i)=>{if(arr[i]!==undefined)opt.textContent=arr[i]});
+    }
+  });
+  // data-i18n-ph (placeholder)
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const key=el.getAttribute('data-i18n-ph');
+    const keys=key.split('.');
+    let val=L;
+    for(const k of keys){val=val?.[k]}
+    if(val!==undefined&&typeof val==='string') el.placeholder=val;
+  });
+}
+
+function toggleLang(){
+  LANG=LANG==='ko'?'en':'ko';
+  localStorage.setItem('nzd_lang',LANG);
+  applyLang();
+}
 
 // Capacitor 환경이면 Render 서버로, 아니면 상대경로
 const API = (typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform())
@@ -1376,9 +1693,12 @@ function initHome(){
     $('no-profile-msg').style.display='none';
     $('home-form').style.display='block';
     $('profile-bar').style.display='flex';
-    const injText=p.injury&&p.injury.length?` · 부상: ${p.injury.join(', ')}`:'';
+    const injText=p.injury&&p.injury.length?` · ${t('injuryDisplay')}${p.injury.join(', ')}`:'';
     const nameText=p.name?`<strong>${p.name}</strong> · `:'';
-    $('pb-info').innerHTML=`${nameText}<strong>${p.gender}</strong> · <strong>${p.age}세</strong> · ${p.weight}kg / ${p.height}cm · ${p.goal} · ${p.level}${injText}`;
+    const dG=t('displayGender')[p.gender]||p.gender;
+    const dGoal=t('displayGoal')[p.goal]||p.goal;
+    const dLevel=t('displayLevel')[p.level]||p.level;
+    $('pb-info').innerHTML=`${nameText}<strong>${dG}</strong> · <strong>${p.age}${t('ageUnit')}</strong> · ${p.weight}kg / ${p.height}cm · ${dGoal} · ${dLevel}${injText}`;
     goToStep(1);
   }
 }
@@ -1395,7 +1715,7 @@ async function predictRisk(){
   hideErr('home-error');
   goToStep(2);
   $('home-loading').classList.add('show');
-  startLoadingMessages('home-loading-text',['오늘 컨디션 분석 중...','수면 · 피로도 파악 중...','실패 위험도 계산 중...','거의 다 됐어요...']);
+  startLoadingMessages('home-loading-text',t('loadAnalyze'));
   $('risk-btn').disabled=true;
 
   try{
@@ -1431,8 +1751,8 @@ function renderRisk(d){
       <div class="risk-score-row">
         <div class="risk-score-num ${numCls}">${score}<span style="font-size:20px">%</span></div>
         <div>
-          <div class="risk-level-badge">오늘 0일 위험도 ${d.risk_level||''}</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px">오늘 0일이 될 위험</div>
+          <div class="risk-level-badge">${t('riskBadge')} ${d.risk_level||''}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">${t('riskSubtext')}</div>
         </div>
       </div>
       <ul class="risk-reasons">${reasons}</ul>
@@ -1561,7 +1881,7 @@ function onExCheck(cb){
   playCheck();
   vibrate([25]);
   if(cb.checked){
-    startRestTimer(cb.dataset.name||'운동', cb.dataset.rest||'60초');
+    startRestTimer(cb.dataset.name||t('restingLabel'), cb.dataset.rest||'60초');
     if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform()){
       const allCbs=document.querySelectorAll('#r-main input[type=checkbox]');
       const done=[...allCbs].filter(c=>c.checked).length;
@@ -1600,9 +1920,10 @@ function adjustSets(idx, delta){
 }
 
 function fmtSec(s){
-  if(s<60) return s+'초';
+  const L=TRANS[LANG];
+  if(s<60) return L.fmtSec(s);
   const m=Math.floor(s/60), r=s%60;
-  return r?`${m}분 ${r}초`:`${m}분`;
+  return L.fmtMin(m,r);
 }
 
 function adjustRest(idx, delta){
@@ -1646,7 +1967,7 @@ function updateCalories(){
     num.textContent=Math.round(total)+' kcal';
     bar.style.display='flex';
     const tag=$('cal-live-tag');
-    if(tag) tag.textContent=p?'(체중·성별·중량 반영)':'(프로필 설정 시 더 정확해져요)';
+    if(tag) tag.textContent=p?t('calLiveTag'):t('calLiveTagNoProfile');
   }
 }
 
@@ -1682,7 +2003,7 @@ async function getRoutine(){
   hideErr('home-error-3');
   goToStep(3);
   $('home-loading-3').style.display='block';
-  startLoadingMessages('home-loading-text-3',['맞춤 루틴 구성 중...','운동 순서 최적화 중...','컨디션 반영 중...','난이도 조정 중...','마무리 다듬는 중...']);
+  startLoadingMessages('home-loading-text-3',t('loadRoutine'));
   $('routine-btn').disabled=true;
   if($('routine-btn-default')) $('routine-btn-default').disabled=true;
 
@@ -1710,7 +2031,7 @@ async function getRoutine(){
     window._currentRoutine=d;
     window._currentTarget=$('target').value;
     if(peakMode){
-      d.condition_note='💥 고점 모드 — 최고 강도로 구성된 루틴입니다';
+      d.condition_note=t('peakConditionNote');
       peakMode=false;
     }
     renderRoutine(d);
@@ -1765,7 +2086,7 @@ function renderRoutine(d){
           <span class="sets-num" id="sets-${i}">${ex.sets}</span>
           <button class="sets-btn" onclick="adjustSets(${i},+1)">+</button>
         </div>
-        <span class="sets-label">세트</span>
+        <span class="sets-label">${t('setsLabel')}</span>
         <span class="ex-reps-badge">× ${ex.reps}</span>
       </div>
       <div class="ex-rest-row">
@@ -1774,14 +2095,14 @@ function renderRoutine(d){
           <span class="rest-sec-disp" id="rest-sec-${i}" data-sec="${restSec}">${ex.rest||'60초'}</span>
           <button class="sets-btn" onclick="adjustRest(${i},+15)">+</button>
         </div>
-        <span class="sets-label">휴식</span>
+        <span class="sets-label">${t('restLabel')}</span>
       </div>
       ${ex.purpose?`<div class="ex-detail"><span class="ex-purpose">✦ ${ex.purpose}</span></div>`:''}
       <div class="ex-tip">💡 ${ex.tip}</div>
       ${ex.caution?`<div class="ex-caution">⚠️ ${ex.caution}</div>`:''}
-      ${ex.alternative?`<div class="ex-alt">대체: ${ex.alternative}</div>`:''}
+      ${ex.alternative?`<div class="ex-alt">${t('altPrefix')}${ex.alternative}</div>`:''}
       <div class="ex-weight-row">
-        <span class="ex-weight-label">💪 사용 중량</span>
+        <span class="ex-weight-label">${t('weightLabel')}</span>
         <input type="number" class="weight-input" id="weight-${i}" placeholder="0" min="0" max="999" step="0.5" oninput="updateCalories()">
         <span style="font-size:11px;color:var(--muted)">kg</span>
       </div>
@@ -1948,7 +2269,7 @@ function completeWorkout(){
   $('ds-done').textContent=done+'/'+total;
   $('ds-cal').textContent=cal;
   $('ds-streak').textContent=streak;
-  $('ds-target').textContent=(window._currentTarget||'오늘의 루틴')+' 완료 ✓';
+  $('ds-target').textContent=(window._currentTarget||t('todayRoutine'))+' ✓';
 
   // Switch view
   stopRestTimer();
@@ -1978,7 +2299,7 @@ async function getMinRoutine(){
   hideErr('home-error-3');
   goToStep(3);
   $('home-loading-3').style.display='block';
-  startLoadingMessages('home-loading-text-3',['최소 루틴 찾는 중...','5분 코스 구성 중...','0일 방지 플랜 완성 중...']);
+  startLoadingMessages('home-loading-text-3',t('loadMin'));
 
   const reason=$('lazy-reason')?.value||'귀찮음';
   try{
@@ -2048,9 +2369,9 @@ function saveMinWorkout(){
 
   $('ds-rate').textContent='100%';
   $('ds-done').textContent=total+'/'+total;
-  $('ds-cal').textContent='최소실행';
+  $('ds-cal').textContent=t('minSaved');
   $('ds-streak').textContent=streak;
-  $('ds-target').textContent='최소 실행 완료 ✓';
+  $('ds-target').textContent=t('minDoneTarget');
   $('min-result').classList.remove('show');
   $('workout-done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
@@ -2065,7 +2386,7 @@ async function getMotivation(){
   hideErr('home-error');
   $('motive-result').classList.remove('show');
   $('home-loading').classList.add('show');
-  $('home-loading-text').textContent='동기부여 준비 중...';
+  $('home-loading-text').textContent=t('loadMotivation');
   try{
     const res=await fetch(API+'/motivation',{
       method:'POST',headers:{'Content-Type':'application/json'},
@@ -2108,7 +2429,7 @@ function renderCalendar(){
   }));
 
   const y=_calYear,m=_calMonth;
-  $('cal-month-label').textContent=`${y}년 ${m+1}월`;
+  $('cal-month-label').textContent=t('calMonthTpl')(y,m+1);
 
   const firstDay=new Date(y,m,1).getDay(); // 0=Sun
   const daysInMonth=new Date(y,m+1,0).getDate();
@@ -2168,12 +2489,12 @@ function renderDash(){
   $('d-total').textContent=logs.length;
 
   // 7-day chart
-  const days=['일','월','화','수','목','금','토'];
+  const days=t('calWeekdays');
   $('week-chart').innerHTML='';
   for(let i=6;i>=0;i--){
     const d=new Date(now);d.setDate(now.getDate()-i);
     const dayLogs=logs.filter(l=>{const ld=new Date(l.ts);return ld.toDateString()===d.toDateString()});
-    const label=days[d.getDay()]+(i===0?'(오늘)':'');
+    const label=days[d.getDay()]+(i===0?t('todayLabel'):'');
     $('week-chart').innerHTML+=`<div class="bar-row">
       <div class="bar-label">${label}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${dayLogs.length>0?'100%':'0%'}"></div></div>
@@ -2184,7 +2505,7 @@ function renderDash(){
   // Balance chart
   const splitOrder=['가슴+삼두','등+이두','어깨','하체','코어','유산소','전신'];
   const splitColors={'가슴+삼두':'','등+이두':'blue','어깨':'','하체':'green','코어':'blue','유산소':'green','전신':''};
-  const splitLabel={'가슴+삼두':'가슴','등+이두':'등','어깨':'어깨','하체':'하체','코어':'코어','유산소':'유산소','전신':'전신'};
+  const splitLabel=t('splitLabel');
   const maxT=Math.max(...splitOrder.map(k=>counts[k]||0),1);
   $('target-chart').innerHTML=splitOrder.map(k=>{
     const v=counts[k]||0;
@@ -2205,14 +2526,14 @@ function renderDash(){
     $('log-list').innerHTML=`
       <div class="onboard-card">
         <div class="onboard-icon">🚀</div>
-        <div class="onboard-title">첫 운동을 기록해봐요!</div>
-        <div class="onboard-desc">루틴을 완료하면 여기에 기록이 쌓여요.<br>기록이 쌓일수록 AI 분석도 정확해져요.</div>
+        <div class="onboard-title">${t('onboardTitle')}</div>
+        <div class="onboard-desc">${t('onboardDesc')}</div>
         <div class="onboard-steps">
-          <div class="onboard-step"><div class="onboard-step-num">1</div> 프로필 탭에서 내 정보 입력</div>
-          <div class="onboard-step"><div class="onboard-step-num">2</div> 루틴 탭에서 컨디션 입력 후 루틴 생성</div>
-          <div class="onboard-step"><div class="onboard-step-num">3</div> 운동 완료 후 저장 버튼 클릭</div>
+          <div class="onboard-step"><div class="onboard-step-num">1</div> ${t('onboardStep1')}</div>
+          <div class="onboard-step"><div class="onboard-step-num">2</div> ${t('onboardStep2')}</div>
+          <div class="onboard-step"><div class="onboard-step-num">3</div> ${t('onboardStep3')}</div>
         </div>
-        <button class="btn btn-primary" onclick="showPage('home')" style="max-width:220px;margin:0 auto">첫 루틴 짜러 가기 💪</button>
+        <button class="btn btn-primary" onclick="showPage('home')" style="max-width:220px;margin:0 auto">${t('onboardBtn')}</button>
       </div>`;
     return;
   }
@@ -2221,15 +2542,15 @@ function renderDash(){
       <div class="log-item missed">
         <div class="log-header">
           <div class="log-date">${l.date}</div>
-          <div class="log-target" style="color:var(--red);background:#f43f5e15">😞 운동 못 함</div>
+          <div class="log-target" style="color:var(--red);background:#f43f5e15">${t('logMissedLabel')}</div>
         </div>
-        <div class="log-exercises">이유: ${l.reason||'기타'}</div>
+        <div class="log-exercises">${t('logReasonPrefix')}${l.reason||'기타'}</div>
       </div>`;
-    const condText=l.condition_fatigue!=null?`<span class="log-stat-tag">피로 ${l.condition_fatigue}/10</span>`:'';
-    const fatText=l.fatigue!=null?`<span class="log-stat-tag">운동 후 피로 ${l.fatigue}/10</span>`:'';
-    const minTag=l.is_min?`<span style="font-size:10px;color:var(--blue);background:#6366f115;padding:2px 6px;border-radius:4px">최소루틴</span>`:'';
+    const condText=l.condition_fatigue!=null?`<span class="log-stat-tag">${t('logPreFatigue')} ${l.condition_fatigue}/10</span>`:'';
+    const fatText=l.fatigue!=null?`<span class="log-stat-tag">${t('logPostFatigue')} ${l.fatigue}/10</span>`:'';
+    const minTag=l.is_min?`<span style="font-size:10px;color:var(--blue);background:#6366f115;padding:2px 6px;border-radius:4px">${t('logMinTag')}</span>`:'';
     const calTag=l.kcal?`<span class="log-stat-tag">🔥 ${l.kcal}kcal</span>`:'';
-    const durTag=l.duration_min?`<span class="log-stat-tag">⏱ ${l.duration_min}분</span>`:'';
+    const durTag=l.duration_min?`<span class="log-stat-tag">⏱ ${l.duration_min}${LANG==='ko'?'분':'min'}</span>`:'';
     const weightItems=(l.exercise_detail||[]).filter(e=>e.weight>0).map(e=>`${e.name} ${e.weight}kg`);
     const weightRow=weightItems.length?`<div class="log-weights">🏋️ ${weightItems.join(' · ')}</div>`:'';
     return `
@@ -2241,7 +2562,7 @@ function renderDash(){
         <div class="log-exercises">${(l.exercises||[]).join(' · ')}</div>
         ${weightRow}
         <div class="log-meta">
-          <div class="log-complete">✅ ${l.done}/${l.total} 완료 (${l.rate}%)</div>
+          <div class="log-complete">✅ ${l.done}/${l.total} ${t('logComplete')} (${l.rate}%)</div>
           ${calTag}${durTag}${condText}${fatText}
         </div>
       </div>`;
@@ -2286,8 +2607,8 @@ function showMissedModal(y,m,d){
   window._missedDate=(y!==undefined)?new Date(y,m,d,12,0,0):null;
   const btn=$('missed-save-btn');
   if(btn) btn.textContent=window._missedDate
-    ?`${window._missedDate.getFullYear()}년 ${window._missedDate.getMonth()+1}월 ${window._missedDate.getDate()}일 기록 남기기 ✓`
-    :'오늘 기록 남기기 ✓';
+    ?t('missedSaveDateTpl')(window._missedDate.getFullYear(),window._missedDate.getMonth()+1,window._missedDate.getDate())
+    :t('missedSaveBtn');
   $('missed-modal').classList.add('show');
 }
 function hideMissedModal(){window._missedDate=null;$('missed-modal').classList.remove('show')}
@@ -2311,7 +2632,7 @@ function saveMissedWorkout(){
 async function getFeedback(){
   const logs=getLogs();
   const p=getProfile();
-  if(!p||logs.length<2){alert('운동 기록이 2개 이상 있어야 피드백을 받을 수 있어요.');return}
+  if(!p||logs.length<2){alert(t('alertNeedLogs2'));return}
   $('fb-loading').classList.add('show');
   $('feedback-result').style.display='none';
   try{
@@ -2343,7 +2664,7 @@ function renderAnalysisCharts(){
         <div class="bar-track"><div class="bar-fill" style="background:linear-gradient(90deg,var(--red),#f87191);width:${Math.round(v/maxR*100)}%"></div></div>
         <div class="bar-val" style="color:var(--red)">${v}</div>
       </div>`).join(''):
-    '<div style="font-size:13px;color:var(--muted);padding:8px 0">운동 못 한 기록이 없어요</div>';
+    `<div style="font-size:13px;color:var(--muted);padding:8px 0">${t('noMissedData')}</div>`;
 }
 
 // ── Failure Analysis ──────────────────────────────────────────────────────────
@@ -2351,7 +2672,7 @@ async function getAnalysis(){
   const logs=getLogs();
   const missed=getMissedLogs();
   const p=getProfile();
-  if(!p||logs.length+missed.length<2){alert('기록이 더 필요해요.');return}
+  if(!p||logs.length+missed.length<2){alert(t('alertNeedLogs'));return}
   $('analysis-loading').classList.add('show');
   $('analysis-result').style.display='none';
   try{
@@ -2361,7 +2682,7 @@ async function getAnalysis(){
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
-    $('analysis-summary').textContent=`총 운동 ${d.total_logged}회 · 건너뜀 ${d.total_missed}회 · 완료율 ${d.completion_rate}% · 주요 실패 원인: ${d.top_failure_reason}`;
+    $('analysis-summary').textContent=t('analysisSummaryTpl')(d.total_logged,d.total_missed,d.completion_rate,d.top_failure_reason);
     $('analysis-text').textContent=d.failure_analysis||d.pattern_summary||'';
     $('strategy-list').innerHTML=(d.strategy||[]).map(s=>`<div class="strategy-item">💡 ${s}</div>`).join('');
     $('analysis-plan').textContent=`🎯 ${d.next_week_plan||''}`;
@@ -2374,7 +2695,7 @@ async function getAnalysis(){
 async function getReport(){
   const logs=getLogs();
   const p=getProfile();
-  if(!p||logs.length<4){alert('4주 리포트는 운동 기록이 4개 이상 있어야 해요.');return}
+  if(!p||logs.length<4){alert(t('alertNeedLogs4'));return}
   $('report-loading').classList.add('show');
   $('report-result').style.display='none';
   try{
@@ -2422,7 +2743,7 @@ async function convertRoutine(){
     $('cv-exercises').innerHTML=(cv.main||[]).map(ex=>`
       <div class="convert-item">
         <div class="ex-name">${ex.name}</div>
-        <div class="convert-arrow">↑ 원래: ${ex.original_name}</div>
+        <div class="convert-arrow">↑ ${t('origPrefix')}${ex.original_name}</div>
         <div class="ex-detail" style="margin-top:4px">
           <span class="ex-badge">🔁 ${ex.sets}세트 × ${ex.reps}</span>
           <span class="ex-badge">⏸ ${ex.rest}</span>
@@ -2443,7 +2764,7 @@ function initDiet(){
   if(!p){$('diet-no-profile').style.display='block';$('diet-form').style.display='none';return}
   $('diet-no-profile').style.display='none';
   $('diet-form').style.display='block';
-  $('diet-profile-info').textContent=`${p.gender} · ${p.age}세 · ${p.weight}kg · ${p.height}cm · 목표: ${p.goal}`;
+  $('diet-profile-info').textContent=`${t('displayGender')[p.gender]||p.gender} · ${p.age}${t('ageUnit')} · ${p.weight}kg · ${p.height}cm · ${t('dietGoalPrefix')}${t('displayGoal')[p.goal]||p.goal}`;
 }
 
 function dietBack(){
@@ -2483,8 +2804,8 @@ async function getDiet(){
 
 // ── Reset ────────────────────────────────────────────────────────────────────
 function clearAppCache(){
-  if($('cache-confirm').value.trim()!=='확인했습니다'){
-    alert('"확인했습니다"를 정확히 입력해주세요.');
+  if($('cache-confirm').value.trim()!==t('confirmWord')){
+    alert(t('confirmWordError'));
     return;
   }
   if('caches' in window){
@@ -2495,8 +2816,8 @@ function clearAppCache(){
 }
 
 function confirmReset(){
-  if($('reset-confirm').value.trim()!=='확인했습니다'){
-    alert('"확인했습니다"를 정확히 입력해주세요.');
+  if($('reset-confirm').value.trim()!==t('confirmWord')){
+    alert(t('confirmWordError'));
     return;
   }
   localStorage.clear();
@@ -2519,18 +2840,18 @@ function showDayDetail(y, m, d){
     return `${ld.getFullYear()}-${ld.getMonth()}-${ld.getDate()}` === key;
   });
 
-  const dateStr = `${y}년 ${m+1}월 ${d}일`;
+  const dateStr = t('calMonthTpl')? (LANG==='ko'?`${y}년 ${m+1}월 ${d}일`:t('calMonthTpl')(y,m+1)+` ${d}`) : `${y}년 ${m+1}월 ${d}일`;
   $('day-modal-date').textContent = dateStr;
 
   let html = '';
   if(dayLogs.length > 0){
     dayLogs.forEach(log => {
-      const minTag = log.is_min ? ' <span style="font-size:10px;color:var(--blue);background:#6366f115;padding:1px 6px;border-radius:4px">최소루틴</span>' : '';
+      const minTag = log.is_min ? ` <span style="font-size:10px;color:var(--blue);background:#6366f115;padding:1px 6px;border-radius:4px">${t('logMinTag')}</span>` : '';
       html += `<div class="day-stat-row">
-        <div class="day-stat"><div class="day-stat-num">${log.rate}%</div><div class="day-stat-label">완료율</div></div>
-        <div class="day-stat"><div class="day-stat-num">${log.done}/${log.total}</div><div class="day-stat-label">운동 수</div></div>
-        ${log.kcal?`<div class="day-stat"><div class="day-stat-num">${log.kcal}</div><div class="day-stat-label">kcal</div></div>`:''}
-        ${log.duration_min?`<div class="day-stat"><div class="day-stat-num">${log.duration_min}분</div><div class="day-stat-label">운동 시간</div></div>`:''}
+        <div class="day-stat"><div class="day-stat-num">${log.rate}%</div><div class="day-stat-label">${t('dayStatRate')}</div></div>
+        <div class="day-stat"><div class="day-stat-num">${log.done}/${log.total}</div><div class="day-stat-label">${t('dayStatCount')}</div></div>
+        ${log.kcal?`<div class="day-stat"><div class="day-stat-num">${log.kcal}</div><div class="day-stat-label">${t('dayStatKcal')}</div></div>`:''}
+        ${log.duration_min?`<div class="day-stat"><div class="day-stat-num">${log.duration_min}${LANG==='ko'?'분':'min'}</div><div class="day-stat-label">${t('dayStatTime')}</div></div>`:''}
       </div>`;
       if(log.target) html += `<div style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:6px">${log.target}${minTag}</div>`;
       if((log.exercises||[]).length){
@@ -2538,8 +2859,8 @@ function showDayDetail(y, m, d){
       }
     });
   } else if(dayMissed.length > 0){
-    html += `<div class="day-missed-reason">😞 운동 못 함 — ${dayMissed[0].reason||'기타'}</div>`;
-    html += `<button class="btn btn-primary" style="margin-top:0" onclick="$('day-modal').classList.remove('show');showMissedModal(${y},${m},${d})">이유 다시 기록하기</button>`;
+    html += `<div class="day-missed-reason">${t('missedReasonLog')}${dayMissed[0].reason||'기타'}</div>`;
+    html += `<button class="btn btn-primary" style="margin-top:0" onclick="$('day-modal').classList.remove('show');showMissedModal(${y},${m},${d})">${t('relogBtn')}</button>`;
   } else {
     const now = new Date(); now.setHours(0,0,0,0);
     const sel = new Date(y, m, d);
@@ -2547,13 +2868,13 @@ function showDayDetail(y, m, d){
     if(isFuture){
       html = `<div class="day-modal-empty">
         <div class="day-modal-empty-icon">📅</div>
-        <div class="day-modal-empty-text">아직 오지 않은 날이에요.</div>
+        <div class="day-modal-empty-text">${t('futureDay')}</div>
       </div>`;
     } else {
       html = `<div class="day-modal-empty">
         <div class="day-modal-empty-icon">💭</div>
-        <div class="day-modal-empty-text">이날 기록이 없어요.<br>최소 실행이라도 기록으로 남길까요?</div>
-        <button class="btn" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;width:100%;margin-top:0" onclick="$('day-modal').classList.remove('show');showMissedModal(${y},${m},${d})">😞 못 했어요, 이유 남기기</button>
+        <div class="day-modal-empty-text">${t('emptyDay')}</div>
+        <button class="btn" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;width:100%;margin-top:0" onclick="$('day-modal').classList.remove('show');showMissedModal(${y},${m},${d})">${t('logMissedBtn')}</button>
       </div>`;
     }
   }
@@ -2579,13 +2900,14 @@ if(sessionStorage.getItem('nzd_entered')){
 loadProfileForm();
 initHome();
 if(!getProfile()) showPage('profile');
+applyLang();
 </script>
 <!-- DAY DETAIL MODAL -->
 <div class="modal-bg" id="day-modal" onclick="if(event.target===this)$('day-modal').classList.remove('show')">
   <div class="modal">
     <div class="day-modal-date" id="day-modal-date"></div>
     <div id="day-modal-body"></div>
-    <button class="btn btn-outline" style="width:100%;margin-top:4px" onclick="$('day-modal').classList.remove('show')">닫기</button>
+    <button class="btn btn-outline" style="width:100%;margin-top:4px" onclick="$('day-modal').classList.remove('show')" data-i18n="closeBtn">닫기</button>
   </div>
 </div>
 
