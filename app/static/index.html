@@ -511,6 +511,26 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   font-weight:700;margin-bottom:18px}
 .done-actions{display:flex;flex-direction:column;gap:8px}
 
+/* ── 내일 준비 ──────────────────────────────────────────────────────────────── */
+.tomorrow-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:12px;animation:fadeUp .5s ease .3s both}
+.tomorrow-title{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px}
+.tomorrow-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tomorrow-btn{background:#0a0f1a;border:1px solid var(--border);border-radius:12px;padding:12px 10px;cursor:pointer;transition:all .2s;touch-action:manipulation;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--muted);text-align:left}
+.tomorrow-btn.done{border-color:var(--green);background:#10b98112;color:var(--green)}
+.tomorrow-btn-icon{font-size:18px;flex-shrink:0}
+.tomorrow-done-msg{text-align:center;font-size:13px;color:var(--green);font-weight:700;margin-top:12px;animation:fadeUp .3s ease}
+
+/* ── 보험권 ─────────────────────────────────────────────────────────────────── */
+.insurance-badge{display:inline-flex;align-items:center;gap:4px;background:#f59e0b18;border:1px solid #f59e0b40;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:800;color:#f59e0b;cursor:pointer;transition:all .2s}
+.insurance-badge:hover{background:#f59e0b28}
+.insurance-card{background:linear-gradient(135deg,#f59e0b12,#f97316 08);border:1px solid #f59e0b40;border-radius:18px;padding:20px 18px;text-align:center;margin-bottom:14px;animation:fadeUp .4s ease}
+.insurance-title{font-size:17px;font-weight:900;color:#fff;margin-bottom:6px}
+.insurance-desc{font-size:13px;color:#fcd34d;line-height:1.6;margin-bottom:14px}
+.insurance-award{background:linear-gradient(135deg,#f59e0b15,#f97316 10);border:1px solid #f59e0b50;border-radius:14px;padding:16px;text-align:center;margin-top:12px;animation:fadeUp .4s ease}
+.insurance-award-icon{font-size:36px;display:block;margin-bottom:8px}
+.insurance-award-title{font-size:15px;font-weight:800;color:#f59e0b;margin-bottom:4px}
+.insurance-award-desc{font-size:12px;color:var(--muted);line-height:1.5}
+
 /* ── 복귀 플랜 카드 ─────────────────────────────────────────────────────────── */
 .comeback-card{background:linear-gradient(135deg,#6366f115,#8b5cf608);border:1px solid #6366f140;border-radius:18px;padding:22px 18px;text-align:center;margin-bottom:14px;animation:fadeUp .4s ease}
 .comeback-emoji{font-size:40px;display:block;margin-bottom:10px}
@@ -677,10 +697,22 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <button class="btn" style="background:none;color:var(--muted);font-size:12px;padding:6px" onclick="$('comeback-card').style.display='none'" data-i18n="comebackSkip">원래대로 할게요</button>
     </div>
 
+    <!-- 보험권 위기 카드 -->
+    <div id="insurance-card" style="display:none" class="insurance-card">
+      <div style="font-size:36px;margin-bottom:10px">🛡️</div>
+      <div class="insurance-title" data-i18n="insuranceTitle">스트릭 보험권 사용할까요?</div>
+      <div class="insurance-desc" id="insurance-desc"></div>
+      <button class="btn btn-primary" style="margin-bottom:8px" onclick="useInsurance()" data-i18n="insuranceUseBtn">🛡️ 보험권 사용 (스트릭 유지)</button>
+      <button class="btn" style="background:none;color:var(--muted);font-size:12px;padding:6px;width:100%" onclick="$('insurance-card').style.display='none'" data-i18n="insuranceSkipBtn">괜찮아요, 그냥 둘게요</button>
+    </div>
+
     <div class="qa-wrap">
       <div class="qa-streak-row">
         <div class="qa-streak-badge" id="qa-streak-badge">🔥 <span id="qa-streak-num">0</span><span data-i18n="qaDays">일째</span></div>
-        <div class="qa-date" id="qa-date"></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="qa-date" id="qa-date"></div>
+          <div id="insurance-badge" style="display:none" class="insurance-badge" onclick="showInsuranceCard()">🛡️ <span id="insurance-count">0</span></div>
+        </div>
       </div>
       <div class="qa-grid">
         <button class="qa-btn qa-1min" onclick="quickStart('1min')">
@@ -940,6 +972,13 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         <div style="text-align:center;margin-bottom:18px">
           <span class="done-target-tag" id="ds-target" data-i18n="todayRoutine">오늘의 루틴</span>
         </div>
+        <!-- 보험권 지급 알림 -->
+        <div id="insurance-award" style="display:none" class="insurance-award">
+          <span class="insurance-award-icon">🎉</span>
+          <div class="insurance-award-title" id="insurance-award-title"></div>
+          <div class="insurance-award-desc" id="insurance-award-desc"></div>
+        </div>
+
         <!-- 감정 기록 -->
         <div class="emotion-section" id="emotion-section">
           <div class="emotion-title" data-i18n="emotionTitle">지금 기분은 어때요?</div>
@@ -967,6 +1006,13 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         <div class="done-actions">
           <button class="btn btn-primary" style="margin-top:0" onclick="showPage('dash')" data-i18n="viewLogBtn">📊 기록 확인하기</button>
           <button class="btn" style="background:#1a2436;color:var(--text);width:100%" onclick="startNewRoutine()" data-i18n="newRoutineBtn">💪 새 루틴 짜기</button>
+        </div>
+
+        <!-- 내일의 나를 위한 준비 -->
+        <div class="tomorrow-section" id="tomorrow-section">
+          <div class="tomorrow-title" data-i18n="tomorrowTitle">내일의 나를 위한 준비 💌</div>
+          <div class="tomorrow-grid" id="tomorrow-grid"></div>
+          <div id="tomorrow-done-msg" style="display:none" class="tomorrow-done-msg" data-i18n="tomorrowDoneMsg">내일 시작이 훨씬 쉬워질 거예요 ✨</div>
         </div>
       </div>
 
@@ -1584,6 +1630,23 @@ const TRANS = {
     excuseOpts:['오늘 너무 늦었어','그냥 귀찮아','너무 피곤해','운동복 갈아입기 싫어','헬스장 못 가','5분이 뭐가 달라져','몸이 안 좋아','의욕이 없어'],
     backHome:'← 홈',excuseShorterBtn:'더 짧게 (1분)',
     expandTitle:'막상 해보니, 조금 더 할 수 있겠어요?',expand2min:'⚡ 2분만 더',expandFull:'💪 오늘 루틴으로',
+    tomorrowTitle:'내일의 나를 위한 준비 💌',
+    tomorrowDoneMsg:'내일 시작이 훨씬 쉬워질 거예요 ✨',
+    tomorrowItems:[
+      {icon:'👕',label:'운동복 꺼내두기'},
+      {icon:'💧',label:'물병 채워두기'},
+      {icon:'🎒',label:'가방 문 앞에 두기'},
+      {icon:'📱',label:'내일 알림 설정'},
+      {icon:'🏃',label:'운동 장소 정하기'},
+      {icon:'✅',label:'루틴 미리 보기'},
+    ],
+    insuranceTitle:'스트릭 보험권 사용할까요?',
+    insuranceUseBtn:'🛡️ 보험권 사용 (스트릭 유지)',
+    insuranceSkipBtn:'괜찮아요, 그냥 둘게요',
+    insuranceDesc:(count,streak)=>`보험권 ${count}장 보유 중이에요.\n${streak}일 스트릭이 끊길 위기예요.\n사용하면 오늘을 "회복일"로 기록하고 스트릭이 유지돼요.`,
+    insuranceAwardTitle:(n)=>`🛡️ 보험권 ${n}장 획득!`,
+    insuranceAwardDesc:'하루 위기가 생겨도 스트릭이 유지됩니다.',
+    insuranceUsed:'회복일 ✓',
     nrgTitle:'잠깐, 기억나세요?',nrgSub:'오늘도 그럴 수 있어요.',nrgGoBtn:'⚡ 1분만 해볼게요',nrgSkipBtn:'그래도 못 하겠어요 →',
     nrgDesc:(pct,n)=>`하기 싫었던 날 ${n}번 중\n${pct}%가 끝나고 "괜찮았다"고 했어요.`,
     comebackSkip:'원래대로 할게요',
@@ -1732,6 +1795,23 @@ const TRANS = {
     excuseOpts:["It's too late today","I'm just lazy","I'm too tired","Don't want to change clothes","Can't go to gym","What's 5 min gonna do","Not feeling well","No motivation"],
     backHome:'← Home',excuseShorterBtn:'Even shorter (1 min)',
     expandTitle:'Feeling like you could do a bit more?',expand2min:'⚡ 2 more min',expandFull:'💪 Full routine',
+    tomorrowTitle:"Prepare for tomorrow's you 💌",
+    tomorrowDoneMsg:"Tomorrow's start will be so much easier ✨",
+    tomorrowItems:[
+      {icon:'👕',label:'Lay out workout clothes'},
+      {icon:'💧',label:'Fill your water bottle'},
+      {icon:'🎒',label:'Put bag by the door'},
+      {icon:'📱',label:'Set tomorrow\'s reminder'},
+      {icon:'🏃',label:'Decide where to work out'},
+      {icon:'✅',label:'Preview tomorrow\'s routine'},
+    ],
+    insuranceTitle:'Use your streak insurance?',
+    insuranceUseBtn:'🛡️ Use Insurance (keep streak)',
+    insuranceSkipBtn:"That's okay, leave it",
+    insuranceDesc:(count,streak)=>`You have ${count} insurance card(s).\nYour ${streak}-day streak is at risk.\nUsing one logs today as a "recovery day" and keeps your streak.`,
+    insuranceAwardTitle:(n)=>`🛡️ Insurance x${n} earned!`,
+    insuranceAwardDesc:'If you ever miss a day, your streak stays safe.',
+    insuranceUsed:'Recovery day ✓',
     nrgTitle:'Wait — remember this?',nrgSub:'Today could be the same.',nrgGoBtn:'⚡ Try just 1 min',nrgSkipBtn:"Still can't do it →",
     nrgDesc:(pct,n)=>`${pct}% of the ${n} times\nyou didn't want to, you felt okay after.`,
     comebackSkip:'Do it the normal way',
@@ -2207,6 +2287,114 @@ function initHome(){
   }
 }
 
+// ── 내일의 나를 위한 준비 ────────────────────────────────────────────────────
+function renderTomorrowSection(){
+  const grid=$('tomorrow-grid');
+  if(!grid) return;
+  const items=t('tomorrowItems');
+  const doneSet=new Set();
+  grid.innerHTML=items.map((item,i)=>`
+    <button class="tomorrow-btn" id="tmr-${i}" onclick="checkTomorrow(${i})">
+      <span class="tomorrow-btn-icon">${item.icon}</span>
+      <span>${item.label}</span>
+    </button>`).join('');
+}
+
+function checkTomorrow(idx){
+  const btn=document.getElementById('tmr-'+idx);
+  if(!btn) return;
+  btn.classList.toggle('done');
+  playTick();vibrate([20]);
+  // 절반 이상 체크 시 완료 메시지
+  const total=document.querySelectorAll('.tomorrow-btn').length;
+  const done=document.querySelectorAll('.tomorrow-btn.done').length;
+  const msg=$('tomorrow-done-msg');
+  if(msg) msg.style.display=done>=Math.ceil(total/2)?'block':'none';
+}
+
+// ── 0일 보험권 ────────────────────────────────────────────────────────────────
+function getInsurance(){return JSON.parse(localStorage.getItem('nzd_insurance')||'{"count":0}')}
+function saveInsurance(d){localStorage.setItem('nzd_insurance',JSON.stringify(d))}
+
+function checkAndAwardInsurance(streak){
+  if(streak>0&&streak%7===0){
+    const ins=getInsurance();
+    ins.count++;
+    saveInsurance(ins);
+    const award=$('insurance-award');
+    const title=$('insurance-award-title');
+    const desc=$('insurance-award-desc');
+    if(award&&title&&desc){
+      title.textContent=t('insuranceAwardTitle')(ins.count);
+      desc.textContent=t('insuranceAwardDesc');
+      award.style.display='block';
+    }
+    return true;
+  }
+  return false;
+}
+
+function isTodayWorkedOut(){
+  const logs=getLogs();
+  const today=new Date();today.setHours(0,0,0,0);
+  return logs.some(l=>{
+    const ld=new Date(l.ts);ld.setHours(0,0,0,0);
+    return ld.getTime()===today.getTime()&&!l.is_recovery;
+  });
+}
+
+function renderInsuranceBadge(){
+  const ins=getInsurance();
+  const badge=$('insurance-badge');
+  const cnt=$('insurance-count');
+  if(!badge) return;
+  if(ins.count>0){badge.style.display='flex';if(cnt)cnt.textContent=ins.count}
+  else{badge.style.display='none'}
+}
+
+function showInsuranceCard(){
+  const ins=getInsurance();
+  const streak=parseInt($('qa-streak-num')?.textContent)||0;
+  if(ins.count<=0) return;
+  const desc=$('insurance-desc');
+  if(desc) desc.innerHTML=t('insuranceDesc')(ins.count,streak).replace('\n','<br>');
+  $('insurance-card').style.display='block';
+}
+
+function checkInsurancePrompt(){
+  const ins=getInsurance();
+  if(ins.count<=0) return;
+  const days=daysSinceLastWorkout();
+  // 어제까지는 했는데 오늘 아직 안 했으면 (days===1)
+  if(days===1&&!isTodayWorkedOut()){
+    showInsuranceCard();
+  }
+}
+
+function useInsurance(){
+  const ins=getInsurance();
+  if(ins.count<=0) return;
+  ins.count--;
+  saveInsurance(ins);
+  // 오늘 회복일 로그 추가
+  const logs=getLogs();
+  const log={
+    date:new Date().toLocaleDateString('ko-KR'),
+    target:t('insuranceUsed'),
+    exercises:[],exercise_detail:[],
+    done:0,total:0,rate:100,fatigue:5,
+    kcal:0,is_recovery:true,skipped:false,ts:Date.now()
+  };
+  logs.unshift(log);
+  localStorage.setItem('fitness_logs',JSON.stringify(logs));
+  $('insurance-card').style.display='none';
+  renderInsuranceBadge();
+  renderComebackCard();
+  renderQuickStats();
+  vibrate([60,30,120]);
+  playTick();
+}
+
 function daysSinceLastWorkout(){
   const logs=getLogs();
   if(!logs.length) return null;
@@ -2236,6 +2424,8 @@ function renderComebackCard(){
 
 function renderQuickStats(){
   renderComebackCard();
+  renderInsuranceBadge();
+  checkInsurancePrompt();
   const logs=getLogs();
   // 스트릭 계산
   let streak=0;
@@ -2816,6 +3006,8 @@ function completeWorkout(){
     if(has) streak++;
     else if(i>0) break;
   }
+  $('insurance-award').style.display='none';
+  checkAndAwardInsurance(streak);
 
   // Calorie from live bar
   const calText=$('cal-live-num')?.textContent||'0 kcal';
@@ -2832,6 +3024,8 @@ function completeWorkout(){
   stopRestTimer();
   $('routine-result').classList.remove('show');
   resetEmotionSection();
+  renderTomorrowSection();
+  $('tomorrow-done-msg').style.display='none';
   $('workout-done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
   playComplete();
@@ -2935,6 +3129,8 @@ function saveMinWorkout(){
   $('ds-target').textContent=t('minDoneTarget');
   $('min-result').classList.remove('show');
   resetEmotionSection();
+  renderTomorrowSection();
+  $('tomorrow-done-msg').style.display='none';
   $('workout-done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
   playComplete();
