@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2EBFC7DF72D854FE3FD30CD2 /* TimerBridgePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF953AC11683AB6017C29B3 /* TimerBridgePlugin.swift */; };
+		NZD0HK0000000000000001AA /* HealthKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = NZD0HK0000000000000001BB /* HealthKitPlugin.swift */; };
 		NZD0FF0000000000000001AA /* CustomBridgeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = NZD0FE0000000000000001AA /* CustomBridgeViewController.swift */; };
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
 		4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 4D22ABE82AF431CB00220026 /* CapApp-SPM */; };
@@ -70,6 +71,7 @@
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		9FF953AC11683AB6017C29B3 /* TimerBridgePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerBridgePlugin.swift; sourceTree = "<group>"; };
+		NZD0HK0000000000000001BB /* HealthKitPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitPlugin.swift; sourceTree = "<group>"; };
 		NZD0FE0000000000000001AA /* CustomBridgeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBridgeViewController.swift; sourceTree = "<group>"; };
 		FED2E851D0DF12AC1FB2D8E9 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		NZD0020000000000000001AA /* TimerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TimerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +156,7 @@
 				2FAD9762203C412B000D30F8 /* config.xml */,
 				50B271D01FEDC1A000F3C39B /* public */,
 				9FF953AC11683AB6017C29B3 /* TimerBridgePlugin.swift */,
+				NZD0HK0000000000000001BB /* HealthKitPlugin.swift */,
 				NZD0FE0000000000000001AA /* CustomBridgeViewController.swift */,
 			);
 			path = App;
@@ -281,6 +284,7 @@
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				2EBFC7DF72D854FE3FD30CD2 /* TimerBridgePlugin.swift in Sources */,
+				NZD0HK0000000000000001AA /* HealthKitPlugin.swift in Sources */,
 				NZD0FF0000000000000001AA /* CustomBridgeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
