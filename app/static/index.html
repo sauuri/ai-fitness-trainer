@@ -511,6 +511,21 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   font-weight:700;margin-bottom:18px}
 .done-actions{display:flex;flex-direction:column;gap:8px}
 
+/* ── 복귀 플랜 카드 ─────────────────────────────────────────────────────────── */
+.comeback-card{background:linear-gradient(135deg,#6366f115,#8b5cf608);border:1px solid #6366f140;border-radius:18px;padding:22px 18px;text-align:center;margin-bottom:14px;animation:fadeUp .4s ease}
+.comeback-emoji{font-size:40px;display:block;margin-bottom:10px}
+.comeback-title{font-size:18px;font-weight:900;color:#fff;margin-bottom:6px}
+.comeback-desc{font-size:13px;color:var(--muted);line-height:1.7}
+
+/* ── 노후회 인터스티셜 ──────────────────────────────────────────────────────── */
+.nrg-wrap{text-align:center;padding:12px 4px;animation:fadeUp .3s ease}
+.nrg-icon{font-size:44px;margin-bottom:14px;display:block}
+.nrg-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:18px}
+.nrg-stat-wrap{background:linear-gradient(135deg,#10b98115,#34d39908);border:1px solid #10b98140;border-radius:16px;padding:20px;margin-bottom:16px}
+.nrg-pct{font-size:52px;font-weight:900;color:var(--green);line-height:1;margin-bottom:6px}
+.nrg-desc{font-size:13px;color:#6ee7b7;line-height:1.6}
+.nrg-sub{font-size:14px;font-weight:700;color:var(--text);margin-bottom:20px}
+
 /* ── 감정 기록 ─────────────────────────────────────────────────────────────── */
 .emotion-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;animation:fadeUp .5s ease .2s both}
 .emotion-title{font-size:13px;font-weight:700;color:var(--muted);text-align:center;margin-bottom:12px;letter-spacing:.3px}
@@ -653,6 +668,15 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
   <!-- ── 퀵 액션 (3초 진입) ── -->
   <div id="home-quick" style="display:none">
+    <!-- 복귀 플랜 카드 (2일+ 미운동 시 표시) -->
+    <div id="comeback-card" style="display:none" class="comeback-card">
+      <div class="comeback-emoji" id="comeback-emoji">👋</div>
+      <div class="comeback-title" id="comeback-title"></div>
+      <div class="comeback-desc" id="comeback-desc"></div>
+      <button class="btn btn-primary" id="comeback-btn" style="margin-top:12px;margin-bottom:6px"></button>
+      <button class="btn" style="background:none;color:var(--muted);font-size:12px;padding:6px" onclick="$('comeback-card').style.display='none'" data-i18n="comebackSkip">원래대로 할게요</button>
+    </div>
+
     <div class="qa-wrap">
       <div class="qa-streak-row">
         <div class="qa-streak-badge" id="qa-streak-badge">🔥 <span id="qa-streak-num">0</span><span data-i18n="qaDays">일째</span></div>
@@ -693,6 +717,21 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <div class="sit-title" data-i18n="sitTitle">지금 상황이 어때요?</div>
       <div class="sit-grid" id="sit-grid"></div>
       <button class="sit-back" onclick="showQuickHome()">← <span data-i18n="sitBack">뒤로</span></button>
+    </div>
+  </div>
+
+  <!-- ── 노후회 인터스티셜 ── -->
+  <div id="home-noregret" style="display:none">
+    <div class="nrg-wrap">
+      <div class="nrg-icon">📊</div>
+      <div class="nrg-title" data-i18n="nrgTitle">잠깐, 기억나세요?</div>
+      <div class="nrg-stat-wrap">
+        <div class="nrg-pct" id="nrg-pct">0%</div>
+        <div class="nrg-desc" id="nrg-desc"></div>
+      </div>
+      <div class="nrg-sub" data-i18n="nrgSub">오늘도 그럴 수 있어요.</div>
+      <button class="btn btn-primary" style="margin-bottom:10px" onclick="nrgGo()" data-i18n="nrgGoBtn">⚡ 1분만 해볼게요</button>
+      <button class="btn" style="background:none;color:var(--muted);font-size:13px;width:100%;padding:10px" onclick="showExcuseSection()" data-i18n="nrgSkipBtn">그래도 못 하겠어요 →</button>
     </div>
   </div>
 
@@ -1545,6 +1584,15 @@ const TRANS = {
     excuseOpts:['오늘 너무 늦었어','그냥 귀찮아','너무 피곤해','운동복 갈아입기 싫어','헬스장 못 가','5분이 뭐가 달라져','몸이 안 좋아','의욕이 없어'],
     backHome:'← 홈',excuseShorterBtn:'더 짧게 (1분)',
     expandTitle:'막상 해보니, 조금 더 할 수 있겠어요?',expand2min:'⚡ 2분만 더',expandFull:'💪 오늘 루틴으로',
+    nrgTitle:'잠깐, 기억나세요?',nrgSub:'오늘도 그럴 수 있어요.',nrgGoBtn:'⚡ 1분만 해볼게요',nrgSkipBtn:'그래도 못 하겠어요 →',
+    nrgDesc:(pct,n)=>`하기 싫었던 날 ${n}번 중\n${pct}%가 끝나고 "괜찮았다"고 했어요.`,
+    comebackSkip:'원래대로 할게요',
+    comeback:{
+      2:{emoji:'👋',title:'이틀 만이네요',desc:'아직 흐름이 살아있어요.\n오늘은 욕심 없이 1분만 해요.',btn:'⚡ 1분 복귀 루틴',mins:1},
+      3:{emoji:'💙',title:'3일 만이에요',desc:'괜찮아요. 지금 돌아온 게 중요해요.\n3분 루틴으로 부드럽게 시작해요.',btn:'🔥 3분 복귀 루틴',mins:3},
+      5:{emoji:'✨',title:'잠깐 쉬었네요',desc:'완전히 포기한 게 아니에요.\n5분 가벼운 복귀 루틴으로 시작해요.',btn:'💪 5분 복귀 루틴',mins:5},
+      9:{emoji:'🚀',title:'돌아온 것만으로 성공',desc:'오늘 앱 열었다는 게 이미 절반이에요.\n무리하지 말고 1분만 다시 시작해요.',btn:'⚡ 1분 재시작',mins:1},
+    },
     emotionTitle:'지금 기분은 어때요?',emotionBetter:'하기 전보다 낫다',emotionNoRegret:'후회는 없음',emotionHard:'힘들었음',emotionSame:'똑같음',
     emotionThanks:(pct,n)=>`기록됐어요. 지금까지 ${n}번 중 ${pct}%가 "후회 없음"이었어요.`,
     noRegretBanner:(pct,n)=>`지난 ${n}번의 기록 중 ${pct}%가 완료 후 "괜찮았다"고 했어요.\n오늘도 1분만 해볼까요?`,
@@ -1684,6 +1732,15 @@ const TRANS = {
     excuseOpts:["It's too late today","I'm just lazy","I'm too tired","Don't want to change clothes","Can't go to gym","What's 5 min gonna do","Not feeling well","No motivation"],
     backHome:'← Home',excuseShorterBtn:'Even shorter (1 min)',
     expandTitle:'Feeling like you could do a bit more?',expand2min:'⚡ 2 more min',expandFull:'💪 Full routine',
+    nrgTitle:'Wait — remember this?',nrgSub:'Today could be the same.',nrgGoBtn:'⚡ Try just 1 min',nrgSkipBtn:"Still can't do it →",
+    nrgDesc:(pct,n)=>`${pct}% of the ${n} times\nyou didn't want to, you felt okay after.`,
+    comebackSkip:'Do it the normal way',
+    comeback:{
+      2:{emoji:'👋',title:'2 days since last time',desc:"You're still in the flow.\nNo pressure — just 1 minute.",btn:'⚡ 1-min comeback',mins:1},
+      3:{emoji:'💙',title:'3 days — that\'s okay',desc:"Coming back is what matters.\nStart with a soft 3-min routine.",btn:'🔥 3-min comeback',mins:3},
+      5:{emoji:'✨',title:'You didn\'t quit',desc:"You just paused.\nA light 5-min routine to ease back in.",btn:'💪 5-min comeback',mins:5},
+      9:{emoji:'🚀',title:'Opening the app is already half',desc:"No pressure.\nJust 1 minute to restart the streak.",btn:'⚡ 1-min restart',mins:1},
+    },
     emotionTitle:'How do you feel right now?',emotionBetter:'Better than before',emotionNoRegret:'No regrets',emotionHard:'It was tough',emotionSame:'Same as before',
     emotionThanks:(pct,n)=>`Recorded! ${pct}% of your ${n} sessions ended with "no regrets."`,
     noRegretBanner:(pct,n)=>`${pct}% of your last ${n} sessions ended feeling okay.\nWant to try just 1 min today?`,
@@ -1769,6 +1826,7 @@ function showQuickHome(){
   $('home-quick').style.display='block';
   $('home-situation').style.display='none';
   $('home-excuse').style.display='none';
+  $('home-noregret').style.display='none';
   $('home-form').style.display='none';
 }
 
@@ -1782,7 +1840,12 @@ function quickStart(mode){
   }
   if(mode==='quit'){
     $('home-quick').style.display='none';
-    showExcuseSection();
+    const stats=calcNoRegretStats();
+    if(stats&&stats.pct>=50){
+      showNoRegretInterstitial(stats);
+    } else {
+      showExcuseSection();
+    }
     return;
   }
   // 1min or 5min → 상황 버튼
@@ -1848,6 +1911,22 @@ function recordEmotion(val){
     thanks.style.display='block';
   }
   playTick();
+}
+
+function showNoRegretInterstitial(stats){
+  $('nrg-pct').textContent=stats.pct+'%';
+  const desc=t('nrgDesc')(stats.pct,stats.total);
+  $('nrg-desc').innerHTML=desc.replace('\n','<br>');
+  $('home-noregret').style.display='block';
+  $('home-excuse').style.display='none';
+  $('home-situation').style.display='none';
+  $('home-form').style.display='none';
+}
+
+function nrgGo(){
+  vibrate([40]);
+  $('home-noregret').style.display='none';
+  showSituationSection('1min');
 }
 
 function showNoRegretBanner(containerId){
@@ -2115,6 +2194,7 @@ function initHome(){
     $('profile-bar').style.display='none';
   } else {
     $('no-profile-msg').style.display='none';
+    $('home-noregret').style.display='none';
     $('profile-bar').style.display='flex';
     const injText=p.injury&&p.injury.length?` · ${t('injuryDisplay')}${p.injury.join(', ')}`:'';
     const nameText=p.name?`<strong>${p.name}</strong> · `:'';
@@ -2127,7 +2207,35 @@ function initHome(){
   }
 }
 
+function daysSinceLastWorkout(){
+  const logs=getLogs();
+  if(!logs.length) return null;
+  const last=new Date(logs[0].ts);last.setHours(0,0,0,0);
+  const today=new Date();today.setHours(0,0,0,0);
+  return Math.floor((today-last)/(1000*60*60*24));
+}
+
+function renderComebackCard(){
+  const days=daysSinceLastWorkout();
+  if(!days||days<2){$('comeback-card').style.display='none';return}
+  const L=TRANS[LANG];
+  const key=days<=2?2:days<=3?3:days<=6?5:9;
+  const cb=L.comeback[key];
+  $('comeback-emoji').textContent=cb.emoji;
+  $('comeback-title').textContent=cb.title;
+  $('comeback-desc').innerHTML=cb.desc.replace('\n','<br>');
+  const btn=$('comeback-btn');
+  btn.textContent=cb.btn;
+  btn.onclick=()=>{
+    $('comeback-card').style.display='none';
+    vibrate([40]);
+    getMinRoutineWithReason(LANG==='ko'?`${days}일 만에 복귀`:`Returning after ${days} days`,cb.mins);
+  };
+  $('comeback-card').style.display='block';
+}
+
 function renderQuickStats(){
+  renderComebackCard();
   const logs=getLogs();
   // 스트릭 계산
   let streak=0;
