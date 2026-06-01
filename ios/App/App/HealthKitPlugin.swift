@@ -28,12 +28,17 @@ public class HealthKitPlugin: CAPPlugin, CAPBridgedPlugin {
             guard let samples = samples as? [HKCategorySample] else {
                 call.resolve(["hours": -1]); return
             }
-            let sleepValues: Set<Int> = [
-                HKCategoryValueSleepAnalysis.asleepCore.rawValue,
-                HKCategoryValueSleepAnalysis.asleepDeep.rawValue,
-                HKCategoryValueSleepAnalysis.asleepREM.rawValue,
-                HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue,
-            ]
+            var sleepValues: Set<Int> = [HKCategoryValueSleepAnalysis.inBed.rawValue]
+            if #available(iOS 16.0, *) {
+                sleepValues = [
+                    HKCategoryValueSleepAnalysis.asleepCore.rawValue,
+                    HKCategoryValueSleepAnalysis.asleepDeep.rawValue,
+                    HKCategoryValueSleepAnalysis.asleepREM.rawValue,
+                    HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue,
+                ]
+            } else {
+                sleepValues = [HKCategoryValueSleepAnalysis.asleep.rawValue]
+            }
             let totalSeconds = samples
                 .filter { sleepValues.contains($0.value) }
                 .reduce(0.0) { $0 + $1.endDate.timeIntervalSince($1.startDate) }
