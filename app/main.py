@@ -18,6 +18,13 @@ client = AsyncOpenAI(api_key=settings.openai_api_key)
 BASE = pathlib.Path(__file__).parent
 
 
+def lang_sys(lang: str) -> str:
+    """Append language instruction to system prompt."""
+    if lang == "en":
+        return " Always respond in English. Use English for all text including exercise names, tips, and advice."
+    return ""
+
+
 class RoutineRequest(BaseModel):
     gender: str
     age: int
@@ -36,6 +43,7 @@ class RoutineRequest(BaseModel):
     soreness: bool = False
     motivation: str = "보통"
     condition: int = 7
+    lang: str = "ko"
 
 
 class RiskRequest(BaseModel):
@@ -47,6 +55,7 @@ class RiskRequest(BaseModel):
     available_time: int = 60
     recent_logs: list[dict] = []
     missed_logs: list[dict] = []
+    lang: str = "ko"
 
 
 class MinRoutineRequest(BaseModel):
@@ -59,6 +68,7 @@ class MinRoutineRequest(BaseModel):
     injury: list[str]
     reason: str
     available_time: int = 10
+    lang: str = "ko"
 
 
 class ReportRequest(BaseModel):
@@ -66,6 +76,7 @@ class ReportRequest(BaseModel):
     goal: str
     level: str
     logs: list[dict]
+    lang: str = "ko"
 
 
 class FeedbackRequest(BaseModel):
@@ -73,6 +84,7 @@ class FeedbackRequest(BaseModel):
     goal: str
     level: str
     recent_logs: list[dict]
+    lang: str = "ko"
 
 
 class AnalysisRequest(BaseModel):
@@ -81,6 +93,7 @@ class AnalysisRequest(BaseModel):
     level: str
     logs: list[dict]
     missed_logs: list[dict] = []
+    lang: str = "ko"
 
 
 class ConvertRequest(BaseModel):
@@ -89,11 +102,13 @@ class ConvertRequest(BaseModel):
     target_time: int = 15
     injury: list[str] = []
     equipment: list[str] = []
+    lang: str = "ko"
 
 
 class MotivationRequest(BaseModel):
     reason: str
     situation: str = ""
+    lang: str = "ko"
 
 
 class CaloriesRequest(BaseModel):
@@ -104,6 +119,7 @@ class CaloriesRequest(BaseModel):
     goal: str
     weekly_days: int
     diet_style: str = "한식"
+    lang: str = "ko"
 
 
 @app.get("/")
@@ -235,7 +251,7 @@ async def generate_routine(req: RoutineRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": "당신은 전문 퍼스널 트레이너입니다. JSON으로만 응답합니다."},
+            {"role": "system", "content": f"당신은 전문 퍼스널 트레이너입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""다음 정보를 바탕으로 오늘의 운동 루틴을 짜주세요.
 
 성별: {req.gender} / 나이: {req.age}세 / 몸무게: {req.weight}kg / 키: {req.height}cm
@@ -300,7 +316,7 @@ async def predict_risk(req: RiskRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": "당신은 운동 심리 전문 AI 코치입니다. JSON으로만 응답합니다."},
+            {"role": "system", "content": f"당신은 운동 심리 전문 AI 코치입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""오늘 사용자의 운동 실패 위험도를 분석해주세요.
 
 오늘 상태:
@@ -338,7 +354,7 @@ async def get_min_routine(req: MinRoutineRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": "당신은 운동 습관 코치입니다. JSON으로만 응답합니다."},
+            {"role": "system", "content": f"당신은 운동 습관 코치입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""사용자가 오늘 운동하기 싫다고 합니다.
 이유: {req.reason}
 목표 부위: {req.target} / 장소: {req.location} / 장비: {equip_text}
@@ -375,7 +391,7 @@ async def analyze_failures(req: AnalysisRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": "당신은 데이터 기반 AI 피트니스 코치입니다. JSON으로만 응답합니다."},
+            {"role": "system", "content": f"당신은 데이터 기반 AI 피트니스 코치입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""다음 운동 기록을 분석하고 실패 패턴을 파악해주세요.
 
 성별: {req.gender} / 목표: {req.goal} / 경험: {req.level}
@@ -419,7 +435,7 @@ async def convert_routine(req: ConvertRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": "당신은 전문 퍼스널 트레이너입니다. JSON으로만 응답합니다."},
+            {"role": "system", "content": f"당신은 전문 퍼스널 트레이너입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""다음 운동 루틴을 변환해주세요.
 
 원본 루틴: {original_text}
@@ -454,7 +470,7 @@ async def get_report(req: ReportRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": "당신은 데이터 기반 AI 피트니스 코치입니다. JSON으로만 응답합니다."},
+            {"role": "system", "content": f"당신은 데이터 기반 AI 피트니스 코치입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""다음 운동 기록을 바탕으로 4주 성장 리포트를 작성해주세요.
 
 성별: {req.gender} / 목표: {req.goal} / 경험: {req.level}
@@ -486,7 +502,7 @@ async def get_feedback(req: FeedbackRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": "당신은 데이터 기반 AI 피트니스 코치입니다. JSON으로만 응답합니다."},
+            {"role": "system", "content": f"당신은 데이터 기반 AI 피트니스 코치입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""다음 운동 기록을 분석하고 피드백을 주세요.
 
 성별: {req.gender} / 목표: {req.goal} / 경험: {req.level}
@@ -511,7 +527,7 @@ async def get_motivation(req: MotivationRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": "당신은 현실적이고 공감하는 헬스 트레이너입니다. JSON으로만 응답합니다."},
+            {"role": "system", "content": f"당신은 현실적이고 공감하는 헬스 트레이너입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""사용자가 오늘 헬스 가기 싫다고 합니다.
 상황: {req.situation or '그냥 귀찮음'}
 이유: {req.reason or '특별한 이유 없음'}
@@ -534,7 +550,7 @@ async def get_calories(req: CaloriesRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": "당신은 영양사입니다. JSON으로만 응답합니다."},
+            {"role": "system", "content": f"당신은 영양사입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""다음 정보를 바탕으로 하루 칼로리와 식단을 추천해주세요.
 
 성별: {req.gender} / 나이: {req.age}세 / 몸무게: {req.weight}kg / 키: {req.height}cm

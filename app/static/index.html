@@ -1729,7 +1729,8 @@ async function predictRisk(){
         motivation:$('td-motivation').value,
         available_time:parseInt($('td-time').value)||60,
         recent_logs:getLogs().slice(0,10),
-        missed_logs:getMissedLogs().slice(0,14)
+        missed_logs:getMissedLogs().slice(0,14),
+        lang:LANG
       })
     });
     const d=await res.json();
@@ -2023,7 +2024,8 @@ async function getRoutine(){
         stress:peakMode?'낮음':$('td-stress').value,
         soreness:peakMode?false:$('td-soreness').checked,
         motivation:peakMode?'높음':$('td-motivation').value,
-        condition:peakMode?10:undefined
+        condition:peakMode?10:undefined,
+        lang:LANG
       })
     });
     const d=await res.json();
@@ -2312,7 +2314,8 @@ async function getMinRoutine(){
         equipment:p.equipment||[],
         injury:p.injury||[],
         reason,
-        available_time:parseInt($('td-time').value)||10
+        available_time:parseInt($('td-time').value)||10,
+        lang:LANG
       })
     });
     const d=await res.json();
@@ -2390,7 +2393,7 @@ async function getMotivation(){
   try{
     const res=await fetch(API+'/motivation',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({reason:$('lazy-reason').value,situation:$('lazy-reason').value})
+      body:JSON.stringify({reason:$('lazy-reason').value,situation:$('lazy-reason').value,lang:LANG})
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
@@ -2638,7 +2641,7 @@ async function getFeedback(){
   try{
     const res=await fetch(API+'/feedback',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({gender:p.gender,goal:p.goal,level:p.level,recent_logs:logs.slice(0,7)})
+      body:JSON.stringify({gender:p.gender,goal:p.goal,level:p.level,recent_logs:logs.slice(0,7),lang:LANG})
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
@@ -2678,7 +2681,7 @@ async function getAnalysis(){
   try{
     const res=await fetch(API+'/analyze-failures',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({gender:p.gender,goal:p.goal,level:p.level,logs,missed_logs:missed})
+      body:JSON.stringify({gender:p.gender,goal:p.goal,level:p.level,logs,missed_logs:missed,lang:LANG})
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
@@ -2701,7 +2704,7 @@ async function getReport(){
   try{
     const res=await fetch(API+'/report',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({gender:p.gender,goal:p.goal,level:p.level,logs})
+      body:JSON.stringify({gender:p.gender,goal:p.goal,level:p.level,logs,lang:LANG})
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
@@ -2733,7 +2736,8 @@ async function convertRoutine(){
         convert_to:$('convert-type').value,
         target_time:15,
         injury:p.injury||[],
-        equipment:p.equipment||[]
+        equipment:p.equipment||[],
+        lang:LANG
       })
     });
     const cv=await res.json();
@@ -2781,7 +2785,7 @@ async function getDiet(){
   try{
     const res=await fetch(API+'/calories',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,weekly_days:parseInt($('diet-days').value),diet_style:$('diet-style').value})
+      body:JSON.stringify({gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,weekly_days:parseInt($('diet-days').value),diet_style:$('diet-style').value,lang:LANG})
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
