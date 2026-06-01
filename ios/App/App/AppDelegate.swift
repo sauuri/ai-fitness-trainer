@@ -3,6 +3,7 @@ import UIKit
 import Capacitor
 import TimerShared
 import UserNotifications
+import WidgetKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -30,7 +31,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    func applicationWillTerminate(_ application: UIApplication) {}
+    func applicationWillTerminate(_ application: UIApplication) {
+        // UserDefaults 위젯 데이터 정리
+        if let d = UserDefaults(suiteName: "group.com.sauuri.nozeroday") {
+            d.removeObject(forKey: "workoutStartTime")
+            d.removeObject(forKey: "exerciseName")
+            d.removeObject(forKey: "currentSet")
+            d.removeObject(forKey: "totalSets")
+            d.synchronize()
+        }
+        WidgetCenter.shared.reloadTimelines(ofKind: "NZDTimer")
+
+        // Live Activity 즉시 종료 (semaphore로 async 완료 대기)
+        if #available(iOS 16.2, *) {
+            let semaphore = DispatchSemaphore(value: 0)
+            Task.detached {
+                for activity in Activity<TimerActivityAttributes>.activities {
+                    await activity.end(nil, dismissalPolicy: .immediate)
+                }
+                semaphore.signal()
+            }
+            _ = semaphore.wait(timeout: .now() + 3)
+        }
+    }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         return ApplicationDelegateProxy.shared.application(app, open: url, options: options)
