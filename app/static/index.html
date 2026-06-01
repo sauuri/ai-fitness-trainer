@@ -511,6 +511,16 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   font-weight:700;margin-bottom:18px}
 .done-actions{display:flex;flex-direction:column;gap:8px}
 
+/* ── 확장 섹션 ─────────────────────────────────────────────────────────────── */
+.expand-prompt{margin-top:12px;animation:fadeUp .4s ease}
+.expand-divider{text-align:center;position:relative;margin-bottom:12px}
+.expand-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border)}
+.expand-divider span{background:var(--bg);padding:0 10px;position:relative;font-size:12px;color:var(--muted);font-weight:600}
+.expand-more-btn{background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;flex:1;margin-top:0;font-size:13px;font-weight:700}
+.expand-more-btn:hover{background:#6366f130;transform:translateY(-1px)}
+.expand-full-btn{background:#f9731615;color:var(--accent);border:1px solid #f9731630;flex:1;margin-top:0;font-size:13px;font-weight:700}
+.expand-full-btn:hover{background:#f9731625;transform:translateY(-1px)}
+
 /* ── QUICK ACTION (3초 진입) ───────────────────────────────────────────────── */
 .qa-wrap{padding:4px 0 8px}
 .qa-streak-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
@@ -892,9 +902,15 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           <div class="min-success" id="min-success"></div>
           <div class="min-upgrade" id="min-upgrade"></div>
         </div>
-        <div class="btn-group" style="margin-top:8px">
-          <button class="btn btn-primary" onclick="getRoutine()" data-i18n="wantMoreBtn">더 하고 싶어졌어 💪</button>
-          <button class="btn btn-green" onclick="saveMinWorkout()" data-i18n="saveMinBtn">완료 저장 ✅</button>
+        <button class="btn btn-green" onclick="saveMinWorkout()" style="margin-top:8px;width:100%" data-i18n="saveMinBtn">완료 저장 ✅</button>
+
+        <!-- 확장 섹션 -->
+        <div class="expand-prompt" id="expand-prompt">
+          <div class="expand-divider"><span data-i18n="expandTitle">막상 해보니, 조금 더 할 수 있겠어요?</span></div>
+          <div class="btn-group" style="margin-top:0">
+            <button class="btn expand-more-btn" onclick="getMoreMinRoutine()" data-i18n="expand2min">⚡ 2분만 더</button>
+            <button class="btn expand-full-btn" onclick="getRoutine()" data-i18n="expandFull">💪 오늘 루틴으로</button>
+          </div>
         </div>
       </div>
 
@@ -1489,6 +1505,7 @@ const TRANS = {
     ],
     excuseOpts:['오늘 너무 늦었어','그냥 귀찮아','너무 피곤해','운동복 갈아입기 싫어','헬스장 못 가','5분이 뭐가 달라져','몸이 안 좋아','의욕이 없어'],
     backHome:'← 홈',excuseShorterBtn:'더 짧게 (1분)',
+    expandTitle:'막상 해보니, 조금 더 할 수 있겠어요?',expand2min:'⚡ 2분만 더',expandFull:'💪 오늘 루틴으로',
   },
   en: {
     appTitle:'No-Zero-Day | AI Fitness Coach',
@@ -1624,6 +1641,7 @@ const TRANS = {
     ],
     excuseOpts:["It's too late today","I'm just lazy","I'm too tired","Don't want to change clothes","Can't go to gym","What's 5 min gonna do","Not feeling well","No motivation"],
     backHome:'← Home',excuseShorterBtn:'Even shorter (1 min)',
+    expandTitle:'Feeling like you could do a bit more?',expand2min:'⚡ 2 more min',expandFull:'💪 Full routine',
   }
 };
 
@@ -1760,9 +1778,19 @@ function pickSituation(idx){
   getMinRoutineWithReason(sit.text, time);
 }
 
+function getMoreMinRoutine(){
+  vibrate([25]);
+  const reason=window._lastMinReason||t('lazyReasonOpts')[0];
+  const prevTime=window._lastMinTime||1;
+  const nextTime=Math.min(prevTime+2, 10);
+  getMinRoutineWithReason(reason, nextTime);
+}
+
 async function getMinRoutineWithReason(reason, minutes){
   const p=getProfile();
   if(!p) return;
+  window._lastMinReason=reason;
+  window._lastMinTime=minutes;
   vibrate([40]);
   $('routine-result').classList.remove('show');
   $('min-result').classList.remove('show');
@@ -2633,6 +2661,8 @@ async function getMinRoutine(){
   startLoadingMessages('home-loading-text-3',t('loadMin'));
 
   const reason=$('lazy-reason')?.value||'귀찮음';
+  window._lastMinReason=reason;
+  window._lastMinTime=parseInt($('td-time').value)||10;
   try{
     const res=await fetch(API+'/min-routine',{
       method:'POST',headers:{'Content-Type':'application/json'},
