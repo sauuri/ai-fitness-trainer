@@ -686,7 +686,10 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           <div class="excuse-reframe" id="ex-reframe"></div>
           <div class="excuse-action" id="ex-action"></div>
         </div>
-        <button class="btn btn-primary" id="ex-route-btn" style="margin-bottom:8px"></button>
+        <div class="btn-group" style="margin-bottom:8px">
+          <button class="btn btn-primary" id="ex-route-btn" style="margin-top:0;flex:2"></button>
+          <button class="btn" id="ex-shorter-btn" style="margin-top:0;flex:1;background:#1a2436;color:var(--muted);font-size:12px" data-i18n="excuseShorterBtn">더 짧게 (1분)</button>
+        </div>
       </div>
       <button class="sit-back" onclick="showQuickHome()">← <span data-i18n="sitBack">뒤로</span></button>
     </div>
@@ -704,6 +707,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
     <!-- ── STEP 1: 컨디션 입력 ── -->
     <div class="step-page active" id="home-step-1">
+      <button class="step-back" onclick="showQuickHome()" data-i18n="backHome">← 홈</button>
       <div class="card">
         <div class="card-title" data-i18n="conditionTitle">🌡️ 오늘 컨디션 입력</div>
         <div style="display:flex;flex-direction:column;gap:14px">
@@ -1484,6 +1488,7 @@ const TRANS = {
       {icon:'🌙',label:'5분이 뭐가 달라져',text:'5분 운동해봤자 달라지는 게 없음'},
     ],
     excuseOpts:['오늘 너무 늦었어','그냥 귀찮아','너무 피곤해','운동복 갈아입기 싫어','헬스장 못 가','5분이 뭐가 달라져','몸이 안 좋아','의욕이 없어'],
+    backHome:'← 홈',excuseShorterBtn:'더 짧게 (1분)',
   },
   en: {
     appTitle:'No-Zero-Day | AI Fitness Coach',
@@ -1618,6 +1623,7 @@ const TRANS = {
       {icon:'🌙',label:"What's 5 min gonna do",text:'5 minutes of exercise feels pointless'},
     ],
     excuseOpts:["It's too late today","I'm just lazy","I'm too tired","Don't want to change clothes","Can't go to gym","What's 5 min gonna do","Not feeling well","No motivation"],
+    backHome:'← Home',excuseShorterBtn:'Even shorter (1 min)',
   }
 };
 
@@ -1826,16 +1832,22 @@ async function runExcuseTranslator(){
     $('ex-empathy').textContent=d.empathy||'';
     $('ex-reframe').textContent=d.reframe||'';
     $('ex-action').textContent=d.action||'';
+    const route=d.route||'1min';
     const routeBtn=$('ex-route-btn');
     routeBtn.textContent=d.button_label||(LANG==='ko'?'시작하기':'Let\'s go');
-    const route=d.route||'1min';
-    routeBtn.onclick=()=>{
+    const launchRoute=(mins)=>{
       $('excuse-result').style.display='none';
       $('home-excuse').style.display='none';
       $('home-form').style.display='block';
-      const minutes=route==='5min'?5:route==='rest'?2:1;
-      getMinRoutineWithReason(excuse, minutes);
+      getMinRoutineWithReason(excuse, mins);
     };
+    routeBtn.onclick=()=>launchRoute(route==='5min'?5:route==='rest'?2:1);
+    const shorterBtn=$('ex-shorter-btn');
+    if(shorterBtn){
+      shorterBtn.textContent=t('excuseShorterBtn');
+      shorterBtn.onclick=()=>launchRoute(1);
+      shorterBtn.style.display=route==='1min'?'none':'block';
+    }
     $('excuse-result').style.display='block';
     playTick();vibrate([40]);
   }catch(e){alert(e.message)}
