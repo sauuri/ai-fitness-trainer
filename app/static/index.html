@@ -2661,23 +2661,12 @@ let _todaySteps = null;
 async function loadTodaySteps(){
   if(typeof Capacitor==='undefined'||!Capacitor.isNativePlatform()) return;
   try{
-    const {CapacitorHealthkit}=Capacitor.Plugins;
-    if(!CapacitorHealthkit) return;
-    const perm=await CapacitorHealthkit.requestAuthorization({
-      all:[],read:['steps'],write:[]
-    });
-    if(!perm.granted) return;
-    const now=new Date();
-    const start=new Date();start.setHours(0,0,0,0);
-    const res=await CapacitorHealthkit.queryHKitSampleType({
-      sampleName:'stepCount',
-      startDate:start.toISOString(),
-      endDate:now.toISOString(),
-      limit:0,
-      ascending:true
-    });
-    const total=(res.resultData||[]).reduce((a,r)=>a+(r.quantity||0),0);
-    _todaySteps=Math.round(total);
+    const {HealthKitBridge}=Capacitor.Plugins;
+    if(!HealthKitBridge) return;
+    const auth=await HealthKitBridge.requestAuth();
+    if(!auth.granted) return;
+    const result=await HealthKitBridge.getSteps();
+    _todaySteps=result.steps||0;
     renderStepsBadge(_todaySteps);
   }catch(e){console.log('HealthKit:',e)}
 }
