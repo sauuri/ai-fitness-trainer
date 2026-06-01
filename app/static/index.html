@@ -1418,6 +1418,32 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   </div>
 
   <div class="card" style="margin-top:8px">
+    <div class="card-title" data-i18n="notiTitle">🔔 0일 위험 알림</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6" data-i18n="notiDesc">운동 시간이 지나도 기록이 없으면 먼저 알림을 보내요.</div>
+    <div class="toggle-row" style="margin-bottom:12px">
+      <span style="font-size:13px;color:var(--text)" data-i18n="notiToggleLabel">알림 켜기</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="noti-toggle" onchange="onNotiToggle(this.checked)">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div id="noti-time-row" style="display:none">
+      <div class="form-group">
+        <label data-i18n="notiTimeLabel">알림 시간</label>
+        <select id="noti-time-select" onchange="saveNotiSettings()">
+          <option value="19">오후 7시</option>
+          <option value="20" selected>오후 8시</option>
+          <option value="21">오후 9시</option>
+          <option value="22">오후 10시</option>
+          <option value="23">오후 11시</option>
+        </select>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px" id="noti-smart-hint" data-i18n="notiSmartHint">운동 기록이 쌓이면 내 패턴에 맞게 자동 조정돼요.</div>
+    </div>
+    <div id="noti-status" style="font-size:12px;color:var(--green);margin-top:6px;display:none" data-i18n="notiStatus">✅ 알림이 설정됐어요</div>
+  </div>
+
+  <div class="card" style="margin-top:8px">
     <div class="card-title" data-i18n="cacheTitle">🔄 앱 캐시 삭제</div>
     <div id="cache-desc" style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6" data-i18n-html="cacheDesc">운동 기록은 유지하고 앱을 최신 버전으로 새로 불러와요. 업데이트 후 화면이 이상할 때 사용하세요.<br>확인하려면 <strong style="color:var(--text)">확인했습니다</strong> 를 입력하세요.</div>
     <input type="text" id="cache-confirm" placeholder="확인했습니다" data-i18n-ph="cachePlaceholder" style="margin-bottom:10px">
@@ -1630,6 +1656,12 @@ const TRANS = {
     excuseOpts:['오늘 너무 늦었어','그냥 귀찮아','너무 피곤해','운동복 갈아입기 싫어','헬스장 못 가','5분이 뭐가 달라져','몸이 안 좋아','의욕이 없어'],
     backHome:'← 홈',excuseShorterBtn:'더 짧게 (1분)',
     expandTitle:'막상 해보니, 조금 더 할 수 있겠어요?',expand2min:'⚡ 2분만 더',expandFull:'💪 오늘 루틴으로',
+    notiTitle:'🔔 0일 위험 알림',notiDesc:'운동 시간이 지나도 기록이 없으면 먼저 알림을 보내요.',
+    notiToggleLabel:'알림 켜기',notiTimeLabel:'알림 시간',notiSmartHint:'운동 기록이 쌓이면 내 패턴에 맞게 자동 조정돼요.',
+    notiStatus:'✅ 알림이 설정됐어요',
+    notiTimeOpts:['오후 7시','오후 8시','오후 9시','오후 10시','오후 11시'],
+    notiBody:'운동 시간이 지났어요. 60초만으로 오늘을 0으로 끝내지 마요 🔥',
+    notiTitle2:'No-Zero-Day',
     tomorrowTitle:'내일의 나를 위한 준비 💌',
     tomorrowDoneMsg:'내일 시작이 훨씬 쉬워질 거예요 ✨',
     tomorrowItems:[
@@ -1795,6 +1827,12 @@ const TRANS = {
     excuseOpts:["It's too late today","I'm just lazy","I'm too tired","Don't want to change clothes","Can't go to gym","What's 5 min gonna do","Not feeling well","No motivation"],
     backHome:'← Home',excuseShorterBtn:'Even shorter (1 min)',
     expandTitle:'Feeling like you could do a bit more?',expand2min:'⚡ 2 more min',expandFull:'💪 Full routine',
+    notiTitle:'🔔 Zero-Day Risk Alert',notiDesc:"If your workout time passes with no log, we'll remind you first.",
+    notiToggleLabel:'Enable notifications',notiTimeLabel:'Alert time',notiSmartHint:'As your logs grow, timing auto-adjusts to your pattern.',
+    notiStatus:'✅ Notification is set',
+    notiTimeOpts:['7 PM','8 PM','9 PM','10 PM','11 PM'],
+    notiBody:"Your workout time passed. 60 seconds is all it takes to avoid a zero day 🔥",
+    notiTitle2:'No-Zero-Day',
     tomorrowTitle:"Prepare for tomorrow's you 💌",
     tomorrowDoneMsg:"Tomorrow's start will be so much easier ✨",
     tomorrowItems:[
@@ -2285,6 +2323,93 @@ function initHome(){
     showQuickHome();
     renderQuickStats();
   }
+}
+
+// ── 0일 위험 감지 알림 ────────────────────────────────────────────────────────
+const NZD_NOTI_ID = 777;
+
+function getNotiSettings(){
+  return JSON.parse(localStorage.getItem('nzd_noti')||'{"enabled":false,"hour":20}');
+}
+function saveNotiSettings(){
+  const enabled=$('noti-toggle')?.checked||false;
+  const hour=parseInt($('noti-time-select')?.value)||20;
+  localStorage.setItem('nzd_noti',JSON.stringify({enabled,hour}));
+  if(enabled) scheduleRiskNotification();
+  else cancelRiskNotification();
+  $('noti-status').style.display=enabled?'block':'none';
+}
+
+function onNotiToggle(checked){
+  $('noti-time-row').style.display=checked?'block':'none';
+  saveNotiSettings();
+}
+
+function loadNotiSettings(){
+  const s=getNotiSettings();
+  const toggle=$('noti-toggle');
+  const sel=$('noti-time-select');
+  const timeRow=$('noti-time-row');
+  const status=$('noti-status');
+  if(toggle) toggle.checked=s.enabled;
+  if(sel) sel.value=s.hour;
+  if(timeRow) timeRow.style.display=s.enabled?'block':'none';
+  if(status) status.style.display=s.enabled?'block':'none';
+}
+
+function getSmartNotiHour(){
+  // 최근 14개 로그에서 평균 운동 시작 시간 계산
+  const logs=getLogs().slice(0,14);
+  if(logs.length<3) return getNotiSettings().hour;
+  const hours=logs.map(l=>new Date(l.ts).getHours());
+  const avg=Math.round(hours.reduce((a,b)=>a+b,0)/hours.length);
+  return Math.min(Math.max(avg+1,19),23); // 평균 +1시간, 19~23시 범위
+}
+
+async function scheduleRiskNotification(){
+  if(typeof Capacitor==='undefined'||!Capacitor.isNativePlatform()) return;
+  try{
+    const {LocalNotifications}=Capacitor.Plugins;
+    // 권한 요청
+    const perm=await LocalNotifications.requestPermissions();
+    if(perm.display!=='granted') return;
+
+    // 이미 오늘 운동 완료했으면 내일부터
+    const todayDone=isTodayWorkedOut();
+    const hour=getSmartNotiHour();
+    const at=new Date();
+    at.setHours(hour,0,0,0);
+    if(at<=new Date()||todayDone) at.setDate(at.getDate()+1);
+
+    await LocalNotifications.cancel({notifications:[{id:NZD_NOTI_ID}]});
+    await LocalNotifications.schedule({
+      notifications:[{
+        id:NZD_NOTI_ID,
+        title:t('notiTitle2'),
+        body:t('notiBody'),
+        schedule:{at,repeats:false},
+        smallIcon:'ic_stat_nzd',
+        actionTypeId:'OPEN_APP'
+      }]
+    });
+  }catch(e){console.log('Noti error:',e)}
+}
+
+async function cancelRiskNotification(){
+  if(typeof Capacitor==='undefined'||!Capacitor.isNativePlatform()) return;
+  try{
+    const {LocalNotifications}=Capacitor.Plugins;
+    await LocalNotifications.cancel({notifications:[{id:NZD_NOTI_ID}]});
+    // 내일 것 다시 스케줄
+    const s=getNotiSettings();
+    if(s.enabled) setTimeout(scheduleRiskNotification,500);
+  }catch(e){}
+}
+
+function initNotifications(){
+  loadNotiSettings();
+  const s=getNotiSettings();
+  if(s.enabled) scheduleRiskNotification();
 }
 
 // ── 내일의 나를 위한 준비 ────────────────────────────────────────────────────
@@ -3028,6 +3153,7 @@ function completeWorkout(){
   $('tomorrow-done-msg').style.display='none';
   $('workout-done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
+  cancelRiskNotification();
   playComplete();
   vibrate([80,40,80,40,300]);
   launchConfetti();
@@ -3133,6 +3259,7 @@ function saveMinWorkout(){
   $('tomorrow-done-msg').style.display='none';
   $('workout-done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
+  cancelRiskNotification();
   playComplete();
   vibrate([60,40,60,40,200]);
   launchConfetti();
@@ -3660,6 +3787,7 @@ loadProfileForm();
 initHome();
 if(!getProfile()) showPage('profile');
 applyLang();
+initNotifications();
 </script>
 <!-- DAY DETAIL MODAL -->
 <div class="modal-bg" id="day-modal" onclick="if(event.target===this)$('day-modal').classList.remove('show')">
