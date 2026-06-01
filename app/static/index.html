@@ -511,6 +511,21 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   font-weight:700;margin-bottom:18px}
 .done-actions{display:flex;flex-direction:column;gap:8px}
 
+/* ── 감정 기록 ─────────────────────────────────────────────────────────────── */
+.emotion-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;animation:fadeUp .5s ease .2s both}
+.emotion-title{font-size:13px;font-weight:700;color:var(--muted);text-align:center;margin-bottom:12px;letter-spacing:.3px}
+.emotion-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.emotion-btn{background:#0a0f1a;border:1px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;transition:all .2s;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;gap:5px}
+.emotion-btn:active{transform:scale(.96)}
+.emotion-btn.selected{border-color:var(--green);background:#10b98115}
+.emotion-icon{font-size:22px}
+.emotion-label{font-size:11px;font-weight:700;color:var(--muted);text-align:center;line-height:1.3}
+.emotion-btn.selected .emotion-label{color:var(--green)}
+.emotion-thanks{text-align:center;font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6;animation:fadeUp .3s ease}
+/* 후회없음 통계 배너 */
+.noregret-banner{background:linear-gradient(135deg,#10b98110,#34d39908);border:1px solid #10b98130;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12px;color:#6ee7b7;line-height:1.6;animation:fadeUp .4s ease}
+.noregret-pct{font-size:22px;font-weight:900;color:var(--green);display:block;margin-bottom:2px}
+
 /* ── 확장 섹션 ─────────────────────────────────────────────────────────────── */
 .expand-prompt{margin-top:12px;animation:fadeUp .4s ease}
 .expand-divider{text-align:center;position:relative;margin-bottom:12px}
@@ -886,6 +901,30 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         <div style="text-align:center;margin-bottom:18px">
           <span class="done-target-tag" id="ds-target" data-i18n="todayRoutine">오늘의 루틴</span>
         </div>
+        <!-- 감정 기록 -->
+        <div class="emotion-section" id="emotion-section">
+          <div class="emotion-title" data-i18n="emotionTitle">지금 기분은 어때요?</div>
+          <div class="emotion-grid">
+            <button class="emotion-btn" data-emotion="better" onclick="recordEmotion('better')">
+              <span class="emotion-icon">😊</span>
+              <span class="emotion-label" data-i18n="emotionBetter">하기 전보다 낫다</span>
+            </button>
+            <button class="emotion-btn" data-emotion="noregret" onclick="recordEmotion('noregret')">
+              <span class="emotion-icon">🙏</span>
+              <span class="emotion-label" data-i18n="emotionNoRegret">후회는 없음</span>
+            </button>
+            <button class="emotion-btn" data-emotion="hard" onclick="recordEmotion('hard')">
+              <span class="emotion-icon">😤</span>
+              <span class="emotion-label" data-i18n="emotionHard">힘들었음</span>
+            </button>
+            <button class="emotion-btn" data-emotion="same" onclick="recordEmotion('same')">
+              <span class="emotion-icon">😐</span>
+              <span class="emotion-label" data-i18n="emotionSame">똑같음</span>
+            </button>
+          </div>
+          <div id="emotion-thanks" style="display:none" class="emotion-thanks"></div>
+        </div>
+
         <div class="done-actions">
           <button class="btn btn-primary" style="margin-top:0" onclick="showPage('dash')" data-i18n="viewLogBtn">📊 기록 확인하기</button>
           <button class="btn" style="background:#1a2436;color:var(--text);width:100%" onclick="startNewRoutine()" data-i18n="newRoutineBtn">💪 새 루틴 짜기</button>
@@ -1506,6 +1545,9 @@ const TRANS = {
     excuseOpts:['오늘 너무 늦었어','그냥 귀찮아','너무 피곤해','운동복 갈아입기 싫어','헬스장 못 가','5분이 뭐가 달라져','몸이 안 좋아','의욕이 없어'],
     backHome:'← 홈',excuseShorterBtn:'더 짧게 (1분)',
     expandTitle:'막상 해보니, 조금 더 할 수 있겠어요?',expand2min:'⚡ 2분만 더',expandFull:'💪 오늘 루틴으로',
+    emotionTitle:'지금 기분은 어때요?',emotionBetter:'하기 전보다 낫다',emotionNoRegret:'후회는 없음',emotionHard:'힘들었음',emotionSame:'똑같음',
+    emotionThanks:(pct,n)=>`기록됐어요. 지금까지 ${n}번 중 ${pct}%가 "후회 없음"이었어요.`,
+    noRegretBanner:(pct,n)=>`지난 ${n}번의 기록 중 ${pct}%가 완료 후 "괜찮았다"고 했어요.\n오늘도 1분만 해볼까요?`,
   },
   en: {
     appTitle:'No-Zero-Day | AI Fitness Coach',
@@ -1642,6 +1684,9 @@ const TRANS = {
     excuseOpts:["It's too late today","I'm just lazy","I'm too tired","Don't want to change clothes","Can't go to gym","What's 5 min gonna do","Not feeling well","No motivation"],
     backHome:'← Home',excuseShorterBtn:'Even shorter (1 min)',
     expandTitle:'Feeling like you could do a bit more?',expand2min:'⚡ 2 more min',expandFull:'💪 Full routine',
+    emotionTitle:'How do you feel right now?',emotionBetter:'Better than before',emotionNoRegret:'No regrets',emotionHard:'It was tough',emotionSame:'Same as before',
+    emotionThanks:(pct,n)=>`Recorded! ${pct}% of your ${n} sessions ended with "no regrets."`,
+    noRegretBanner:(pct,n)=>`${pct}% of your last ${n} sessions ended feeling okay.\nWant to try just 1 min today?`,
   }
 };
 
@@ -1778,6 +1823,50 @@ function pickSituation(idx){
   getMinRoutineWithReason(sit.text, time);
 }
 
+// ── 후회 없음 데이터 ─────────────────────────────────────────────────────────
+function calcNoRegretStats(){
+  const logs=getLogs().filter(l=>l.emotion_after);
+  if(logs.length<2) return null;
+  const good=logs.filter(l=>l.emotion_after==='better'||l.emotion_after==='noregret').length;
+  return{pct:Math.round(good/logs.length*100),total:logs.length};
+}
+
+function recordEmotion(val){
+  vibrate([25]);
+  // 마지막 로그에 감정 저장
+  const logs=getLogs();
+  if(logs.length>0){logs[0].emotion_after=val;localStorage.setItem('fitness_logs',JSON.stringify(logs))}
+  // UI 업데이트
+  document.querySelectorAll('.emotion-btn').forEach(b=>b.classList.remove('selected'));
+  const sel=document.querySelector(`.emotion-btn[data-emotion="${val}"]`);
+  if(sel) sel.classList.add('selected');
+  // 통계 계산 후 감사 메시지
+  const stats=calcNoRegretStats();
+  const thanks=$('emotion-thanks');
+  if(thanks&&stats){
+    thanks.textContent=t('emotionThanks')(stats.pct,stats.total);
+    thanks.style.display='block';
+  }
+  playTick();
+}
+
+function showNoRegretBanner(containerId){
+  const stats=calcNoRegretStats();
+  if(!stats||stats.pct<50) return; // 50% 이상일 때만 표시
+  const el=document.getElementById(containerId);
+  if(!el) return;
+  const banner=document.createElement('div');
+  banner.className='noregret-banner';
+  banner.innerHTML=`<span class="noregret-pct">${stats.pct}%</span>${t('noRegretBanner')(stats.pct,stats.total).replace('\n','<br>')}`;
+  el.prepend(banner);
+}
+
+function resetEmotionSection(){
+  document.querySelectorAll('.emotion-btn').forEach(b=>b.classList.remove('selected'));
+  const thanks=$('emotion-thanks');
+  if(thanks) thanks.style.display='none';
+}
+
 function getMoreMinRoutine(){
   vibrate([25]);
   const reason=window._lastMinReason||t('lazyReasonOpts')[0];
@@ -1877,6 +1966,7 @@ async function runExcuseTranslator(){
       shorterBtn.style.display=route==='1min'?'none':'block';
     }
     $('excuse-result').style.display='block';
+    showNoRegretBanner('excuse-result');
     playTick();vibrate([40]);
   }catch(e){alert(e.message)}
   finally{$('excuse-loading').classList.remove('show')}
@@ -2633,6 +2723,7 @@ function completeWorkout(){
   // Switch view
   stopRestTimer();
   $('routine-result').classList.remove('show');
+  resetEmotionSection();
   $('workout-done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
   playComplete();
@@ -2735,6 +2826,7 @@ function saveMinWorkout(){
   $('ds-streak').textContent=streak;
   $('ds-target').textContent=t('minDoneTarget');
   $('min-result').classList.remove('show');
+  resetEmotionSection();
   $('workout-done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
   playComplete();
