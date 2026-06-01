@@ -838,6 +838,9 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
                 oninput="$('sleep-val').textContent=this.value;const _v=+this.value;if(_v===4||_v===12)vibrate([80]);else vibrate([15])">
               <span class="slider-hint">12h</span>
             </div>
+            <div id="sleep-hk-hint" style="display:none;font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5">
+              💡 <span data-i18n="sleepHkHint">건강 앱 → 수면 탭에서 수면 추적을 켜면 다음부터 자동으로 입력돼요.</span>
+            </div>
           </div>
           <div class="form-group">
             <label><span data-i18n="fatigueLabel">피로도</span> <span id="fatigue-pre-val" style="color:var(--red);font-size:13px">5</span>/10</label>
@@ -1754,6 +1757,7 @@ const TRANS = {
     expandTitle:'막상 해보니, 조금 더 할 수 있겠어요?',expand2min:'⚡ 2분만 더',expandFull:'💪 오늘 루틴으로',
     snoozeDoBtn:'⚡ 1분만 하기',snooze30Btn:'🔔 30분 후',
     snoozeBannerText:(h)=>`⏰ 평소 운동 시간(${h}시)이 지났어요.\n아직 오늘 기록이 없어요.`,
+    sleepHkHint:'건강 앱 → 수면 탭에서 수면 추적을 켜면 다음부터 자동으로 입력돼요.',
     notiTitle:'🔔 0일 위험 알림',notiDesc:'운동 시간이 지나도 기록이 없으면 먼저 알림을 보내요.',
     notiToggleLabel:'알림 켜기',notiTimeLabel:'알림 시간',notiSmartHint:'운동 기록이 쌓이면 내 패턴에 맞게 자동 조정돼요.',
     notiStatus:'✅ 알림이 설정됐어요',
@@ -1927,6 +1931,7 @@ const TRANS = {
     expandTitle:'Feeling like you could do a bit more?',expand2min:'⚡ 2 more min',expandFull:'💪 Full routine',
     snoozeDoBtn:'⚡ Just 1 min',snooze30Btn:'🔔 30 min later',
     snoozeBannerText:(h)=>`⏰ Past your usual workout time (${h}:00).\nNo log yet today.`,
+    sleepHkHint:'Go to Health app → Sleep tab and enable Sleep Tracking to auto-fill this next time.',
     notiTitle:'🔔 Zero-Day Risk Alert',notiDesc:"If your workout time passes with no log, we'll remind you first.",
     notiToggleLabel:'Enable notifications',notiTimeLabel:'Alert time',notiSmartHint:'As your logs grow, timing auto-adjusts to your pattern.',
     notiStatus:'✅ Notification is set',
@@ -2669,14 +2674,20 @@ async function autoFillSleepFromHK(){
     const {HealthKitBridge}=Capacitor.Plugins;
     if(!HealthKitBridge) return;
     const res=await HealthKitBridge.getSleepHours();
-    if(!res||res.hours<=0) return;
-    const hours=Math.min(Math.max(res.hours,4),12); // 4~12 범위 제한
+    const hint=$('sleep-hk-hint');
+    const badge=$('sleep-hk-badge');
+    if(!res||res.hours<=0){
+      if(hint) hint.style.display='block';
+      if(badge) badge.style.display='none';
+      return;
+    }
+    const hours=Math.min(Math.max(res.hours,4),12);
     const slider=$('td-sleep');
     const val=$('sleep-val');
-    const badge=$('sleep-hk-badge');
-    if(slider){ slider.value=hours; }
-    if(val){ val.textContent=hours; }
-    if(badge){ badge.style.display='inline'; }
+    if(slider) slider.value=hours;
+    if(val) val.textContent=hours;
+    if(badge) badge.style.display='inline';
+    if(hint) hint.style.display='none';
   }catch(e){}
 }
 
