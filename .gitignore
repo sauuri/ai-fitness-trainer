@@ -6,3 +6,9 @@ __pycache__/
 node_modules/
 dist/
 .vercel
+
+# Xcode build artifacts
+ios/App/derived/
+ios/App/DerivedData/
+*.xcuserstate
+xcuserdata/
