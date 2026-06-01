@@ -827,7 +827,11 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         <div class="card-title" data-i18n="conditionTitle">🌡️ 오늘 컨디션 입력</div>
         <div style="display:flex;flex-direction:column;gap:14px">
           <div class="form-group">
-            <label><span data-i18n="sleepLabel">수면 시간</span> <span id="sleep-val" style="color:var(--accent);font-size:13px">7</span>h</label>
+            <label>
+      <span data-i18n="sleepLabel">수면 시간</span>
+      <span id="sleep-val" style="color:var(--accent);font-size:13px">7</span>h
+      <span id="sleep-hk-badge" style="display:none;font-size:10px;color:var(--green);background:#10b98115;border:1px solid #10b98130;border-radius:8px;padding:2px 7px;margin-left:4px">🛌 자동입력</span>
+    </label>
             <div class="slider-row">
               <span class="slider-hint">4h</span>
               <input type="range" id="td-sleep" min="4" max="12" step="0.5" value="7"
@@ -2050,6 +2054,7 @@ function quickStart(mode){
     $('home-quick').style.display='none';
     $('home-form').style.display='block';
     goToStep(1);
+    autoFillSleepFromHK();
     return;
   }
   if(mode==='quit'){
@@ -2657,6 +2662,23 @@ function renderComebackCard(){
 
 // ── HealthKit 걸음수 ──────────────────────────────────────────────────────────
 let _todaySteps = null;
+
+async function autoFillSleepFromHK(){
+  if(typeof Capacitor==='undefined'||!Capacitor.isNativePlatform()) return;
+  try{
+    const {HealthKitBridge}=Capacitor.Plugins;
+    if(!HealthKitBridge) return;
+    const res=await HealthKitBridge.getSleepHours();
+    if(!res||res.hours<=0) return;
+    const hours=Math.min(Math.max(res.hours,4),12); // 4~12 범위 제한
+    const slider=$('td-sleep');
+    const val=$('sleep-val');
+    const badge=$('sleep-hk-badge');
+    if(slider){ slider.value=hours; }
+    if(val){ val.textContent=hours; }
+    if(badge){ badge.style.display='inline'; }
+  }catch(e){}
+}
 
 async function loadTodaySteps(){
   if(typeof Capacitor==='undefined'||!Capacitor.isNativePlatform()) return;
