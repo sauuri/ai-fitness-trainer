@@ -2680,9 +2680,9 @@ function saveMinWorkout(){
   localStorage.setItem('fitness_logs',JSON.stringify(logs));
 
   let streak=0;
-  const t=new Date();t.setHours(0,0,0,0);
+  const tod=new Date();tod.setHours(0,0,0,0);
   for(let i=0;i<30;i++){
-    const dd=new Date(t);dd.setDate(t.getDate()-i);
+    const dd=new Date(tod);dd.setDate(tod.getDate()-i);
     const has=logs.some(l=>{const ld=new Date(l.ts);ld.setHours(0,0,0,0);return ld.getTime()===dd.getTime()});
     if(has) streak++; else if(i>0) break;
   }
