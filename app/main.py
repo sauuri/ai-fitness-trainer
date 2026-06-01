@@ -122,6 +122,11 @@ class CaloriesRequest(BaseModel):
     lang: str = "ko"
 
 
+class ExcuseRequest(BaseModel):
+    excuse: str
+    lang: str = "ko"
+
+
 @app.get("/")
 async def root():
     return FileResponse(BASE / "static/index.html")
@@ -577,6 +582,34 @@ async def get_calories(req: CaloriesRequest):
     }},
     "tip": "식단 조언"
 }}"""}
+        ],
+        response_format={"type": "json_object"}
+    )
+    return JSONResponse(json.loads(resp.choices[0].message.content))
+
+
+@app.post("/excuse")
+async def translate_excuse(req: ExcuseRequest):
+    resp = await client.chat.completions.create(
+        model=settings.model_name,
+        messages=[
+            {"role": "system", "content": f"당신은 운동 포기 직전의 사람을 잡아주는 AI 코치입니다. 절대 혼내지 않고, 공감하면서 작은 행동으로 안내합니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
+            {"role": "user", "content": f"""사용자가 오늘 운동을 포기하려 합니다.
+변명/이유: "{req.excuse}"
+
+이 변명을 공감하면서 실행 가능한 최소 행동으로 변환해주세요.
+목표는 완벽한 운동이 아니라 오늘을 0으로 끝내지 않는 것입니다.
+
+다음 JSON 형식으로만 응답:
+{{
+    "empathy": "변명에 공감하는 짧은 말 (1문장, 따뜻하게)",
+    "reframe": "관점을 바꿔주는 말 (1문장, 오늘 목표를 낮춰줌)",
+    "action": "지금 당장 할 수 있는 최소 행동 (구체적으로, 1~2문장)",
+    "route": "1min 또는 5min 또는 rest",
+    "button_label": "행동 버튼 텍스트 (10자 이내)"
+}}
+
+route 기준: 피로/통증/늦은시간 → rest / 귀찮음/의욕없음/운동복 → 1min / 여유있음 → 5min"""}
         ],
         response_format={"type": "json_object"}
     )

@@ -511,6 +511,51 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   font-weight:700;margin-bottom:18px}
 .done-actions{display:flex;flex-direction:column;gap:8px}
 
+/* ── QUICK ACTION (3초 진입) ───────────────────────────────────────────────── */
+.qa-wrap{padding:4px 0 8px}
+.qa-streak-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.qa-streak-badge{display:inline-flex;align-items:center;gap:6px;background:#f9731615;border:1px solid #f9731630;border-radius:20px;padding:5px 12px;font-size:13px;font-weight:800;color:var(--accent)}
+.qa-date{font-size:11px;color:var(--muted)}
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.qa-btn{border:none;border-radius:16px;cursor:pointer;transition:all .2s;touch-action:manipulation;display:flex;flex-direction:column;align-items:flex-start;padding:16px 16px 14px;text-align:left}
+.qa-btn:active{transform:scale(.97)}
+.qa-icon{font-size:26px;margin-bottom:6px;display:block}
+.qa-label{font-size:17px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:3px}
+.qa-sub{font-size:11px;font-weight:600;opacity:.65}
+.qa-1min{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#a5b4fc}
+.qa-5min{background:linear-gradient(135deg,#f97316,#fb923c);color:#fed7aa}
+.qa-proper{background:linear-gradient(135deg,#10b981,#34d399);color:#6ee7b7;width:100%;flex-direction:row;align-items:center;gap:12px;padding:14px 18px;margin-bottom:10px}
+.qa-proper .qa-icon{margin-bottom:0;font-size:22px}
+.qa-proper .qa-label{font-size:15px}
+.qa-quit{background:#0c1018;border:1px solid #1a2436;color:var(--muted);width:100%;flex-direction:row;align-items:center;gap:12px;padding:14px 18px}
+.qa-quit .qa-icon{margin-bottom:0;font-size:20px}
+.qa-quit .qa-label{font-size:13px;font-weight:700;color:var(--text)}
+
+/* ── SITUATION BUTTONS ─────────────────────────────────────────────────────── */
+.sit-wrap{animation:fadeUp .3s ease}
+.sit-title{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:10px;text-align:center}
+.sit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.sit-btn{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 10px;cursor:pointer;transition:all .2s;touch-action:manipulation;text-align:left}
+.sit-btn:active{transform:scale(.97);border-color:var(--accent)}
+.sit-btn-icon{font-size:20px;display:block;margin-bottom:4px}
+.sit-btn-label{font-size:12px;font-weight:700;color:var(--text);line-height:1.4}
+.sit-back{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:4px 0 12px;display:block;width:100%;text-align:center}
+
+/* ── EXCUSE TRANSLATOR ─────────────────────────────────────────────────────── */
+.excuse-wrap{animation:fadeUp .3s ease}
+.excuse-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:4px}
+.excuse-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.excuse-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.excuse-opt{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 15px;cursor:pointer;transition:all .2s;touch-action:manipulation;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text);font-weight:600;text-align:left}
+.excuse-opt:active,.excuse-opt.selected{border-color:var(--accent);background:#f9731610;color:#fff}
+.excuse-opt-icon{font-size:20px;flex-shrink:0}
+.excuse-custom{background:#0a0f1a;border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:13px;padding:12px 14px;width:100%;margin-bottom:10px;resize:none;min-height:70px}
+.excuse-custom:focus{outline:none;border-color:var(--accent)}
+.excuse-result{background:linear-gradient(135deg,#6366f112,#8b5cf608);border:1px solid #6366f130;border-radius:16px;padding:20px;animation:fadeUp .4s ease;margin-bottom:12px}
+.excuse-empathy{font-size:14px;color:var(--text);line-height:1.7;margin-bottom:8px}
+.excuse-reframe{font-size:13px;color:var(--accent);font-weight:700;margin-bottom:8px;padding-left:10px;border-left:3px solid var(--accent)}
+.excuse-action{font-size:13px;color:#6ee7b7;background:#10b98112;border:1px solid #10b98130;border-radius:10px;padding:10px 12px;line-height:1.6}
+
 /* ONBOARDING */
 .onboard-card{background:linear-gradient(135deg,#f9731608,#6366f108);
   border:1px solid #f9731620;border-radius:16px;padding:28px 20px;text-align:center;margin-bottom:12px}
@@ -579,6 +624,72 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
     <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">No-Zero-Day</div>
     <div style="font-size:13px;color:var(--muted);margin-bottom:16px" data-i18n-html="noProfileMsg">포기하지 않게 만드는 AI 운동 코치<br>먼저 프로필을 설정해주세요</div>
     <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('profile')" data-i18n="setProfileBtn">프로필 설정하기 →</button>
+  </div>
+
+  <!-- ── 퀵 액션 (3초 진입) ── -->
+  <div id="home-quick" style="display:none">
+    <div class="qa-wrap">
+      <div class="qa-streak-row">
+        <div class="qa-streak-badge" id="qa-streak-badge">🔥 <span id="qa-streak-num">0</span><span data-i18n="qaDays">일째</span></div>
+        <div class="qa-date" id="qa-date"></div>
+      </div>
+      <div class="qa-grid">
+        <button class="qa-btn qa-1min" onclick="quickStart('1min')">
+          <span class="qa-icon">⚡</span>
+          <span class="qa-label" data-i18n="qa1min">1분만</span>
+          <span class="qa-sub" data-i18n="qa1minSub">지금 바로 시작</span>
+        </button>
+        <button class="qa-btn qa-5min" onclick="quickStart('5min')">
+          <span class="qa-icon">🔥</span>
+          <span class="qa-label" data-i18n="qa5min">5분만</span>
+          <span class="qa-sub" data-i18n="qa5minSub">최소 루틴</span>
+        </button>
+      </div>
+      <button class="qa-btn qa-proper" onclick="quickStart('proper')">
+        <span class="qa-icon">💪</span>
+        <div>
+          <div class="qa-label" data-i18n="qaProper">제대로</div>
+          <div class="qa-sub" data-i18n="qaProperSub">컨디션 분석 후 맞춤 루틴</div>
+        </div>
+      </button>
+      <button class="qa-btn qa-quit" onclick="quickStart('quit')">
+        <span class="qa-icon">😮‍💨</span>
+        <div>
+          <div class="qa-label" data-i18n="qaQuit">오늘 포기할 것 같아요</div>
+          <div class="qa-sub" data-i18n="qaQuitSub">포기 번역기 열기</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── 상황별 응급 버튼 ── -->
+  <div id="home-situation" style="display:none">
+    <div class="sit-wrap">
+      <div class="sit-title" data-i18n="sitTitle">지금 상황이 어때요?</div>
+      <div class="sit-grid" id="sit-grid"></div>
+      <button class="sit-back" onclick="showQuickHome()">← <span data-i18n="sitBack">뒤로</span></button>
+    </div>
+  </div>
+
+  <!-- ── 포기 번역기 ── -->
+  <div id="home-excuse" style="display:none">
+    <div class="excuse-wrap">
+      <div class="excuse-title" data-i18n="excuseTitle">포기 번역기</div>
+      <div class="excuse-sub" data-i18n="excuseSub">오늘 하기 싫은 이유를 말해줘요. 같이 해결해볼게요.</div>
+      <div class="excuse-grid" id="excuse-opts"></div>
+      <textarea class="excuse-custom" id="excuse-custom" data-i18n-ph="excuseCustomPh" placeholder="또는 직접 입력..."></textarea>
+      <button class="btn btn-primary" onclick="runExcuseTranslator()" style="margin-bottom:12px" data-i18n="excuseRunBtn">번역하기 🔀</button>
+      <div class="loading" id="excuse-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="excuseLoading">번역 중...</div></div>
+      <div id="excuse-result" style="display:none">
+        <div class="excuse-result">
+          <div class="excuse-empathy" id="ex-empathy"></div>
+          <div class="excuse-reframe" id="ex-reframe"></div>
+          <div class="excuse-action" id="ex-action"></div>
+        </div>
+        <button class="btn btn-primary" id="ex-route-btn" style="margin-bottom:8px"></button>
+      </div>
+      <button class="sit-back" onclick="showQuickHome()">← <span data-i18n="sitBack">뒤로</span></button>
+    </div>
   </div>
 
   <div id="home-form" style="display:none">
@@ -1357,6 +1468,22 @@ const TRANS = {
     splitLabel:{'가슴+삼두':'가슴','등+이두':'등','어깨':'어깨','하체':'하체','코어':'코어','유산소':'유산소','전신':'전신'},
     noCalData:'운동 완료 후 기록이 쌓여요.',noMissedData:'운동 못 한 기록이 없어요',
     fmtMin:(m,s)=>s?`${m}분 ${s}초`:`${m}분`,fmtSec:(s)=>`${s}초`,
+    qaDays:'일째',qa1min:'1분만',qa1minSub:'지금 바로 시작',qa5min:'5분만',qa5minSub:'최소 루틴',
+    qaProper:'제대로',qaProperSub:'컨디션 분석 후 맞춤 루틴',qaQuit:'오늘 포기할 것 같아요',qaQuitSub:'포기 번역기 열기',
+    sitTitle:'지금 상황이 어때요?',sitBack:'뒤로',
+    excuseTitle:'포기 번역기',excuseSub:'오늘 하기 싫은 이유를 말해줘요. 같이 해결해볼게요.',
+    excuseCustomPh:'또는 직접 입력...',excuseRunBtn:'번역하기 🔀',excuseLoading:'번역 중...',
+    situations:[
+      {icon:'🛏️',label:'침대에 누워있음',text:'침대에 누워있어서 일어나기 싫음'},
+      {icon:'🕙',label:'너무 늦은 시간',text:'너무 늦어서 운동하기 애매함'},
+      {icon:'👕',label:'운동복 갈아입기 싫음',text:'운동복 갈아입기 귀찮음'},
+      {icon:'🏠',label:'헬스장 못 감',text:'헬스장에 갈 상황이 안 됨'},
+      {icon:'😮‍💨',label:'그냥 귀찮음',text:'딱히 이유 없이 하기 싫음'},
+      {icon:'😴',label:'너무 피곤함',text:'너무 피곤해서 움직이기 싫음'},
+      {icon:'🤕',label:'몸이 안 좋음',text:'몸이 아프거나 근육통이 심함'},
+      {icon:'🌙',label:'5분이 뭐가 달라져',text:'5분 운동해봤자 달라지는 게 없음'},
+    ],
+    excuseOpts:['오늘 너무 늦었어','그냥 귀찮아','너무 피곤해','운동복 갈아입기 싫어','헬스장 못 가','5분이 뭐가 달라져','몸이 안 좋아','의욕이 없어'],
   },
   en: {
     appTitle:'No-Zero-Day | AI Fitness Coach',
@@ -1475,6 +1602,22 @@ const TRANS = {
     splitLabel:{'가슴+삼두':'Chest','등+이두':'Back','어깨':'Shoulder','하체':'Legs','코어':'Core','유산소':'Cardio','전신':'Full'},
     noCalData:'Records appear after completing workouts.',noMissedData:'No missed workout records',
     fmtMin:(m,s)=>s?`${m}m ${s}s`:`${m}m`,fmtSec:(s)=>`${s}s`,
+    qaDays:' day streak',qa1min:'1 Min',qa1minSub:'Start right now',qa5min:'5 Min',qa5minSub:'Minimal routine',
+    qaProper:'Full Workout',qaProperSub:'Analyze condition & build routine',qaQuit:"I'm about to quit",qaQuitSub:'Open Excuse Translator',
+    sitTitle:"What's your situation?",sitBack:'Back',
+    excuseTitle:'Excuse Translator',excuseSub:"Tell me why you don't want to. Let's fix it together.",
+    excuseCustomPh:'Or type your own...',excuseRunBtn:'Translate 🔀',excuseLoading:'Translating...',
+    situations:[
+      {icon:'🛏️',label:'Lying in bed',text:"I'm lying in bed and don't want to get up"},
+      {icon:'🕙',label:'Too late at night',text:"It's too late to work out"},
+      {icon:'👕',label:'Too lazy to change',text:"I don't want to change into workout clothes"},
+      {icon:'🏠',label:"Can't go to gym",text:"I can't make it to the gym today"},
+      {icon:'😮‍💨',label:'Just lazy',text:'No specific reason, just lazy'},
+      {icon:'😴',label:'Too tired',text:"I'm too tired to move"},
+      {icon:'🤕',label:'Not feeling well',text:'Feeling sick or have bad muscle soreness'},
+      {icon:'🌙',label:"What's 5 min gonna do",text:'5 minutes of exercise feels pointless'},
+    ],
+    excuseOpts:["It's too late today","I'm just lazy","I'm too tired","Don't want to change clothes","Can't go to gym","What's 5 min gonna do","Not feeling well","No motivation"],
   }
 };
 
@@ -1549,6 +1692,154 @@ function toggleLang(){
   LANG=LANG==='ko'?'en':'ko';
   localStorage.setItem('nzd_lang',LANG);
   applyLang();
+  initHome();
+}
+
+// ── Quick Action (3초 진입) ──────────────────────────────────────────────────
+function showQuickHome(){
+  $('home-quick').style.display='block';
+  $('home-situation').style.display='none';
+  $('home-excuse').style.display='none';
+  $('home-form').style.display='none';
+}
+
+function quickStart(mode){
+  vibrate([25]);
+  if(mode==='proper'){
+    $('home-quick').style.display='none';
+    $('home-form').style.display='block';
+    goToStep(1);
+    return;
+  }
+  if(mode==='quit'){
+    $('home-quick').style.display='none';
+    showExcuseSection();
+    return;
+  }
+  // 1min or 5min → 상황 버튼
+  $('home-quick').style.display='none';
+  showSituationSection(mode);
+}
+
+function showSituationSection(mode){
+  window._quickMode=mode;
+  $('home-situation').style.display='block';
+  $('home-excuse').style.display='none';
+  $('home-form').style.display='none';
+  const L=TRANS[LANG];
+  const grid=$('sit-grid');
+  grid.innerHTML=L.situations.map((s,i)=>`
+    <button class="sit-btn" onclick="pickSituation(${i})">
+      <span class="sit-btn-icon">${s.icon}</span>
+      <span class="sit-btn-label">${s.label}</span>
+    </button>`).join('');
+}
+
+function pickSituation(idx){
+  vibrate([25]);
+  const sit=TRANS[LANG].situations[idx];
+  const mode=window._quickMode||'1min';
+  const p=getProfile();
+  if(!p) return;
+  // 몸 안좋음/피곤 → rest 처리
+  const restSituations=[2,5,6]; // too tired, not feeling well indices... use route from situation text
+  // set time based on mode
+  const time=mode==='1min'?1:5;
+  // override td-time value temporarily
+  if($('td-time')) $('td-time').value=time*10; // approximate
+  // inject situation as reason for min-routine
+  window._situationReason=sit.text;
+  $('home-situation').style.display='none';
+  $('home-form').style.display='block';
+  getMinRoutineWithReason(sit.text, time);
+}
+
+async function getMinRoutineWithReason(reason, minutes){
+  const p=getProfile();
+  if(!p) return;
+  vibrate([40]);
+  $('routine-result').classList.remove('show');
+  $('min-result').classList.remove('show');
+  $('workout-done').style.display='none';
+  hideErr('home-error-3');
+  goToStep(3);
+  $('home-loading-3').style.display='block';
+  startLoadingMessages('home-loading-text-3',t('loadMin'));
+  try{
+    const res=await fetch(API+'/min-routine',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        gender:p.gender,goal:p.goal,level:p.level,
+        target:$('target').value||'전신',
+        location:p.location,equipment:p.equipment||[],injury:p.injury||[],
+        reason,available_time:minutes,lang:LANG
+      })
+    });
+    const d=await res.json();
+    if(!res.ok) throw new Error(d.detail||'오류');
+    window._currentMinRoutine=d;
+    renderMinRoutine(d);
+  }catch(e){showErr('home-error-3',e.message)}
+  finally{stopLoadingMessages();$('home-loading-3').style.display='none'}
+}
+
+// ── Excuse Translator (포기 번역기) ─────────────────────────────────────────
+let _selectedExcuse='';
+
+function showExcuseSection(){
+  $('home-excuse').style.display='block';
+  $('home-situation').style.display='none';
+  $('home-quick').style.display='none';
+  $('home-form').style.display='none';
+  $('excuse-result').style.display='none';
+  _selectedExcuse='';
+  const L=TRANS[LANG];
+  const opts=$('excuse-opts');
+  opts.innerHTML=L.excuseOpts.map((o,i)=>`
+    <button class="excuse-opt" onclick="selectExcuse(this,'${o.replace(/'/g,"&#39;")}')" data-idx="${i}">
+      <span class="excuse-opt-icon">${L.situations[i]?.icon||'💭'}</span>
+      ${o}
+    </button>`).join('');
+}
+
+function selectExcuse(el, text){
+  document.querySelectorAll('.excuse-opt').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  _selectedExcuse=text;
+  $('excuse-custom').value='';
+  vibrate([15]);
+}
+
+async function runExcuseTranslator(){
+  const excuse=_selectedExcuse||$('excuse-custom').value.trim();
+  if(!excuse){vibrate([80]);return}
+  vibrate([25]);
+  $('excuse-result').style.display='none';
+  $('excuse-loading').classList.add('show');
+  try{
+    const res=await fetch(API+'/excuse',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({excuse,lang:LANG})
+    });
+    if(!res.ok) throw new Error('오류');
+    const d=await res.json();
+    $('ex-empathy').textContent=d.empathy||'';
+    $('ex-reframe').textContent=d.reframe||'';
+    $('ex-action').textContent=d.action||'';
+    const routeBtn=$('ex-route-btn');
+    routeBtn.textContent=d.button_label||(LANG==='ko'?'시작하기':'Let\'s go');
+    const route=d.route||'1min';
+    routeBtn.onclick=()=>{
+      $('excuse-result').style.display='none';
+      $('home-excuse').style.display='none';
+      $('home-form').style.display='block';
+      const minutes=route==='5min'?5:route==='rest'?2:1;
+      getMinRoutineWithReason(excuse, minutes);
+    };
+    $('excuse-result').style.display='block';
+    playTick();vibrate([40]);
+  }catch(e){alert(e.message)}
+  finally{$('excuse-loading').classList.remove('show')}
 }
 
 // Capacitor 환경이면 Render 서버로, 아니면 상대경로
@@ -1687,11 +1978,13 @@ function initHome(){
   const p=getProfile();
   if(!p){
     $('no-profile-msg').style.display='block';
+    $('home-quick').style.display='none';
     $('home-form').style.display='none';
+    $('home-situation').style.display='none';
+    $('home-excuse').style.display='none';
     $('profile-bar').style.display='none';
   } else {
     $('no-profile-msg').style.display='none';
-    $('home-form').style.display='block';
     $('profile-bar').style.display='flex';
     const injText=p.injury&&p.injury.length?` · ${t('injuryDisplay')}${p.injury.join(', ')}`:'';
     const nameText=p.name?`<strong>${p.name}</strong> · `:'';
@@ -1699,7 +1992,31 @@ function initHome(){
     const dGoal=t('displayGoal')[p.goal]||p.goal;
     const dLevel=t('displayLevel')[p.level]||p.level;
     $('pb-info').innerHTML=`${nameText}<strong>${dG}</strong> · <strong>${p.age}${t('ageUnit')}</strong> · ${p.weight}kg / ${p.height}cm · ${dGoal} · ${dLevel}${injText}`;
-    goToStep(1);
+    showQuickHome();
+    renderQuickStats();
+  }
+}
+
+function renderQuickStats(){
+  const logs=getLogs();
+  // 스트릭 계산
+  let streak=0;
+  const today=new Date();today.setHours(0,0,0,0);
+  for(let i=0;i<30;i++){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const has=logs.some(l=>{const ld=new Date(l.ts);ld.setHours(0,0,0,0);return ld.getTime()===d.getTime()});
+    if(has) streak++; else if(i>0) break;
+  }
+  const sn=$('qa-streak-num');
+  if(sn) sn.textContent=streak;
+  // 날짜
+  const dn=$('qa-date');
+  if(dn){
+    const now=new Date();
+    const days=t('calWeekdays');
+    dn.textContent=LANG==='ko'
+      ?`${now.getMonth()+1}월 ${now.getDate()}일 (${days[now.getDay()]})`
+      :`${days[now.getDay()]}, ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][now.getMonth()]} ${now.getDate()}`;
   }
 }
 
@@ -2287,7 +2604,7 @@ function startNewRoutine(){
   $('workout-done').style.display='none';
   $('routine-result').classList.remove('show');
   peakMode=false; lazyMode=false;
-  goToStep(1);
+  showQuickHome();
 }
 
 // ── Min Routine ──────────────────────────────────────────────────────────────
