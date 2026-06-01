@@ -1,0 +1,4 @@
+module TimerShared {
+header "TimerShared-Swift.h"
+export *
+}

@@ -51,5 +51,9 @@
 	<true/>
 	<key>NSSupportsLiveActivitiesFrequentUpdates</key>
 	<true/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>오늘 걸음 수를 읽어 운동 위험도를 더 정확하게 분석합니다.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>운동 완료 기록을 건강 앱에 저장합니다.</string>
 </dict>
 </plist>

@@ -76,7 +76,6 @@ struct TimerWidgetView: View {
     }
 }
 
-@main
 struct TimerWidget: Widget {
     let kind = "NZDTimer"
     var body: some WidgetConfiguration {

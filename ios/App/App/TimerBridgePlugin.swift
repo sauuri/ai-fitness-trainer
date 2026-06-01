@@ -13,6 +13,8 @@ public class TimerBridgePlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "setTimer", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "clearTimer", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "updateTimer", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "pauseTimer", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "resumeTimer", returnType: CAPPluginReturnPromise),
     ]
 
     private let appGroup = "group.com.sauuri.nozeroday"
@@ -90,6 +92,41 @@ public class TimerBridgePlugin: CAPPlugin, CAPBridgedPlugin {
         } else {
             call.resolve()
         }
+    }
+
+    @objc func pauseTimer(_ call: CAPPluginCall) {
+        let elapsed = call.getInt("elapsedSeconds") ?? 0
+        if #available(iOS 16.2, *) {
+            Task {
+                guard let activity = Activity<TimerActivityAttributes>.activities.first else {
+                    call.resolve(["status": "none"]); return
+                }
+                var s = activity.content.state
+                s.isPaused = true
+                s.elapsedSeconds = elapsed
+                let content = ActivityContent(state: s, staleDate: nil)
+                await activity.update(content)
+                call.resolve(["status": "paused"])
+            }
+        } else { call.resolve() }
+    }
+
+    @objc func resumeTimer(_ call: CAPPluginCall) {
+        let elapsed = call.getInt("elapsedSeconds") ?? 0
+        if #available(iOS 16.2, *) {
+            Task {
+                guard let activity = Activity<TimerActivityAttributes>.activities.first else {
+                    call.resolve(["status": "none"]); return
+                }
+                var s = activity.content.state
+                s.isPaused = false
+                s.elapsedSeconds = elapsed
+                s.startTime = Date().addingTimeInterval(-Double(elapsed))
+                let content = ActivityContent(state: s, staleDate: nil)
+                await activity.update(content)
+                call.resolve(["status": "resumed"])
+            }
+        } else { call.resolve() }
     }
 
     @available(iOS 16.2, *)

@@ -532,6 +532,10 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .insurance-award-title{font-size:14px;font-weight:800;color:#f59e0b;margin-bottom:4px}
 .insurance-award-desc{font-size:12px;color:var(--muted);line-height:1.5}
 
+/* ── 스누즈 배너 ─────────────────────────────────────────────────────────────── */
+.snooze-banner{background:linear-gradient(135deg,#f9731612,#fb923c08);border:1px solid #f9731635;border-radius:14px;padding:14px 16px;margin-bottom:12px;animation:fadeUp .3s ease}
+.snooze-text{font-size:13px;color:var(--text);line-height:1.5;font-weight:600}
+
 /* ── 복귀 플랜 카드 ─────────────────────────────────────────────────────────── */
 .comeback-card{background:linear-gradient(135deg,#6366f112,#8b5cf608);border:1px solid #6366f135;border-radius:14px;padding:20px 18px;text-align:center;margin-bottom:12px;animation:fadeUp .4s ease}
 .comeback-emoji{font-size:36px;display:block;margin-bottom:10px}
@@ -631,6 +635,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .onboard-step-num{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));
   color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 <!-- ===== SPLASH ===== -->
@@ -691,6 +696,15 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
   <!-- ── 퀵 액션 (3초 진입) ── -->
   <div id="home-quick" style="display:none">
+    <!-- 스누즈 배너 -->
+    <div id="snooze-banner" style="display:none" class="snooze-banner">
+      <div class="snooze-text" id="snooze-text"></div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn" style="flex:2;background:#f9731618;color:var(--accent);border:1px solid #f9731635;margin-top:0;font-size:13px;font-weight:700" onclick="quickStart('1min')" data-i18n="snoozeDoBtn">⚡ 1분만 하기</button>
+        <button class="btn" style="flex:1;background:#1a2436;color:var(--muted);border:none;margin-top:0;font-size:12px" onclick="snooze30()" data-i18n="snooze30Btn">🔔 30분 후</button>
+      </div>
+    </div>
+
     <!-- 복귀 플랜 카드 (2일+ 미운동 시 표시) -->
     <div id="comeback-card" style="display:none" class="comeback-card">
       <div class="comeback-emoji" id="comeback-emoji">👋</div>
@@ -776,8 +790,10 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <div class="excuse-title" data-i18n="excuseTitle">포기 번역기</div>
       <div class="excuse-sub" data-i18n="excuseSub">오늘 하기 싫은 이유를 말해줘요. 같이 해결해볼게요.</div>
       <div class="excuse-grid" id="excuse-opts"></div>
-      <textarea class="excuse-custom" id="excuse-custom" data-i18n-ph="excuseCustomPh" placeholder="또는 직접 입력..."></textarea>
-      <button class="btn btn-primary" onclick="runExcuseTranslator()" style="margin-bottom:12px" data-i18n="excuseRunBtn">번역하기 🔀</button>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <textarea class="excuse-custom" id="excuse-custom" data-i18n-ph="excuseCustomPh" placeholder="또는 직접 입력..." style="margin-bottom:0;flex:1"></textarea>
+        <button class="btn" onclick="runExcuseTranslator()" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;margin-top:0;padding:0 14px;flex-shrink:0;font-size:18px">🔀</button>
+      </div>
       <div class="loading" id="excuse-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="excuseLoading">번역 중...</div></div>
       <div id="excuse-result" style="display:none">
         <div class="excuse-result">
@@ -1521,6 +1537,79 @@ const $ = id => document.getElementById(id);
 function showErr(id,msg){const el=$(id);el.textContent=msg;el.classList.add('show')}
 function hideErr(id){$(id).classList.remove('show')}
 
+// ── Supabase 동기화 ───────────────────────────────────────────────────────────
+const SUPA_URL = 'https://mklwzvtxsfmicshicyxk.supabase.co';
+const SUPA_KEY = 'SUPABASE_ANON_KEY_HERE'; // ← 실제 anon key로 교체 필요
+let _supa = null;
+
+function getSupaClient(){
+  if(_supa) return _supa;
+  if(typeof supabase === 'undefined') return null;
+  try{ _supa = supabase.createClient(SUPA_URL, SUPA_KEY); return _supa; }
+  catch(e){ return null; }
+}
+
+function getDeviceId(){
+  let id = localStorage.getItem('nzd_device_id');
+  if(!id){
+    id = 'nzd-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem('nzd_device_id', id);
+  }
+  return id;
+}
+
+async function syncToSupabase(){
+  const sb = getSupaClient();
+  if(!sb || SUPA_KEY === 'SUPABASE_ANON_KEY_HERE') return;
+  try{
+    const payload = {
+      device_id: getDeviceId(),
+      profile: getProfile(),
+      logs: getLogs(),
+      missed: getMissedLogs(),
+      insurance: getInsurance(),
+      noti: getNotiSettings(),
+      updated_at: new Date().toISOString()
+    };
+    await sb.from('nzd_sync').upsert(payload, { onConflict: 'device_id' });
+  }catch(e){ console.log('Sync error:', e) }
+}
+
+async function syncFromSupabase(){
+  const sb = getSupaClient();
+  if(!sb || SUPA_KEY === 'SUPABASE_ANON_KEY_HERE') return;
+  try{
+    const { data, error } = await sb.from('nzd_sync')
+      .select('*').eq('device_id', getDeviceId()).single();
+    if(error || !data) return;
+    // 로컬보다 서버가 최신이면 덮어씌우기
+    const localLogs = getLogs();
+    const serverLogs = data.logs || [];
+    if(serverLogs.length > localLogs.length){
+      if(data.profile) localStorage.setItem('fitness_profile', JSON.stringify(data.profile));
+      if(data.logs)    localStorage.setItem('fitness_logs', JSON.stringify(data.logs));
+      if(data.missed)  localStorage.setItem('fitness_missed', JSON.stringify(data.missed));
+      if(data.insurance) localStorage.setItem('nzd_insurance', JSON.stringify(data.insurance));
+      initHome();
+      renderDash();
+      showSyncToast();
+    }
+  }catch(e){ console.log('Fetch error:', e) }
+}
+
+function showSyncToast(){
+  let toast = document.getElementById('sync-toast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id = 'sync-toast';
+    toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;font-size:12px;font-weight:700;padding:8px 16px;border-radius:20px;z-index:9999;animation:fadeUp .3s ease';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = LANG==='ko' ? '☁️ 클라우드에서 기록 복원됨' : '☁️ Records restored from cloud';
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 3000);
+}
+
 // ── i18n ──────────────────────────────────────────────────────────────────────
 let LANG = localStorage.getItem('nzd_lang') || 'ko';
 const TRANS = {
@@ -1659,6 +1748,8 @@ const TRANS = {
     excuseOpts:['오늘 너무 늦었어','그냥 귀찮아','너무 피곤해','운동복 갈아입기 싫어','헬스장 못 가','5분이 뭐가 달라져','몸이 안 좋아','의욕이 없어'],
     backHome:'← 홈',excuseShorterBtn:'더 짧게 (1분)',
     expandTitle:'막상 해보니, 조금 더 할 수 있겠어요?',expand2min:'⚡ 2분만 더',expandFull:'💪 오늘 루틴으로',
+    snoozeDoBtn:'⚡ 1분만 하기',snooze30Btn:'🔔 30분 후',
+    snoozeBannerText:(h)=>`⏰ 평소 운동 시간(${h}시)이 지났어요.\n아직 오늘 기록이 없어요.`,
     notiTitle:'🔔 0일 위험 알림',notiDesc:'운동 시간이 지나도 기록이 없으면 먼저 알림을 보내요.',
     notiToggleLabel:'알림 켜기',notiTimeLabel:'알림 시간',notiSmartHint:'운동 기록이 쌓이면 내 패턴에 맞게 자동 조정돼요.',
     notiStatus:'✅ 알림이 설정됐어요',
@@ -1830,6 +1921,8 @@ const TRANS = {
     excuseOpts:["It's too late today","I'm just lazy","I'm too tired","Don't want to change clothes","Can't go to gym","What's 5 min gonna do","Not feeling well","No motivation"],
     backHome:'← Home',excuseShorterBtn:'Even shorter (1 min)',
     expandTitle:'Feeling like you could do a bit more?',expand2min:'⚡ 2 more min',expandFull:'💪 Full routine',
+    snoozeDoBtn:'⚡ Just 1 min',snooze30Btn:'🔔 30 min later',
+    snoozeBannerText:(h)=>`⏰ Past your usual workout time (${h}:00).\nNo log yet today.`,
     notiTitle:'🔔 Zero-Day Risk Alert',notiDesc:"If your workout time passes with no log, we'll remind you first.",
     notiToggleLabel:'Enable notifications',notiTimeLabel:'Alert time',notiSmartHint:'As your logs grow, timing auto-adjusts to your pattern.',
     notiStatus:'✅ Notification is set',
@@ -2010,7 +2103,7 @@ function pickSituation(idx){
 // ── 후회 없음 데이터 ─────────────────────────────────────────────────────────
 function calcNoRegretStats(){
   const logs=getLogs().filter(l=>l.emotion_after);
-  if(logs.length<2) return null;
+  if(logs.length<1) return null;
   const good=logs.filter(l=>l.emotion_after==='better'||l.emotion_after==='noregret').length;
   return{pct:Math.round(good/logs.length*100),total:logs.length};
 }
@@ -2052,7 +2145,7 @@ function nrgGo(){
 
 function showNoRegretBanner(containerId){
   const stats=calcNoRegretStats();
-  if(!stats||stats.pct<50) return; // 50% 이상일 때만 표시
+  if(!stats) return; // 50% 이상일 때만 표시
   const el=document.getElementById(containerId);
   if(!el) return;
   const banner=document.createElement('div');
@@ -2131,6 +2224,8 @@ function selectExcuse(el, text){
   _selectedExcuse=text;
   $('excuse-custom').value='';
   vibrate([15]);
+  // 선택 즉시 자동 번역
+  runExcuseTranslator();
 }
 
 async function runExcuseTranslator(){
@@ -2280,6 +2375,7 @@ function saveProfile(){
     injury
   };
   localStorage.setItem('fitness_profile',JSON.stringify(profile));
+  syncToSupabase();
   $('profile-saved').style.display='block';
   setTimeout(()=>{
     $('profile-saved').style.display='none';
@@ -2362,12 +2458,20 @@ function loadNotiSettings(){
 }
 
 function getSmartNotiHour(){
-  // 최근 14개 로그에서 평균 운동 시작 시간 계산
-  const logs=getLogs().slice(0,14);
+  const logs=getLogs().slice(0,21);
   if(logs.length<3) return getNotiSettings().hour;
+  // 평균 운동 시간 계산
   const hours=logs.map(l=>new Date(l.ts).getHours());
   const avg=Math.round(hours.reduce((a,b)=>a+b,0)/hours.length);
-  return Math.min(Math.max(avg+1,19),23); // 평균 +1시간, 19~23시 범위
+  // 오늘 요일이 실패가 잦은 요일이면 1시간 더 일찍 알림
+  const missed=getMissedLogs();
+  const todayDay=new Date().getDay();
+  const dayCounts={};
+  missed.forEach(m=>{const d=new Date(m.ts).getDay();dayCounts[d]=(dayCounts[d]||0)+1});
+  const maxMissDay=Object.entries(dayCounts).sort((a,b)=>b[1]-a[1])[0];
+  const isHighRiskDay=maxMissDay&&parseInt(maxMissDay[0])===todayDay&&maxMissDay[1]>=2;
+  const base=Math.min(Math.max(avg+1,18),22);
+  return isHighRiskDay?Math.max(base-1,18):base;
 }
 
 async function scheduleRiskNotification(){
@@ -2551,10 +2655,96 @@ function renderComebackCard(){
   $('comeback-card').style.display='block';
 }
 
+// ── HealthKit 걸음수 ──────────────────────────────────────────────────────────
+let _todaySteps = null;
+
+async function loadTodaySteps(){
+  if(typeof Capacitor==='undefined'||!Capacitor.isNativePlatform()) return;
+  try{
+    const {CapacitorHealthkit}=Capacitor.Plugins;
+    if(!CapacitorHealthkit) return;
+    const perm=await CapacitorHealthkit.requestAuthorization({
+      all:[],read:['steps'],write:[]
+    });
+    if(!perm.granted) return;
+    const now=new Date();
+    const start=new Date();start.setHours(0,0,0,0);
+    const res=await CapacitorHealthkit.queryHKitSampleType({
+      sampleName:'stepCount',
+      startDate:start.toISOString(),
+      endDate:now.toISOString(),
+      limit:0,
+      ascending:true
+    });
+    const total=(res.resultData||[]).reduce((a,r)=>a+(r.quantity||0),0);
+    _todaySteps=Math.round(total);
+    renderStepsBadge(_todaySteps);
+  }catch(e){console.log('HealthKit:',e)}
+}
+
+function renderStepsBadge(steps){
+  let badge=$('steps-badge');
+  if(!badge){
+    badge=document.createElement('div');
+    badge.id='steps-badge';
+    badge.style.cssText='font-size:11px;color:var(--muted);text-align:center;margin-bottom:4px';
+    const wrap=$('home-quick');
+    if(wrap) wrap.prepend(badge);
+  }
+  const low=steps<3000;
+  badge.innerHTML=`🚶 ${steps.toLocaleString()}${LANG==='ko'?'걸음':' steps today'} ${low?'<span style="color:var(--red);font-weight:700">'+(LANG==='ko'?'· 활동량 낮음':'· low activity')+'</span>':''}`;
+  // 활동량 낮으면 스누즈 배너에도 반영
+  if(low&&!isTodayWorkedOut()){
+    const txt=$('snooze-text');
+    if(txt&&$('snooze-banner').style.display==='block'){
+      txt.innerHTML+='<br><span style="color:var(--red);font-size:12px">'+(LANG==='ko'?`오늘 걸음수 ${steps.toLocaleString()}걸음 — 활동량이 낮아요.`:`Today's steps: ${steps.toLocaleString()} — low activity.`)+'</span>';
+    }
+  }
+}
+
+function checkSnoozeBanner(){
+  const s=getNotiSettings();
+  if(!s.enabled) return;
+  if(isTodayWorkedOut()){$('snooze-banner').style.display='none';return}
+  const hour=getSmartNotiHour()-1; // 알림 시간 1시간 전부터 배너
+  const now=new Date().getHours();
+  const snoozedUntil=parseInt(localStorage.getItem('nzd_snoozed_until')||'0');
+  if(Date.now()<snoozedUntil){$('snooze-banner').style.display='none';return}
+  if(now>=hour){
+    const txt=$('snooze-text');
+    if(txt) txt.innerHTML=t('snoozeBannerText')(hour+1).replace('\n','<br>');
+    $('snooze-banner').style.display='block';
+  } else {
+    $('snooze-banner').style.display='none';
+  }
+}
+
+async function snooze30(){
+  vibrate([25]);
+  $('snooze-banner').style.display='none';
+  localStorage.setItem('nzd_snoozed_until',String(Date.now()+30*60*1000));
+  // 30분 후 알림 스케줄
+  if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform()){
+    try{
+      const {LocalNotifications}=Capacitor.Plugins;
+      const at=new Date(Date.now()+30*60*1000);
+      await LocalNotifications.cancel({notifications:[{id:NZD_NOTI_ID+1}]});
+      await LocalNotifications.schedule({notifications:[{
+        id:NZD_NOTI_ID+1,
+        title:t('notiTitle2'),
+        body:t('notiBody'),
+        schedule:{at},
+      }]});
+    }catch(e){}
+  }
+}
+
 function renderQuickStats(){
   renderComebackCard();
   renderInsuranceBadge();
   checkInsurancePrompt();
+  checkSnoozeBanner();
+  loadTodaySteps();
   const logs=getLogs();
   // 스트릭 계산
   let streak=0;
@@ -3158,6 +3348,7 @@ function completeWorkout(){
   $('workout-done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
   cancelRiskNotification();
+  syncToSupabase();
   playComplete();
   vibrate([80,40,80,40,300]);
   launchConfetti();
@@ -3264,6 +3455,7 @@ function saveMinWorkout(){
   $('workout-done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
   cancelRiskNotification();
+  syncToSupabase();
   playComplete();
   vibrate([60,40,60,40,200]);
   launchConfetti();
@@ -3792,12 +3984,14 @@ initHome();
 if(!getProfile()) showPage('profile');
 applyLang();
 initNotifications();
+syncFromSupabase();
 
 // 앱 포그라운드 복귀 시 알림 재스케줄 + 설정 복원
 document.addEventListener('resume',()=>{
   loadNotiSettings();
   const s=getNotiSettings();
   if(s.enabled) scheduleRiskNotification();
+  syncFromSupabase();
 },false);
 </script>
 <!-- DAY DETAIL MODAL -->
