@@ -555,17 +555,22 @@ async def get_calories(req: CaloriesRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": f"당신은 영양사입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
-            {"role": "user", "content": f"""다음 정보를 바탕으로 하루 칼로리와 식단을 추천해주세요.
+            {"role": "system", "content": f"당신은 No-Zero-Day 앱의 복구 식단 코치입니다. 완벽한 다이어트를 강요하는 영양사가 아닙니다. 사용자가 운동을 못 했거나, 야식을 먹었거나, 하루가 망한 것 같을 때 자책하지 않고 다시 이어갈 수 있도록 돕습니다. 목표는 완벽한 식단이 아니라 오늘을 완전히 0점으로 끝내지 않는 것입니다. 칼로리와 영양소는 참고용으로만 제시하고 사용자를 압박하지 마세요. '힘내세요', '포기하지 마세요' 같은 뻔한 문구는 쓰지 마세요. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
+            {"role": "user", "content": f"""다음 정보를 바탕으로 오늘 실천 가능한 복구 식단을 추천해주세요.
 
 성별: {req.gender} / 나이: {req.age}세 / 몸무게: {req.weight}kg / 키: {req.height}cm
 목표: {req.goal} / 주당 운동 횟수: {req.weekly_days}회
 선호 식단 스타일: {req.diet_style}
 
-식단 예시는 반드시 {req.diet_style} 스타일로 작성해주세요.
-한식이면 밥·국·반찬 위주, 양식이면 파스타·샐러드·스테이크 위주,
-빵/샌드위치면 토스트·베이글·샌드위치 위주, 간편식이면 편의점·조리 최소화 위주,
+식단 예시는 반드시 {req.diet_style} 스타일로 현실적으로 작성해주세요.
+한식이면 밥·국·반찬 위주, 양식이면 파스타·샐러드 위주,
+빵/샌드위치면 토스트·베이글 위주, 간편식이면 편의점에서 바로 살 수 있는 것 위주,
 고단백 위주면 닭가슴살·계란·단백질쉐이크 중심으로 작성해주세요.
+
+tip 필드는 반드시 다음 내용을 포함하세요:
+1. 오늘 상황에 대한 짧은 공감 (자책 유발 금지)
+2. 오늘 망해도 괜찮은 이유 한 문장
+3. 내일 다시 이어가기 위한 작은 행동 1개
 
 다음 JSON 형식으로만 응답:
 {{
@@ -580,7 +585,7 @@ async def get_calories(req: CaloriesRequest):
         "dinner": "저녁 식단 예시",
         "snack": "간식 예시"
     }},
-    "tip": "식단 조언"
+    "tip": "공감 + 괜찮은 이유 + 내일을 위한 작은 행동"
 }}"""}
         ],
         response_format={"type": "json_object"}

@@ -674,8 +674,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   <button class="nav-btn active" onclick="showPage('home')"><span style="font-size:20px">🏋️</span><span data-i18n="nav.0">루틴</span></button>
   <button class="nav-btn" onclick="showPage('dash')"><span style="font-size:20px">📊</span><span data-i18n="nav.1">기록</span></button>
   <button class="nav-btn" onclick="showPage('analysis')"><span style="font-size:20px">📈</span><span data-i18n="nav.2">분석</span></button>
-  <button class="nav-btn" onclick="showPage('diet')"><span style="font-size:20px">🥗</span><span data-i18n="nav.3">식단</span></button>
-  <button class="nav-btn" onclick="showPage('profile')"><span style="font-size:20px">⚙️</span><span data-i18n="nav.4">프로필</span></button>
+  <button class="nav-btn" onclick="showPage('profile')"><span style="font-size:20px">⚙️</span><span data-i18n="nav.3">프로필</span></button>
+  <button class="nav-btn" onclick="showPage('diet')"><span style="font-size:20px">🥗</span><span data-i18n="nav.4">복구식단</span></button>
 </nav>
 
 <div class="wrap">
@@ -1279,7 +1279,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
     <!-- 식단 step 1: 입력 -->
     <div class="step-page active" id="diet-step-1">
       <div class="card">
-        <div class="card-title" data-i18n="dietCardTitle">🥗 식단 추천받기</div>
+        <div class="card-title" data-i18n="dietCardTitle">🥗 오늘 망해도 괜찮아요</div>
         <div id="diet-profile-info" style="font-size:12px;color:var(--muted);margin-bottom:14px"></div>
         <div style="display:flex;flex-direction:column;gap:14px">
           <div class="form-group">
@@ -1303,7 +1303,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
             </select>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="getDiet()" style="margin-top:16px" data-i18n="dietBtn">🥗 식단 추천받기</button>
+        <button class="btn btn-primary" onclick="getDiet()" style="margin-top:16px" data-i18n="dietBtn">🥗 복구 식단 받기</button>
       </div>
       <div class="loading" id="diet-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadCalories">칼로리 계산 중...</div></div>
       <div class="error" id="diet-error"></div>
@@ -1623,7 +1623,7 @@ const TRANS = {
   ko: {
     appTitle:'No-Zero-Day | AI 운동 실패 방지 코치',
     sound:'소리',
-    nav:['루틴','기록','분석','식단','프로필'],
+    nav:['루틴','기록','분석','프로필','복구식단'],
     splashSub:'포기하지 않게 만드는 AI 운동 코치<br>오늘도 0일은 없다',
     feat:[['오늘 0일 위험도 예측','오늘 컨디션 분석 후 운동 포기 확률 계산'],['맞춤 루틴 생성','수면·피로·스트레스 반영한 오늘만의 루틴'],['가기 싫어도 OK','5분 최소 실행 루틴으로 제로데이 방지']],
     splashStart:'시작하기 →',splashSkip:'건너뛰기',
@@ -1673,13 +1673,13 @@ const TRANS = {
     converterTitle:'🔄 상황별 루틴 변환기',noRoutineMsg:'먼저 루틴 탭에서 맞춤 루틴을 생성해주세요.',
     convertTypeLabel:'변환 유형',convertBtn:'변환하기 🔄',loadConvert:'루틴 변환 중...',
     convertOpts:['🏠 집 운동으로 변환','⚡ 짧게 (15분 이내)','💆 회복 루틴으로','🤸 맨몸 운동으로','🦵 무릎 보호 루틴으로'],
-    dietNoProfile:'프로필을 먼저 설정해주세요',dietCardTitle:'🥗 식단 추천받기',
+    dietNoProfile:'프로필을 먼저 설정해주세요',dietCardTitle:'🥗 오늘 망해도 괜찮아요',
     dietWeekLabel:'주당 운동 횟수',dietWeekOpts:['주 1회','주 2회','주 3회','주 4회','주 5회 이상'],
     dietStyleLabel:'선호 식단 스타일',
     dietStyleOpts:['🍚 한식 (밥·국·반찬)','🍝 양식 (파스타·샐러드)','🥪 빵/샌드위치','🏪 간편식 (편의점)','💪 고단백 위주'],
-    dietBtn:'🥗 식단 추천받기',dietBackBtn:'← 다시 계산',loadCalories:'칼로리 계산 중...',
-    macroTitle:'🔥 하루 칼로리 & 영양소',macroCalLabel:'목표 칼로리',macroProteinLabel:'단백질',macroCarbLabel:'탄수화물',macroFatLabel:'지방',
-    mealTitle:'🍽️ 오늘의 식단 예시',mealBreakfast:'🌅 아침',mealLunch:'☀️ 점심',mealDinner:'🌙 저녁',mealSnack:'🍎 간식',
+    dietBtn:'🥗 복구 식단 받기',dietBackBtn:'← 다시 받기',loadCalories:'복구 식단 만드는 중...',
+    macroTitle:'📊 오늘의 참고 수치',macroCalLabel:'목표 칼로리',macroProteinLabel:'단백질',macroCarbLabel:'탄수화물',macroFatLabel:'지방',
+    mealTitle:'🍽️ 지금 선택할 수 있는 식사',mealBreakfast:'🌅 아침',mealLunch:'☀️ 점심',mealDinner:'🌙 저녁',mealSnack:'🍎 간식',
     profileHeading:'⚙️ 내 프로필',basicInfoTitle:'👤 기본 정보',
     nameLabel:'이름 (선택)',namePlaceholder:'이름을 입력해주세요',
     genderLabel:'성별',genderOpts:['남성','여성'],ageLabel:'나이',heightLabel:'키 (cm)',
@@ -1797,7 +1797,7 @@ const TRANS = {
   en: {
     appTitle:'No-Zero-Day | AI Fitness Coach',
     sound:'Sound',
-    nav:['Routine','Log','Analysis','Diet','Profile'],
+    nav:['Routine','Log','Analysis','Profile','Recovery'],
     splashSub:'The AI coach that keeps you going<br>No zero days, ever',
     feat:[["Today's Zero-Day Risk",'Analyzes your condition & predicts dropout probability'],['Personalized Routine','Tailored to your sleep, fatigue & stress'],['Even when you hate it','5-min minimal routine to prevent zero days']],
     splashStart:'Get Started →',splashSkip:'Skip',
@@ -1847,13 +1847,13 @@ const TRANS = {
     converterTitle:'🔄 Routine Converter',noRoutineMsg:'Generate a routine first in the Routine tab.',
     convertTypeLabel:'Convert Type',convertBtn:'Convert 🔄',loadConvert:'Converting routine...',
     convertOpts:['🏠 Home Workout','⚡ Shorter (under 15 min)','💆 Recovery Routine','🤸 Bodyweight Only','🦵 Knee-safe Routine'],
-    dietNoProfile:'Please set up your profile first',dietCardTitle:'🥗 Get Diet Recommendation',
+    dietNoProfile:'Please set up your profile first',dietCardTitle:"🥗 Today's not over yet",
     dietWeekLabel:'Weekly Workouts',dietWeekOpts:['1x / week','2x / week','3x / week','4x / week','5+ / week'],
     dietStyleLabel:'Diet Style',
     dietStyleOpts:['🍚 Korean (rice & sides)','🍝 Western (pasta & salad)','🥪 Bread / Sandwiches','🏪 Convenience Store','💪 High Protein'],
-    dietBtn:'🥗 Get Recommendation',dietBackBtn:'← Recalculate',loadCalories:'Calculating calories...',
-    macroTitle:'🔥 Daily Calories & Nutrition',macroCalLabel:'Target',macroProteinLabel:'Protein',macroCarbLabel:'Carbs',macroFatLabel:'Fat',
-    mealTitle:"🍽️ Today's Sample Meals",mealBreakfast:'🌅 Breakfast',mealLunch:'☀️ Lunch',mealDinner:'🌙 Dinner',mealSnack:'🍎 Snack',
+    dietBtn:'🥗 Get Recovery Meal',dietBackBtn:'← Try again',loadCalories:'Building recovery meal...',
+    macroTitle:'📊 Reference Numbers',macroCalLabel:'Target',macroProteinLabel:'Protein',macroCalLabel:'Carbs',macroFatLabel:'Fat',
+    mealTitle:"🍽️ What you can eat right now",mealBreakfast:'🌅 Breakfast',mealLunch:'☀️ Lunch',mealDinner:'🌙 Dinner',mealSnack:'🍎 Snack',
     profileHeading:'⚙️ My Profile',basicInfoTitle:'👤 Basic Info',
     nameLabel:'Name (optional)',namePlaceholder:'Enter your name',
     genderLabel:'Gender',genderOpts:['Male','Female'],ageLabel:'Age',heightLabel:'Height (cm)',
@@ -2337,7 +2337,7 @@ function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   $('page-'+name).classList.add('active');
-  const idx={home:0,dash:1,analysis:2,diet:3,profile:4}[name];
+  const idx={home:0,dash:1,analysis:2,profile:3,diet:4}[name];
   document.querySelectorAll('.nav-btn')[idx].classList.add('active');
   if(name==='dash') renderDash();
   if(name==='diet') initDiet();
