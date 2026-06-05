@@ -593,10 +593,10 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .qa-proper .qa-icon{margin-bottom:0;font-size:22px}
 .qa-proper .qa-label{font-size:15px}
 .qa-proper .qa-sub{font-size:11px}
-.qa-quit{background:#0c1018;border:1px solid #1e2a3a;color:var(--muted);width:100%;flex-direction:row;align-items:center;gap:12px;padding:13px 16px;min-height:auto}
+.qa-quit{background:#6366f110;border:1px solid #6366f138;color:var(--muted);width:100%;flex-direction:row;align-items:center;gap:12px;padding:13px 16px;min-height:auto}
 .qa-quit .qa-icon{margin-bottom:0;font-size:18px}
-.qa-quit .qa-label{font-size:13px;font-weight:700;color:var(--text)}
-.qa-quit .qa-sub{font-size:11px}
+.qa-quit .qa-label{font-size:13px;font-weight:700;color:#c4b5fd}
+.qa-quit .qa-sub{font-size:11px;color:#8b7fd4}
 
 /* ── SITUATION BUTTONS ─────────────────────────────────────────────────────── */
 .sit-wrap{animation:fadeUp .3s ease}
@@ -2833,22 +2833,45 @@ function renderRisk(d){
   else if(score>=30){cls='risk-mid';numCls='mid'}
 
   const reasons=(d.reasons||[]).map(r=>`<li>${r}</li>`).join('');
-  $('risk-result').innerHTML=`
-    <div class="risk-card ${cls}">
-      <div class="risk-score-row">
+  const isHighRisk=score>=60;
+  const topDisplay=isHighRisk
+    ?`<div style="text-align:center;padding:6px 0 10px">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">${LANG==='ko'?'오늘의 목표':'Today\'s Goal'}</div>
+        <div style="font-size:26px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:6px">${LANG==='ko'?'5분이면 충분해요 ✓':'5 min = success today ✓'}</div>
+        <div style="font-size:11px;color:var(--muted)">${LANG==='ko'?`위험도 ${score}% — 오늘은 완벽한 운동 금지`:`Risk ${score}% — no perfect workout today`}</div>
+      </div>`
+    :`<div class="risk-score-row">
         <div class="risk-score-num ${numCls}">${score}<span style="font-size:20px">%</span></div>
         <div>
           <div class="risk-level-badge">${t('riskBadge')} ${d.risk_level||''}</div>
           <div style="font-size:11px;color:var(--muted);margin-top:4px">${t('riskSubtext')}</div>
         </div>
-      </div>
+      </div>`;
+
+  $('risk-result').innerHTML=`
+    <div class="risk-card ${cls}">
+      ${topDisplay}
       <ul class="risk-reasons">${reasons}</ul>
       <div class="risk-recommendation">${d.recommendation||''}</div>
     </div>`;
   $('risk-result').style.display='block';
   $('action-btns').style.display='flex';
-  if(score>=60){playWarning();vibrate([120,60,120])}
-  else{playTick();vibrate([40])}
+
+  const routineBtn=$('routine-btn');
+  const minBtn=$('min-btn');
+  if(isHighRisk){
+    routineBtn.className='btn btn-outline';
+    routineBtn.style.marginTop='0';
+    minBtn.className='btn btn-primary';
+    minBtn.style.cssText='margin-top:0;background:linear-gradient(135deg,#6366f1,#8b5cf6)';
+    playWarning();vibrate([120,60,120]);
+  }else{
+    routineBtn.className='btn btn-primary';
+    routineBtn.style.marginTop='0';
+    minBtn.className='btn';
+    minBtn.style.cssText='background:#6366f1;color:#fff';
+    playTick();vibrate([40]);
+  }
 }
 
 // ── Workout Timer ────────────────────────────────────────────────────────────

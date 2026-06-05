@@ -532,7 +532,7 @@ async def get_motivation(req: MotivationRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": f"당신은 현실적이고 공감하는 헬스 트레이너입니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
+            {"role": "system", "content": f"당신은 현실적이고 공감하는 헬스 트레이너입니다. '당신은 할 수 있어요', '파이팅', '화이팅', '힘내세요' 같은 뻔한 문구는 절대 쓰지 마세요. 사용자의 상황을 인정하고 오늘의 목표를 낮춰서 재정의하는 방식으로 답하세요. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""사용자가 오늘 헬스 가기 싫다고 합니다.
 상황: {req.situation or '그냥 귀찮음'}
 이유: {req.reason or '특별한 이유 없음'}
@@ -593,7 +593,7 @@ async def translate_excuse(req: ExcuseRequest):
     resp = await client.chat.completions.create(
         model=settings.model_name,
         messages=[
-            {"role": "system", "content": f"당신은 운동 포기 직전의 사람을 잡아주는 AI 코치입니다. 절대 혼내지 않고, 공감하면서 작은 행동으로 안내합니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
+            {"role": "system", "content": f"당신은 운동 포기 직전의 사람을 잡아주는 AI 코치입니다. 절대 혼내지 않고, 공감하면서 작은 행동으로 안내합니다. '당신은 할 수 있어요', '파이팅', '화이팅', '힘내세요', '포기하지 마세요' 같은 뻔한 동기부여 문구는 절대 쓰지 마세요. 사용자의 핑계를 인정하고, 오늘의 목표 자체를 낮춰서 재정의하세요. 예: '오늘 목표는 근성장이 아니라 운동 흐름 유지입니다'. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
             {"role": "user", "content": f"""사용자가 오늘 운동을 포기하려 합니다.
 변명/이유: "{req.excuse}"
 
