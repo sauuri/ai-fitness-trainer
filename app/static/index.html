@@ -2469,18 +2469,25 @@ function loadNotiSettings(){
 function getSmartNotiHour(){
   const logs=getLogs().slice(0,21);
   if(logs.length<3) return getNotiSettings().hour;
-  // 평균 운동 시간 계산
-  const hours=logs.map(l=>new Date(l.ts).getHours());
-  const avg=Math.round(hours.reduce((a,b)=>a+b,0)/hours.length);
-  // 오늘 요일이 실패가 잦은 요일이면 1시간 더 일찍 알림
+  // 평균 종료 시각 (운동 완료 저장 시각)
+  const endHours=logs.map(l=>new Date(l.ts).getHours());
+  const avgEnd=Math.round(endHours.reduce((a,b)=>a+b,0)/endHours.length);
+  // 평균 운동 시간(분) → 시간 단위로 변환 (쉬는 시간 포함, duration_min 기반)
+  const durLogs=logs.filter(l=>l.duration_min>0);
+  const avgDurHour=durLogs.length>=3
+    ? Math.ceil(durLogs.map(l=>l.duration_min).reduce((a,b)=>a+b,0)/durLogs.length/60)
+    : 1;
+  // 알림 = 평균 종료 시각 - 평균 운동 시간 (운동 시작해야 할 시각)
+  const startHour=avgEnd-avgDurHour;
+  const base=Math.min(Math.max(startHour,17),22);
+  // 자주 실패하는 요일이면 1시간 더 일찍
   const missed=getMissedLogs();
   const todayDay=new Date().getDay();
   const dayCounts={};
   missed.forEach(m=>{const d=new Date(m.ts).getDay();dayCounts[d]=(dayCounts[d]||0)+1});
   const maxMissDay=Object.entries(dayCounts).sort((a,b)=>b[1]-a[1])[0];
   const isHighRiskDay=maxMissDay&&parseInt(maxMissDay[0])===todayDay&&maxMissDay[1]>=2;
-  const base=Math.min(Math.max(avg+1,18),22);
-  return isHighRiskDay?Math.max(base-1,18):base;
+  return isHighRiskDay?Math.max(base-1,17):base;
 }
 
 async function scheduleRiskNotification(){
@@ -2927,7 +2934,15 @@ function toggleWorkoutTimer(){
 
 function stopWorkoutTimer(){
   clearInterval(_workoutTimerInterval);
+  _workoutTimerInterval=null;
   const total=_workoutTimerElapsed+(_workoutTimerPaused?0:Math.floor((Date.now()-(_workoutTimerStart||Date.now()))/1000));
+  const el=$('workout-elapsed');
+  if(el){
+    const m=Math.floor(total/60).toString().padStart(2,'0');
+    const s=(total%60).toString().padStart(2,'0');
+    el.textContent=`⏱ ${m}:${s}`;
+    el.classList.add('paused');
+  }
   return Math.round(total/60);
 }
 
