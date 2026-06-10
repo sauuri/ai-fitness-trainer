@@ -2420,7 +2420,7 @@ function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   $('page-'+name).classList.add('active');
-  const idx={home:0,dash:1,analysis:2,profile:3,diet:4}[name];
+  const idx={home:0,dash:1,analysis:2,diet:3,profile:4}[name];
   document.querySelectorAll('.nav-btn')[idx].classList.add('active');
   if(name==='dash') renderDash();
   if(name==='diet') initDiet();
