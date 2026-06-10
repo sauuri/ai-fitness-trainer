@@ -624,8 +624,10 @@ async def recovery_meal(req: RecoveryRequest):
 성별: {req.gender} / 나이: {req.age}세 / 몸무게: {req.weight}kg / 키: {req.height}cm
 목표: {req.goal} / 선호 식단: {req.diet_style}
 
+중요: 사용자가 입력한 수량을 반드시 그대로 사용하세요. "한통", "두 개", "한 판" 등 수량 표현이 있으면 절대 1인분으로 바꾸지 마세요. 수량이 명시되지 않은 경우에만 1인분으로 가정하세요.
+
 다음을 계산해주세요:
-1. 오늘 먹은 것의 칼로리 추정 (최대한 구체적으로, 브랜드/메뉴 알면 실제 수치 사용)
+1. 오늘 먹은 것의 칼로리 추정 — 입력된 수량 그대로 계산 (브랜드/메뉴 알면 실제 수치 사용)
 2. 이 사람의 하루 권장 칼로리 대비 초과분
 3. 내일 하루 식단으로 초과분을 자연스럽게 분산해서 조절하는 방법
 4. 내일 아침/점심/저녁/간식 식단 (구체적 음식명 + 칼로리 표기, {req.diet_style} 스타일)
@@ -634,8 +636,8 @@ tone: 자책 유발 금지. 그냥 숫자 사실만. "이틀 평균으로 보면
 
 JSON 형식:
 {{
-  "what_ate_kcal": 850,
-  "what_ate_detail": "엽떡 1인분 약 850kcal (떡볶이 500kcal + 순대 200kcal + 튀김 150kcal)",
+  "what_ate_kcal": 1700,
+  "what_ate_detail": "엽떡 한통(2인분 기준) 약 1700kcal — 떡볶이 1000kcal + 순대 400kcal + 튀김 300kcal",
   "daily_target": 2000,
   "excess": 350,
   "tomorrow_target": 1650,
