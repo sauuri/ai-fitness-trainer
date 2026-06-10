@@ -1129,10 +1129,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
 <!-- ===== DASHBOARD ===== -->
 <div class="page" id="page-dash">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-    <div class="page-heading" style="margin-bottom:0" data-i18n="dashHeading">📊 운동 기록</div>
-    <button class="btn btn-outline" style="font-size:12px;padding:7px 12px" onclick="showMissedModal()" data-i18n="missedBtn">😞 못 함 기록</button>
-  </div>
+  <div class="page-heading" data-i18n="dashHeading">📊 운동 기록</div>
 
   <div class="stats-grid">
     <div class="stats-card"><div class="stats-num" id="d-week">0</div><div class="stats-label" data-i18n="dWeekLabel">이번 주</div><div class="stats-sub" data-i18n="dWeekSub">회</div></div>
@@ -1185,6 +1182,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         <button class="btn-outline btn" style="padding:3px 8px;font-size:11px" onclick="getFeedback()" data-i18n="feedbackBtn">🤖 AI 피드백</button>
       </div>
     </div>
+    <div class="error" id="fb-error"></div>
     <div class="loading" id="fb-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="aiAnalyzing">AI 분석 중...</div></div>
     <div id="feedback-result" style="display:none" class="feedback-card">
       <div class="fb-summary" id="fb-summary"></div>
@@ -1787,7 +1785,7 @@ const TRANS = {
     onboardStep1:'프로필 탭에서 내 정보 입력',onboardStep2:'루틴 탭에서 컨디션 입력 후 루틴 생성',onboardStep3:'운동 완료 후 저장 버튼 클릭',
     onboardBtn:'첫 루틴 짜러 가기 💪',
     alertNeedLogs2:'운동 기록이 2개 이상 있어야 피드백을 받을 수 있어요.',
-    alertNeedLogs:'기록이 더 필요해요.',alertNeedLogs4:'4주 리포트는 운동 기록이 4개 이상 있어야 해요.',analysisDataHint:'운동 기록 2개 이상 필요',reportDataHint:'운동 기록 4개 이상 필요',
+    alertNeedLogs:'기록이 더 필요해요.',alertNeedLogs4:'4주 리포트는 운동 기록이 4개 이상 있어야 해요.',analysisDataHint:'운동 기록 2개 이상 필요',reportDataHint:'운동 기록 4개 이상 필요',showMoreBtn:'더 보기',
     logMissedLabel:'😞 운동 못 함',logReasonPrefix:'이유: ',
     logPreFatigue:'피로',logPostFatigue:'운동 후 피로',logMinTag:'최소루틴',logComplete:'완료',
     analysisSummaryTpl:(t,m,r,reason)=>`총 운동 ${t}회 · 건너뜀 ${m}회 · 완료율 ${r}% · 주요 실패 원인: ${reason}`,
@@ -1967,7 +1965,7 @@ const TRANS = {
     onboardStep1:'Enter your info in the Profile tab',onboardStep2:'Input condition & generate a routine in the Routine tab',onboardStep3:'Tap Save after completing your workout',
     onboardBtn:'Go build a routine 💪',
     alertNeedLogs2:'You need at least 2 workout logs to get AI feedback.',
-    alertNeedLogs:'More records needed.',alertNeedLogs4:'The 4-week report requires at least 4 workout logs.',analysisDataHint:'Requires 2+ workout logs',reportDataHint:'Requires 4+ workout logs',
+    alertNeedLogs:'More records needed.',alertNeedLogs4:'The 4-week report requires at least 4 workout logs.',analysisDataHint:'Requires 2+ workout logs',reportDataHint:'Requires 4+ workout logs',showMoreBtn:'Show more',
     logMissedLabel:'😞 Missed Workout',logReasonPrefix:'Reason: ',
     logPreFatigue:'pre-fatigue',logPostFatigue:'post-fatigue',logMinTag:'Minimal',logComplete:'done',
     analysisSummaryTpl:(t,m,r,reason)=>`${t} sessions · ${m} skipped · ${r}% completion · Top reason: ${reason}`,
@@ -3735,9 +3733,11 @@ function renderDash(){
   const allLogs=[
     ...logs.map(l=>({...l,type:'done'})),
     ...missed.map(l=>({...l,type:'missed',rate:0}))
-  ].sort((a,b)=>b.ts-a.ts).slice(0,15);
+  ].sort((a,b)=>b.ts-a.ts);
+  const _showAll=window._logShowAll||false;
+  const visibleLogs=_showAll?allLogs:allLogs.slice(0,15);
 
-  if(!allLogs.length){
+  if(!visibleLogs.length){
     $('log-list').innerHTML=`
       <div class="onboard-card">
         <div class="onboard-icon">🚀</div>
@@ -3752,7 +3752,7 @@ function renderDash(){
       </div>`;
     return;
   }
-  $('log-list').innerHTML=allLogs.map(l=>{
+  $('log-list').innerHTML=visibleLogs.map(l=>{
     if(l.type==='missed') return `
       <div class="log-item missed">
         <div class="log-header">
@@ -3782,6 +3782,12 @@ function renderDash(){
         </div>
       </div>`;
   }).join('');
+
+  if(!_showAll&&allLogs.length>15){
+    $('log-list').innerHTML+=`<div style="text-align:center;margin-top:10px"><button class="btn btn-outline" style="font-size:12px;padding:7px 20px" onclick="window._logShowAll=true;renderDash()" data-i18n="showMoreBtn">더 보기 (${allLogs.length-15}개 더)</button></div>`;
+  } else if(_showAll&&allLogs.length>15){
+    $('log-list').innerHTML+=`<div style="text-align:center;margin-top:10px"><button class="btn btn-outline" style="font-size:12px;padding:7px 20px" onclick="window._logShowAll=false;renderDash()">접기 ↑</button></div>`;
+  }
 
   // 칼로리 차트 (최근 7회)
   const calLogs=logs.filter(l=>l.kcal>0).slice(0,7).reverse();
@@ -3829,13 +3835,12 @@ function showMissedModal(y,m,d){
 function hideMissedModal(){window._missedDate=null;$('missed-modal').classList.remove('show')}
 function saveMissedWorkout(){
   const dt=window._missedDate||new Date();
-  const log={
-    date:dt.toLocaleDateString('ko-KR'),
-    reason:$('missed-reason').value,
-    ts:dt.getTime()
-  };
+  const dateKey=`${dt.getFullYear()}-${dt.getMonth()}-${dt.getDate()}`;
   const missed=getMissedLogs();
-  missed.unshift(log);
+  const dupIdx=missed.findIndex(l=>{const d=new Date(l.ts);return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`===dateKey});
+  const log={date:dt.toLocaleDateString('ko-KR'),reason:$('missed-reason').value,ts:dt.getTime()};
+  if(dupIdx>=0) missed[dupIdx]=log;
+  else missed.unshift(log);
   if(missed.length>100) missed.pop();
   localStorage.setItem('fitness_missed',JSON.stringify(missed));
   hideMissedModal();
@@ -3847,7 +3852,8 @@ function saveMissedWorkout(){
 async function getFeedback(){
   const logs=getLogs();
   const p=getProfile();
-  if(!p||logs.length<2){alert(t('alertNeedLogs2'));return}
+  hideErr('fb-error');
+  if(!p||logs.length<2){showErr('fb-error',t('alertNeedLogs2'));return}
   $('fb-loading').classList.add('show');
   $('feedback-result').style.display='none';
   try{
@@ -3862,7 +3868,7 @@ async function getFeedback(){
     $('fb-improve').innerHTML=(d.improve||[]).map(i=>`<div class="fb-item fb-improve">💡 ${i}</div>`).join('');
     $('fb-tip').textContent=`🎯 ${d.next_tip}`;
     $('feedback-result').style.display='block';
-  }catch(e){alert(e.message)}
+  }catch(e){showErr('fb-error',e.message)}
   finally{$('fb-loading').classList.remove('show')}
 }
 
