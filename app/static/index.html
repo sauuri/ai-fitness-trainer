@@ -184,8 +184,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   border-radius:12px;padding:11px 16px;margin:10px 0 4px;display:flex;align-items:center;justify-content:space-between}
 .cal-live-label{font-size:12px;color:var(--muted);font-weight:600}
 .cal-live-num{font-size:20px;font-weight:900;color:var(--accent);letter-spacing:-0.5px}
-.ex-reps-badge{background:#6366f118;border:1px solid #6366f130;border-radius:8px;
-  padding:4px 10px;font-size:12px;font-weight:700;color:#a5b4fc}
+.reps-num{font-size:18px;font-weight:900;color:#a5b4fc;min-width:28px;text-align:center;padding:0 4px}
 .lazy-link{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;
   text-align:center;width:100%;padding:14px 0 4px;text-decoration:underline;display:block}
 .lazy-link:hover{color:var(--accent)}
@@ -1653,7 +1652,7 @@ const TRANS = {
     allDoneBanner:'🎉 오늘 운동 전부 완료! 제로데이 방지 성공 💪',
     statDoneLabel:'완료한 운동',statTotalLabel:'전체 운동',statPctLabel:'완료율',
     postFatigueLabel:'오늘 피로도',saveWorkoutBtn:'운동 완료 저장 ✅',
-    setsLabel:'세트',restLabel:'휴식',weightLabel:'💪 사용 중량',altPrefix:'대체: ',
+    setsLabel:'세트',repsLabel:'회',restLabel:'휴식',weightLabel:'💪 사용 중량',altPrefix:'대체: ',
     calLiveLabel:'🔥 예상 소모 칼로리',calLiveTag:'(체중·성별·중량 반영)',calLiveTagNoProfile:'(프로필 설정 시 더 정확해져요)',
     dashHeading:'📊 운동 기록',missedBtn:'😞 못 함 기록',
     dWeekLabel:'이번 주',dWeekSub:'회',dMonthLabel:'이번 달',dMonthSub:'회',
@@ -1827,7 +1826,7 @@ const TRANS = {
     allDoneBanner:'🎉 All exercises done! Zero day prevented 💪',
     statDoneLabel:'Done',statTotalLabel:'Total',statPctLabel:'Rate',
     postFatigueLabel:'Post-workout Fatigue',saveWorkoutBtn:'Save Workout ✅',
-    setsLabel:'sets',restLabel:'rest',weightLabel:'💪 Weight Used',altPrefix:'Alt: ',
+    setsLabel:'sets',repsLabel:'reps',restLabel:'rest',weightLabel:'💪 Weight Used',altPrefix:'Alt: ',
     calLiveLabel:'🔥 Est. Calories Burned',calLiveTag:'(weight, gender & load)',calLiveTagNoProfile:'(set profile for better accuracy)',
     dashHeading:'📊 Workout Log',missedBtn:'😞 Log Missed',
     dWeekLabel:'This Week',dWeekSub:'sessions',dMonthLabel:'This Month',dMonthSub:'sessions',
@@ -3029,6 +3028,18 @@ function adjustSets(idx, delta){
   updateCalories();
 }
 
+function adjustReps(idx, delta){
+  const el=document.getElementById('reps-'+idx);
+  if(!el) return;
+  const cur=parseInt(el.textContent)||10;
+  const next=Math.max(1,Math.min(30,cur+delta));
+  el.textContent=next;
+  const exEl=document.getElementById('ex-'+idx);
+  if(exEl) exEl.dataset.reps=next;
+  playTick(); vibrate([15]);
+  updateCalories();
+}
+
 function fmtSec(s){
   const L=TRANS[LANG];
   if(s<60) return L.fmtSec(s);
@@ -3198,7 +3209,13 @@ function renderRoutine(d){
           <button class="sets-btn" onclick="adjustSets(${i},+1)">+</button>
         </div>
         <span class="sets-label">${t('setsLabel')}</span>
-        <span class="ex-reps-badge">× ${ex.reps}</span>
+        <span style="font-size:13px;font-weight:700;color:var(--muted);padding:0 2px">×</span>
+        <div class="sets-stepper">
+          <button class="sets-btn" onclick="adjustReps(${i},-1)">−</button>
+          <span class="reps-num" id="reps-${i}">${repsNum}</span>
+          <button class="sets-btn" onclick="adjustReps(${i},+1)">+</button>
+        </div>
+        <span class="sets-label">${t('repsLabel')}</span>
       </div>
       <div class="ex-rest-row">
         <div class="sets-stepper">
