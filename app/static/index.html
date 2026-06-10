@@ -3217,14 +3217,7 @@ function renderRoutine(d){
         </div>
         <span class="sets-label">${t('repsLabel')}</span>
       </div>
-      <div class="ex-rest-row">
-        <div class="sets-stepper">
-          <button class="sets-btn" onclick="adjustRest(${i},-15)">−</button>
-          <span class="rest-sec-disp" id="rest-sec-${i}" data-sec="${restSec}">${ex.rest||'60초'}</span>
-          <button class="sets-btn" onclick="adjustRest(${i},+15)">+</button>
-        </div>
-        <span class="sets-label">${t('restLabel')}</span>
-      </div>
+      <span id="rest-sec-${i}" data-sec="${restSec}" style="display:none"></span>
       ${ex.purpose?`<div class="ex-detail"><span class="ex-purpose">✦ ${ex.purpose}</span></div>`:''}
       <div class="ex-tip">💡 ${ex.tip}</div>
       ${ex.caution?`<div class="ex-caution">⚠️ ${ex.caution}</div>`:''}
