@@ -1440,7 +1440,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <div class="form-group">
         <label data-i18n="goalLabel">목표</label>
         <select id="p-goal" data-i18n-opt="goalOpts">
-          <option value="증량">증량 (근육 키우기)</option>
+          <option value="근비대">근비대 (근육 비대)</option>
+          <option value="증량">증량 (벌크업)</option>
           <option value="감량">감량 (다이어트)</option>
           <option value="체력 향상">체력 향상</option>
           <option value="건강 관리">건강 관리</option>
@@ -1520,6 +1521,13 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <div class="form-group">
         <label data-i18n="notiTimeLabel">알림 시간</label>
         <select id="noti-time-select" onchange="saveNotiSettings()">
+          <option value="6">오전 6시</option>
+          <option value="7">오전 7시</option>
+          <option value="8">오전 8시</option>
+          <option value="9">오전 9시</option>
+          <option value="12">오후 12시</option>
+          <option value="17">오후 5시</option>
+          <option value="18">오후 6시</option>
           <option value="19">오후 7시</option>
           <option value="20" selected>오후 8시</option>
           <option value="21">오후 9시</option>
@@ -1754,7 +1762,7 @@ const TRANS = {
     genderLabel:'성별',genderOpts:['남성','여성'],ageLabel:'나이',heightLabel:'키 (cm)',
     weightLabel2:'몸무게 (kg)',targetWeightLabel:'목표 체중 (kg, 선택)',
     fitnessInfoTitle:'🎯 운동 정보',goalLabel:'목표',
-    goalOpts:['증량 (근육 키우기)','감량 (다이어트)','체력 향상','건강 관리'],
+    goalOpts:['근비대 (근육 비대)','증량 (벌크업)','감량 (다이어트)','체력 향상','건강 관리'],
     levelLabel:'운동 경험',levelOpts:['초급 (헬린이)','중급 (1년 이상)','고급 (3년 이상)'],
     locationLabel:'운동 장소',locationOpts:['헬스장','집','야외'],
     weeklyLabel:'주당 운동 가능 횟수',weeklyOpts:['주 1회','주 2회','주 3회','주 4회','주 5회 이상'],
@@ -1793,7 +1801,7 @@ const TRANS = {
     riskBadge:'오늘 0일 위험도',riskSubtext:'오늘 0일이 될 위험',
     todayLabel:'(오늘)',minSaved:'최소실행',minDoneTarget:'최소 실행 완료 ✓',
     displayGender:{'남성':'남성','여성':'여성'},
-    displayGoal:{'증량':'증량','감량':'감량','체력 향상':'체력 향상','건강 관리':'건강 관리'},
+    displayGoal:{'근비대':'근비대','증량':'증량','감량':'감량','체력 향상':'체력 향상','건강 관리':'건강 관리'},
     displayLevel:{'초급':'초급','중급':'중급','고급':'고급'},
     displayLocation:{'헬스장':'헬스장','집':'집','야외':'야외'},
     injuryDisplay:'부상: ',ageUnit:'세',dietGoalPrefix:'목표: ',
@@ -1934,7 +1942,7 @@ const TRANS = {
     genderLabel:'Gender',genderOpts:['Male','Female'],ageLabel:'Age',heightLabel:'Height (cm)',
     weightLabel2:'Weight (kg)',targetWeightLabel:'Goal Weight (kg, optional)',
     fitnessInfoTitle:'🎯 Fitness Info',goalLabel:'Goal',
-    goalOpts:['Muscle Gain','Weight Loss','Fitness','Health'],
+    goalOpts:['Hypertrophy','Muscle Gain','Weight Loss','Fitness','Health'],
     levelLabel:'Experience',levelOpts:['Beginner','Intermediate (1+ yr)','Advanced (3+ yr)'],
     locationLabel:'Location',locationOpts:['Gym','Home','Outdoor'],
     weeklyLabel:'Available Days / Week',weeklyOpts:['1x / week','2x / week','3x / week','4x / week','5+ / week'],
@@ -1973,7 +1981,7 @@ const TRANS = {
     riskBadge:"Today's Zero-Day Risk",riskSubtext:'Risk of skipping today',
     todayLabel:'(Today)',minSaved:'Minimal',minDoneTarget:'Minimal Workout Done ✓',
     displayGender:{'남성':'Male','여성':'Female'},
-    displayGoal:{'증량':'Muscle Gain','감량':'Weight Loss','체력 향상':'Fitness','건강 관리':'Health'},
+    displayGoal:{'근비대':'Hypertrophy','증량':'Muscle Gain','감량':'Weight Loss','체력 향상':'Fitness','건강 관리':'Health'},
     displayLevel:{'초급':'Beginner','중급':'Intermediate','고급':'Advanced'},
     displayLocation:{'헬스장':'Gym','집':'Home','야외':'Outdoor'},
     injuryDisplay:'Injuries: ',ageUnit:'yo',dietGoalPrefix:'Goal: ',
@@ -2462,10 +2470,7 @@ function saveProfile(){
   localStorage.setItem('fitness_profile',JSON.stringify(profile));
   syncToSupabase();
   $('profile-saved').style.display='block';
-  setTimeout(()=>{
-    $('profile-saved').style.display='none';
-    showPage('home');
-  },900);
+  setTimeout(()=>$('profile-saved').style.display='none',2000);
   initHome();
 }
 
@@ -2478,7 +2483,7 @@ function loadProfileForm(){
   $('p-height').value=p.height||'';
   $('p-weight').value=p.weight||'';
   $('p-target-weight').value=p.target_weight||'';
-  $('p-goal').value=p.goal||'증량';
+  $('p-goal').value=p.goal||'근비대';
   $('p-level').value=p.level||'초급';
   $('p-location').value=p.location||'헬스장';
   $('p-weekly').value=p.weekly_days||3;
@@ -4126,7 +4131,7 @@ async function getDiet(){
   try{
     const res=await fetch(API+'/calories',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,weekly_days:p.weeklyDays||3,diet_style:$('diet-style').value,ingredients,today_kcal:todayKcal,workout_done:workoutDone,lang:LANG})
+      body:JSON.stringify({gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,weekly_days:p.weekly_days||p.weeklyDays||3,diet_style:$('diet-style').value,ingredients,today_kcal:todayKcal,workout_done:workoutDone,lang:LANG})
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
