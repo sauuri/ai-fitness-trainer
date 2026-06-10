@@ -1202,23 +1202,15 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 <div class="page" id="page-analysis">
   <div class="page-heading" data-i18n="analysisHeading">📈 AI 분석</div>
 
-  <!-- Routine shortcut -->
-  <div class="card">
-    <div class="card-title" data-i18n="todayRoutineCard">🏋️ 오늘의 루틴</div>
-    <button class="btn btn-primary" onclick="navToRoutine('normal')" data-i18n="routineBtn">💪 맞춤 루틴 짜줘</button>
-    <div class="btn-group">
-      <button class="btn" onclick="navToRoutine('min')" style="background:#6366f1;color:#fff" data-i18n="minBtn">😮‍💨 최소 실행</button>
-      <button class="btn btn-peak" onclick="navToRoutine('peak')" data-i18n="peakGoBtn">💥 고점으로 간다</button>
-    </div>
-  </div>
-
   <!-- Failure analysis -->
   <div class="card">
     <div class="card-title" data-i18n="failureTitle">😞 운동 실패 원인 분석</div>
     <div id="missed-reason-chart" class="bar-chart" style="margin-bottom:10px">
       <div style="font-size:13px;color:var(--muted);padding:6px 0" data-i18n="failureChartEmpty">기록 탭에서 😞 못 함 기록을 남기면 여기서 패턴을 분석해요.</div>
     </div>
-    <button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="getAnalysis()" data-i18n="analyzeFailBtn">🔍 실패 패턴 분석하기</button>
+    <button class="btn btn-outline" style="width:100%;margin-bottom:4px" onclick="getAnalysis()" data-i18n="analyzeFailBtn">🔍 실패 패턴 분석하기</button>
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:8px" data-i18n="analysisDataHint">운동 기록 2개 이상 필요</div>
+    <div class="error" id="analysis-error"></div>
     <div class="loading" id="analysis-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadFailure">실패 패턴 분석 중...</div></div>
     <div id="analysis-result" style="display:none">
       <div class="analysis-stat" id="analysis-summary"></div>
@@ -1231,7 +1223,9 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   <!-- 4주 report -->
   <div class="card">
     <div class="card-title" data-i18n="reportTitle">📈 4주 성장 리포트</div>
-    <button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="getReport()" data-i18n="genReportBtn">📊 리포트 생성하기</button>
+    <button class="btn btn-outline" style="width:100%;margin-bottom:4px" onclick="getReport()" data-i18n="genReportBtn">📊 리포트 생성하기</button>
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:8px" data-i18n="reportDataHint">운동 기록 4개 이상 필요</div>
+    <div class="error" id="report-error"></div>
     <div class="loading" id="report-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadReport">4주 데이터 분석 중...</div></div>
     <div id="report-result" style="display:none">
       <div class="report-grid">
@@ -1793,7 +1787,7 @@ const TRANS = {
     onboardStep1:'프로필 탭에서 내 정보 입력',onboardStep2:'루틴 탭에서 컨디션 입력 후 루틴 생성',onboardStep3:'운동 완료 후 저장 버튼 클릭',
     onboardBtn:'첫 루틴 짜러 가기 💪',
     alertNeedLogs2:'운동 기록이 2개 이상 있어야 피드백을 받을 수 있어요.',
-    alertNeedLogs:'기록이 더 필요해요.',alertNeedLogs4:'4주 리포트는 운동 기록이 4개 이상 있어야 해요.',
+    alertNeedLogs:'기록이 더 필요해요.',alertNeedLogs4:'4주 리포트는 운동 기록이 4개 이상 있어야 해요.',analysisDataHint:'운동 기록 2개 이상 필요',reportDataHint:'운동 기록 4개 이상 필요',
     logMissedLabel:'😞 운동 못 함',logReasonPrefix:'이유: ',
     logPreFatigue:'피로',logPostFatigue:'운동 후 피로',logMinTag:'최소루틴',logComplete:'완료',
     analysisSummaryTpl:(t,m,r,reason)=>`총 운동 ${t}회 · 건너뜀 ${m}회 · 완료율 ${r}% · 주요 실패 원인: ${reason}`,
@@ -1973,7 +1967,7 @@ const TRANS = {
     onboardStep1:'Enter your info in the Profile tab',onboardStep2:'Input condition & generate a routine in the Routine tab',onboardStep3:'Tap Save after completing your workout',
     onboardBtn:'Go build a routine 💪',
     alertNeedLogs2:'You need at least 2 workout logs to get AI feedback.',
-    alertNeedLogs:'More records needed.',alertNeedLogs4:'The 4-week report requires at least 4 workout logs.',
+    alertNeedLogs:'More records needed.',alertNeedLogs4:'The 4-week report requires at least 4 workout logs.',analysisDataHint:'Requires 2+ workout logs',reportDataHint:'Requires 4+ workout logs',
     logMissedLabel:'😞 Missed Workout',logReasonPrefix:'Reason: ',
     logPreFatigue:'pre-fatigue',logPostFatigue:'post-fatigue',logMinTag:'Minimal',logComplete:'done',
     analysisSummaryTpl:(t,m,r,reason)=>`${t} sessions · ${m} skipped · ${r}% completion · Top reason: ${reason}`,
@@ -3886,6 +3880,9 @@ function renderAnalysisCharts(){
         <div class="bar-val" style="color:var(--red)">${v}</div>
       </div>`).join(''):
     `<div style="font-size:13px;color:var(--muted);padding:8px 0">${t('noMissedData')}</div>`;
+  const hasRoutine=!!window._currentRoutine;
+  $('no-routine-msg').style.display=hasRoutine?'none':'block';
+  $('converter-form').style.display=hasRoutine?'block':'none';
 }
 
 // ── Failure Analysis ──────────────────────────────────────────────────────────
@@ -3893,7 +3890,8 @@ async function getAnalysis(){
   const logs=getLogs();
   const missed=getMissedLogs();
   const p=getProfile();
-  if(!p||logs.length+missed.length<2){alert(t('alertNeedLogs'));return}
+  hideErr('analysis-error');
+  if(!p||logs.length+missed.length<2){showErr('analysis-error',t('alertNeedLogs'));return}
   $('analysis-loading').classList.add('show');
   $('analysis-result').style.display='none';
   try{
@@ -3908,7 +3906,7 @@ async function getAnalysis(){
     $('strategy-list').innerHTML=(d.strategy||[]).map(s=>`<div class="strategy-item">💡 ${s}</div>`).join('');
     $('analysis-plan').textContent=`🎯 ${d.next_week_plan||''}`;
     $('analysis-result').style.display='block';
-  }catch(e){alert(e.message)}
+  }catch(e){showErr('analysis-error',e.message)}
   finally{$('analysis-loading').classList.remove('show')}
 }
 
@@ -3916,7 +3914,8 @@ async function getAnalysis(){
 async function getReport(){
   const logs=getLogs();
   const p=getProfile();
-  if(!p||logs.length<4){alert(t('alertNeedLogs4'));return}
+  hideErr('report-error');
+  if(!p||logs.length<4){showErr('report-error',t('alertNeedLogs4'));return}
   $('report-loading').classList.add('show');
   $('report-result').style.display='none';
   try{
@@ -3935,7 +3934,7 @@ async function getReport(){
     $('rp-warnings').innerHTML=(d.warnings||[]).map(w=>`<div class="report-item report-warning">⚠️ ${w}</div>`).join('');
     $('rp-next').textContent=d.next_focus??'';
     $('report-result').style.display='block';
-  }catch(e){alert(e.message)}
+  }catch(e){showErr('report-error',e.message)}
   finally{$('report-loading').classList.remove('show')}
 }
 
