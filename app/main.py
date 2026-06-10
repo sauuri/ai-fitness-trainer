@@ -125,6 +125,17 @@ class CaloriesRequest(BaseModel):
     lang: str = "ko"
 
 
+class RecoveryRequest(BaseModel):
+    what_ate: str
+    gender: str
+    age: int
+    weight: float
+    height: float
+    goal: str
+    diet_style: str = "한식"
+    lang: str = "ko"
+
+
 class ExcuseRequest(BaseModel):
     excuse: str
     lang: str = "ko"
@@ -596,6 +607,46 @@ tip 필드는 반드시 다음 내용을 포함하세요:
     }},
     "ingredient_note": "보유 재료로 단백질 목표 달성 가능 여부 한 줄 평가",
     "tip": "공감 + 괜찮은 이유 + 내일을 위한 작은 행동"
+}}"""}
+        ],
+        response_format={"type": "json_object"}
+    )
+    return JSONResponse(json.loads(resp.choices[0].message.content))
+
+
+@app.post("/recovery-meal")
+async def recovery_meal(req: RecoveryRequest):
+    resp = await client.chat.completions.create(
+        model=settings.model_name,
+        messages=[
+            {"role": "system", "content": f"당신은 No-Zero-Day 앱의 식단 회복 코치입니다. 오늘 과식하거나 식단을 망친 사람에게 자책 없이 내일 어떻게 조절하면 되는지 숫자로 명확하게 알려줍니다. '힘내세요', '괜찮아요' 같은 뻔한 위로는 하지 않습니다. 그냥 현실적인 숫자와 실천 가능한 식단을 제시합니다. JSON으로만 응답합니다.{lang_sys(req.lang)}"},
+            {"role": "user", "content": f"""오늘 먹은 것: {req.what_ate}
+성별: {req.gender} / 나이: {req.age}세 / 몸무게: {req.weight}kg / 키: {req.height}cm
+목표: {req.goal} / 선호 식단: {req.diet_style}
+
+다음을 계산해주세요:
+1. 오늘 먹은 것의 칼로리 추정 (최대한 구체적으로, 브랜드/메뉴 알면 실제 수치 사용)
+2. 이 사람의 하루 권장 칼로리 대비 초과분
+3. 내일 하루 식단으로 초과분을 자연스럽게 분산해서 조절하는 방법
+4. 내일 아침/점심/저녁/간식 식단 (구체적 음식명 + 칼로리 표기, {req.diet_style} 스타일)
+
+tone: 자책 유발 금지. 그냥 숫자 사실만. "이틀 평균으로 보면 됩니다" 식으로.
+
+JSON 형식:
+{{
+  "what_ate_kcal": 850,
+  "what_ate_detail": "엽떡 1인분 약 850kcal (떡볶이 500kcal + 순대 200kcal + 튀김 150kcal)",
+  "daily_target": 2000,
+  "excess": 350,
+  "tomorrow_target": 1650,
+  "adjustment_note": "내일 350kcal만 줄이면 이틀 평균이 맞춰져요. 끼니당 약 100kcal씩 줄이면 됩니다.",
+  "meals": {{
+    "breakfast": "음식명 (칼로리)",
+    "lunch": "음식명 (칼로리)",
+    "dinner": "음식명 (칼로리)",
+    "snack": "음식명 (칼로리)"
+  }},
+  "tip": "자책 없는 한 줄 코멘트"
 }}"""}
         ],
         response_format={"type": "json_object"}

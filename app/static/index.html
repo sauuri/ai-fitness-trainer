@@ -1348,6 +1348,48 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       </div>
     </div>
   </div>
+
+  <!-- 오늘 실패했어요 섹션 -->
+  <div id="recovery-section" style="display:none">
+    <div class="card" style="margin-top:0">
+      <div class="card-title" data-i18n="recoveryTitle">🙈 오늘 실패했어요</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px" data-i18n="recoveryDesc">오늘 뭘 드셨는지 알려주시면 내일 식단을 맞춰드릴게요</div>
+      <div class="form-group">
+        <label data-i18n="recoveryLabel">오늘 뭘 드셨어요?</label>
+        <input type="text" id="recovery-input" data-i18n-ph="recoveryPlaceholder" placeholder="예: 엽떡 1인분, 치킨 반마리, 맥주 2캔" style="width:100%">
+      </div>
+      <button class="btn btn-primary" onclick="getRecoveryMeal()" style="margin-top:12px" data-i18n="recoveryBtn">📅 내일 식단 짜줘</button>
+      <div class="loading" id="recovery-loading" style="display:none"><div class="loading-ring"></div><div class="loading-text" data-i18n="recoveryLoading">칼로리 계산 중...</div></div>
+      <div class="error" id="recovery-error"></div>
+    </div>
+    <div id="recovery-result" style="display:none">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="card-title" style="margin:0" data-i18n="recoveryResultTitle">📊 오늘의 실제</div>
+        </div>
+        <div id="recovery-what-detail" style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:#f9731410;border:1px solid #f9731430;border-radius:10px;padding:10px;text-align:center">
+            <div style="font-size:18px;font-weight:900;color:var(--accent)" id="recovery-excess-kcal">-</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px" data-i18n="recoveryExcessLabel">오늘 초과 kcal</div>
+          </div>
+          <div style="background:#10b98110;border:1px solid #10b98130;border-radius:10px;padding:10px;text-align:center">
+            <div style="font-size:18px;font-weight:900;color:var(--green)" id="recovery-tomorrow-target">-</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px" data-i18n="recoveryTomorrowLabel">내일 목표 kcal</div>
+          </div>
+        </div>
+        <div id="recovery-adjustment" style="margin-top:10px;font-size:12px;color:var(--muted);line-height:1.6;padding:8px 10px;background:#ffffff08;border-radius:8px"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" data-i18n="recoveryMealTitle">🍽️ 내일 이렇게 드세요</div>
+        <div class="meal-item"><div class="meal-time" data-i18n="mealBreakfast">🌅 아침</div><div class="meal-text" id="r-breakfast"></div></div>
+        <div class="meal-item"><div class="meal-time" data-i18n="mealLunch">☀️ 점심</div><div class="meal-text" id="r-lunch"></div></div>
+        <div class="meal-item"><div class="meal-time" data-i18n="mealDinner">🌙 저녁</div><div class="meal-text" id="r-dinner"></div></div>
+        <div class="meal-item"><div class="meal-time" data-i18n="mealSnack">🍎 간식</div><div class="meal-text" id="r-snack"></div></div>
+        <div class="advice-box" id="r-tip" style="margin-top:8px;margin-bottom:0"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ===== PROFILE ===== -->
@@ -1638,7 +1680,7 @@ const TRANS = {
   ko: {
     appTitle:'No-Zero-Day | AI 운동 실패 방지 코치',
     sound:'소리',
-    nav:['루틴','기록','분석','프로필','복구식단'],
+    nav:['루틴','기록','분석','프로필','식단'],
     splashSub:'포기하지 않게 만드는 AI 운동 코치<br>오늘도 0일은 없다',
     feat:[['오늘 0일 위험도 예측','오늘 컨디션 분석 후 운동 포기 확률 계산'],['맞춤 루틴 생성','수면·피로·스트레스 반영한 오늘만의 루틴'],['가기 싫어도 OK','5분 최소 실행 루틴으로 제로데이 방지']],
     splashStart:'시작하기 →',splashSkip:'건너뛰기',
@@ -1693,7 +1735,12 @@ const TRANS = {
     dietIngrLabel:'자주 쓰는 재료',dietCustomLabel:'직접 추가',dietCustomPlaceholder:'재료 이름 입력',dietCustomBtn:'추가',dietSelectedLabel:'선택된 재료',
     dietQuickIngr:['닭가슴살','두부','햇반','계란','고구마','참치캔','브로콜리','오트밀','그릭요거트','바나나','현미밥','아보카도'],
     dietStyleOpts:['🍚 한식 (밥·국·반찬)','🍝 양식 (파스타·샐러드)','🥪 빵/샌드위치','🏪 간편식 (편의점)','💪 고단백 위주'],
-    dietBtn:'🥗 복구 식단 받기',dietBackBtn:'← 다시 받기',loadCalories:'복구 식단 만드는 중...',
+    dietBtn:'🥗 식단 받기',dietBackBtn:'← 다시 받기',loadCalories:'식단 만드는 중...',
+    recoveryTitle:'🙈 오늘 실패했어요',recoveryDesc:'오늘 뭘 드셨는지 알려주시면 내일 식단을 맞춰드릴게요',
+    recoveryLabel:'오늘 뭘 드셨어요?',recoveryPlaceholder:'예: 엽떡 1인분, 치킨 반마리, 맥주 2캔',
+    recoveryBtn:'📅 내일 식단 짜줘',recoveryLoading:'칼로리 계산 중...',
+    recoveryResultTitle:'📊 오늘의 실제',recoveryExcessLabel:'오늘 초과 kcal',recoveryTomorrowLabel:'내일 목표 kcal',
+    recoveryMealTitle:'🍽️ 내일 이렇게 드세요',
     macroTitle:'📊 오늘의 참고 수치',macroHint:'목표 수치 기준 — 식단 합계와 ±10% 오차 있을 수 있어요',macroCalLabel:'목표 칼로리',macroProteinLabel:'단백질',macroCarbLabel:'탄수화물',macroFatLabel:'지방',
     mealTitle:'🍽️ 지금 선택할 수 있는 식사',mealBreakfast:'🌅 아침',mealLunch:'☀️ 점심',mealDinner:'🌙 저녁',mealSnack:'🍎 간식',
     profileHeading:'⚙️ 내 프로필',basicInfoTitle:'👤 기본 정보',
@@ -1813,7 +1860,7 @@ const TRANS = {
   en: {
     appTitle:'No-Zero-Day | AI Fitness Coach',
     sound:'Sound',
-    nav:['Routine','Log','Analysis','Profile','Recovery'],
+    nav:['Routine','Log','Analysis','Profile','Meals'],
     splashSub:'The AI coach that keeps you going<br>No zero days, ever',
     feat:[["Today's Zero-Day Risk",'Analyzes your condition & predicts dropout probability'],['Personalized Routine','Tailored to your sleep, fatigue & stress'],['Even when you hate it','5-min minimal routine to prevent zero days']],
     splashStart:'Get Started →',splashSkip:'Skip',
@@ -1868,7 +1915,12 @@ const TRANS = {
     dietIngrLabel:'Common ingredients',dietCustomLabel:'Add custom',dietCustomPlaceholder:'Enter ingredient',dietCustomBtn:'Add',dietSelectedLabel:'Selected',
     dietQuickIngr:['Chicken breast','Tofu','Rice','Eggs','Sweet potato','Tuna can','Broccoli','Oatmeal','Greek yogurt','Banana','Brown rice','Avocado'],
     dietStyleOpts:['🍚 Korean (rice & sides)','🍝 Western (pasta & salad)','🥪 Bread / Sandwiches','🏪 Convenience Store','💪 High Protein'],
-    dietBtn:'🥗 Get Recovery Meal',dietBackBtn:'← Try again',loadCalories:'Building recovery meal...',
+    dietBtn:'🥗 Get Meal Plan',dietBackBtn:'← Try again',loadCalories:'Building meal plan...',
+    recoveryTitle:'🙈 Today was rough',recoveryDesc:"Tell me what you ate and I'll plan tomorrow",
+    recoveryLabel:'What did you eat today?',recoveryPlaceholder:'e.g. pizza 2 slices, beer 2 cans',
+    recoveryBtn:'📅 Plan tomorrow',recoveryLoading:'Calculating calories...',
+    recoveryResultTitle:"📊 Today's damage",recoveryExcessLabel:'Excess kcal today',recoveryTomorrowLabel:"Tomorrow's target",
+    recoveryMealTitle:"🍽️ Eat this tomorrow",
     macroTitle:'📊 Reference Numbers',macroHint:'Target values — meals may vary ±10%',macroCalLabel:'Target',macroProteinLabel:'Protein',macroCarbLabel:'Carbs',macroFatLabel:'Fat',
     mealTitle:"🍽️ What you can eat right now",mealBreakfast:'🌅 Breakfast',mealLunch:'☀️ Lunch',mealDinner:'🌙 Dinner',mealSnack:'🍎 Snack',
     profileHeading:'⚙️ My Profile',basicInfoTitle:'👤 Basic Info',
@@ -3920,6 +3972,7 @@ function initDiet(){
   if(!p){$('diet-no-profile').style.display='block';$('diet-form').style.display='none';return}
   $('diet-no-profile').style.display='none';
   $('diet-form').style.display='block';
+  $('recovery-section').style.display='block';
   $('diet-profile-info').textContent=`${t('displayGender')[p.gender]||p.gender} · ${p.age}${t('ageUnit')} · ${p.weight}kg · ${p.height}cm · ${t('dietGoalPrefix')}${t('displayGoal')[p.goal]||p.goal}`;
   renderQuickChips();
   renderSelectedChips();
@@ -3928,6 +3981,36 @@ function initDiet(){
 function dietBack(){
   $('diet-step-1').classList.add('active');
   $('diet-step-2').classList.remove('active');
+}
+
+async function getRecoveryMeal(){
+  const p=getProfile();
+  if(!p) return;
+  const what=$('recovery-input')?.value.trim();
+  if(!what){$('recovery-input')?.focus();return;}
+  hideErr('recovery-error');
+  $('recovery-result').style.display='none';
+  $('recovery-loading').style.display='flex';
+  try{
+    const res=await fetch(API+'/recovery-meal',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({what_ate:what,gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,diet_style:$('diet-style').value||'한식',lang:LANG})
+    });
+    const d=await res.json();
+    if(!res.ok) throw new Error(d.detail||'오류');
+    $('recovery-what-detail').textContent=d.what_ate_detail||'';
+    $('recovery-excess-kcal').textContent=(d.excess>0?'+':'')+d.excess+' kcal';
+    $('recovery-tomorrow-target').textContent=d.tomorrow_target+' kcal';
+    $('recovery-adjustment').textContent=d.adjustment_note||'';
+    $('r-breakfast').textContent=d.meals.breakfast;
+    $('r-lunch').textContent=d.meals.lunch;
+    $('r-dinner').textContent=d.meals.dinner;
+    $('r-snack').textContent=d.meals.snack;
+    $('r-tip').textContent=d.tip||'';
+    $('recovery-result').style.display='block';
+    $('recovery-loading').style.display='none';
+    $('recovery-result').scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){showErr('recovery-error',e.message);$('recovery-loading').style.display='none';}
 }
 
 let _selectedIngredients=new Set();
