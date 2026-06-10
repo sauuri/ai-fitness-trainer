@@ -2964,10 +2964,7 @@ function startRestTimer(name, restStr){
   updateTimerUI();
   $('rest-timer').classList.add('show');
   clearInterval(_restInterval);
-  // 위젯에 타이머 종료 시각 전달
-  const endMs = Date.now() + _restTotal * 1000;
-  if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform())
-    Capacitor.Plugins.TimerBridge?.setTimer({endTime:endMs,label:name}).catch(()=>{});
+  const endMs = Date.now() + _restTotal * 1000; // in-app rest timer only
   _restInterval = setInterval(()=>{
     _restRemain--;
     updateTimerUI();
@@ -2990,8 +2987,6 @@ function updateTimerUI(){
 function stopRestTimer(){
   clearInterval(_restInterval);
   $('rest-timer').classList.remove('show');
-  if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform())
-    Capacitor.Plugins.TimerBridge?.clearTimer().catch(()=>{});
 }
 function skipRest(){ stopRestTimer(); playTick(); }
 function addRestTime(sec){
@@ -3006,15 +3001,6 @@ function onExCheck(cb){
   vibrate([25]);
   if(cb.checked){
     startRestTimer(cb.dataset.name||t('restingLabel'), cb.dataset.rest||'60초');
-    if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform()){
-      const allCbs=document.querySelectorAll('#r-main input[type=checkbox]');
-      const done=[...allCbs].filter(c=>c.checked).length;
-      Capacitor.Plugins.TimerBridge?.updateTimer({
-        exerciseName:cb.dataset.name||'운동',
-        currentSet:done,
-        totalSets:allCbs.length
-      }).catch(()=>{});
-    }
   } else stopRestTimer();
 }
 
