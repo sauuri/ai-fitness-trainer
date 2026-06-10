@@ -682,17 +682,27 @@ async def recovery_meal(req: RecoveryRequest):
 - 삼각김밥 1개 ≈ 180~220kcal
 - 핫도그 1개 ≈ 300~350kcal
 
-다음을 계산해주세요:
-1. 오늘 먹은 것의 칼로리 추정 — 입력된 수량 그대로 계산 (브랜드/메뉴 알면 실제 수치 사용)
-2. 이 사람의 하루 권장 칼로리(daily_target) 계산
-3. 초과분(excess) = what_ate_kcal - daily_target
-4. 내일 목표(tomorrow_target) = daily_target - excess (단, 기초대사량 이하로는 내리지 말 것)
-5. 내일 식단 — 아침+점심+저녁+간식 칼로리 합계가 반드시 tomorrow_target과 일치해야 함
+다음을 순서대로 계산하세요:
+
+[STEP 1] 오늘 먹은 칼로리(what_ate_kcal) — 위 기준표 사용, 수량 그대로
+[STEP 2] 이 사람의 BMR 계산 (Mifflin-St Jeor):
+  - 남성: 10×체중 + 6.25×키 - 5×나이 + 5
+  - 여성: 10×체중 + 6.25×키 - 5×나이 - 161
+[STEP 3] daily_target = BMR × 1.4 (보통 활동량 기준)
+[STEP 4] excess = what_ate_kcal - daily_target (음수면 0)
+[STEP 5] tomorrow_target 계산:
+  - raw = daily_target - excess
+  - tomorrow_target = max(raw, BMR) ← 절대로 BMR 아래로 내리지 말 것
+  - 즉 excess가 아무리 커도 tomorrow_target 최솟값 = BMR
+[STEP 6] 내일 식단 배분 — 반드시 아래 순서로:
+  a. 4끼 칼로리 합계 목표를 먼저 정함: 합계 = tomorrow_target (±10kcal 허용)
+  b. 아침:점심:저녁:간식 = 25:35:30:10 비율로 배분
+  c. 각 끼니 칼로리에 맞는 음식을 구성
+  d. 최종 확인: breakfast_kcal + lunch_kcal + dinner_kcal + snack_kcal = tomorrow_target
 
 식단 작성 규칙:
-- 한식이면 밥을 반드시 포함하고 밥 칼로리(공기밥 300kcal)를 함께 표기할 것. 예: "김치찌개 1인분 + 공기밥 (550kcal)"
-- 양식/간편식도 주식+반찬 형태로 현실적으로 구성할 것
-- 각 끼니 칼로리를 명시하고, 4끼 합계 = tomorrow_target 이 되도록 수치를 먼저 정하고 식단을 구성할 것
+- 한식이면 밥을 반드시 포함하고 밥 칼로리(공기밥 300kcal)를 함께 표기. 예: "김치찌개 1인분 + 공기밥 (550kcal)"
+- tomorrow_target이 낮더라도(BMR 수준이라도) 현실적으로 먹을 수 있는 식단 구성할 것 — 빈 문자열 절대 금지
 
 tone: 자책 유발 금지. 그냥 숫자 사실만. "이틀 평균으로 보면 됩니다" 식으로.
 
