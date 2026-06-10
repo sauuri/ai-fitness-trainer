@@ -133,6 +133,7 @@ class RecoveryRequest(BaseModel):
     height: float
     goal: str
     diet_style: str = "한식"
+    workout_done: bool = False
     lang: str = "ko"
 
 
@@ -623,6 +624,7 @@ async def recovery_meal(req: RecoveryRequest):
             {"role": "user", "content": f"""오늘 먹은 것: {req.what_ate}
 성별: {req.gender} / 나이: {req.age}세 / 몸무게: {req.weight}kg / 키: {req.height}cm
 목표: {req.goal} / 선호 식단: {req.diet_style}
+오늘 운동 여부: {"운동함 (소모 칼로리 반영하여 excess 계산)" if req.workout_done else "운동 안 함"}
 
 중요: 사용자가 입력한 수량을 반드시 그대로 사용하세요. "한통", "두 개", "한 판" 등 수량 표현이 있으면 절대 1인분으로 바꾸지 마세요. 수량이 명시되지 않은 경우에만 1인분으로 가정하세요.
 
@@ -689,7 +691,10 @@ async def recovery_meal(req: RecoveryRequest):
   - 남성: 10×체중 + 6.25×키 - 5×나이 + 5
   - 여성: 10×체중 + 6.25×키 - 5×나이 - 161
 [STEP 3] daily_target = BMR × 1.4 (보통 활동량 기준)
-[STEP 4] excess = what_ate_kcal - daily_target (음수면 0)
+[STEP 4] excess 계산:
+  - 오늘 운동 안 함: excess = what_ate_kcal - daily_target
+  - 오늘 운동 함: workout_kcal ≈ 300kcal 추가 소모 가정 → excess = what_ate_kcal - (daily_target + 300)
+  - excess가 음수면 0이 아니라 실제 음수 그대로 유지 (덜 먹은 것도 표시)
 [STEP 5] tomorrow_target 계산:
   - raw = daily_target - excess
   - tomorrow_target = max(raw, BMR) ← 절대로 BMR 아래로 내리지 말 것

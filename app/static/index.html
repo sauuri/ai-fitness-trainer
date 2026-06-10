@@ -682,8 +682,8 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   <button class="nav-btn active" onclick="showPage('home')"><span style="font-size:20px">🏋️</span><span data-i18n="nav.0">루틴</span></button>
   <button class="nav-btn" onclick="showPage('dash')"><span style="font-size:20px">📊</span><span data-i18n="nav.1">기록</span></button>
   <button class="nav-btn" onclick="showPage('analysis')"><span style="font-size:20px">📈</span><span data-i18n="nav.2">분석</span></button>
-  <button class="nav-btn" onclick="showPage('profile')"><span style="font-size:20px">⚙️</span><span data-i18n="nav.3">프로필</span></button>
-  <button class="nav-btn" onclick="showPage('diet')"><span style="font-size:20px">🥗</span><span data-i18n="nav.4">복구식단</span></button>
+  <button class="nav-btn" onclick="showPage('diet')"><span style="font-size:20px">🥗</span><span data-i18n="nav.3">식단</span></button>
+  <button class="nav-btn" onclick="showPage('profile')"><span style="font-size:20px">⚙️</span><span data-i18n="nav.4">프로필</span></button>
 </nav>
 
 <div class="wrap">
@@ -1318,7 +1318,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         </div>
         <button class="btn btn-primary" onclick="getDiet()" style="margin-top:16px" data-i18n="dietBtn">🥗 식단 받기</button>
       </div>
-      <div class="loading" id="diet-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadCalories">복구 식단 만드는 중...</div></div>
+      <div class="loading" id="diet-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadCalories">식단 만드는 중...</div></div>
       <div class="error" id="diet-error"></div>
     </div>
 
@@ -1328,7 +1328,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <div class="diet-result" id="diet-result">
         <div class="card">
           <div class="card-title" data-i18n="macroTitle">🔥 하루 칼로리 & 영양소</div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:8px" data-i18n="macroHint">목표 수치 기준 — 식단 합계와 ±10% 오차 있을 수 있어요</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px" data-i18n="macroHint">AI 추정 수치 — 식품 브랜드·조리법에 따라 실제 값과 다를 수 있어요</div>
           <div class="macro-grid">
             <div class="macro-card cal-card"><div class="macro-num" id="d-calories"></div><div class="macro-unit">kcal</div><div class="macro-label" data-i18n="macroCalLabel">목표 칼로리</div></div>
             <div class="macro-card pro-card"><div class="macro-num" id="d-protein"></div><div class="macro-unit">g</div><div class="macro-label" data-i18n="macroProteinLabel">단백질</div></div>
@@ -1378,14 +1378,18 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           <div class="card-title" style="margin:0" data-i18n="recoveryResultTitle">📊 오늘의 실제</div>
         </div>
         <div id="recovery-what-detail" style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div style="background:#f9731410;border:1px solid #f9731430;border-radius:10px;padding:10px;text-align:center">
-            <div style="font-size:18px;font-weight:900;color:var(--accent)" id="recovery-excess-kcal">-</div>
-            <div style="font-size:10px;color:var(--muted);margin-top:2px" data-i18n="recoveryExcessLabel">오늘 초과 kcal</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div style="background:#6366f110;border:1px solid #6366f130;border-radius:10px;padding:10px;text-align:center">
+            <div style="font-size:16px;font-weight:900;color:#a5b4fc" id="recovery-total-kcal">-</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px" data-i18n="recoveryTotalLabel">오늘 섭취</div>
+          </div>
+          <div id="recovery-excess-box" style="background:#f9731410;border:1px solid #f9731430;border-radius:10px;padding:10px;text-align:center">
+            <div style="font-size:16px;font-weight:900;color:var(--accent)" id="recovery-excess-kcal">-</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px" id="recovery-excess-label" data-i18n="recoveryExcessLabel">초과</div>
           </div>
           <div style="background:#10b98110;border:1px solid #10b98130;border-radius:10px;padding:10px;text-align:center">
-            <div style="font-size:18px;font-weight:900;color:var(--green)" id="recovery-tomorrow-target">-</div>
-            <div style="font-size:10px;color:var(--muted);margin-top:2px" data-i18n="recoveryTomorrowLabel">내일 목표 kcal</div>
+            <div style="font-size:16px;font-weight:900;color:var(--green)" id="recovery-tomorrow-target">-</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px" data-i18n="recoveryTomorrowLabel">내일 목표</div>
           </div>
         </div>
         <div id="recovery-adjustment" style="margin-top:10px;font-size:12px;color:var(--muted);line-height:1.6;padding:8px 10px;background:#ffffff08;border-radius:8px"></div>
@@ -3986,11 +3990,44 @@ function initDiet(){
   $('diet-profile-info').textContent=`${t('displayGender')[p.gender]||p.gender} · ${p.age}${t('ageUnit')} · ${p.weight}kg · ${p.height}cm · ${t('dietGoalPrefix')}${t('displayGoal')[p.goal]||p.goal}`;
   renderQuickChips();
   renderSelectedChips();
+  try{
+    const cache=JSON.parse(localStorage.getItem('nzd_recovery_cache')||'null');
+    if(cache&&cache.date===new Date().toDateString()&&cache.data){
+      if(cache.data._what) $('recovery-input').value=cache.data._what;
+      if(cache.data._style) $('recovery-style').value=cache.data._style;
+      renderRecoveryResult(cache.data);
+    }
+  }catch(_){}
 }
 
 function dietBack(){
   $('diet-step-1').classList.add('active');
   $('diet-step-2').classList.remove('active');
+}
+
+function renderRecoveryResult(d){
+  $('recovery-total-kcal').textContent=d.what_ate_kcal+' kcal';
+  const exBox=$('recovery-excess-box');
+  const exEl=$('recovery-excess-kcal');
+  const exLabel=$('recovery-excess-label');
+  if(d.excess>0){
+    exBox.style.background='#f9731410';exBox.style.border='1px solid #f9731430';
+    exEl.style.color='var(--accent)';exEl.textContent='+'+d.excess+' kcal';
+    exLabel.textContent='초과';
+  } else {
+    exBox.style.background='#10b98110';exBox.style.border='1px solid #10b98130';
+    exEl.style.color='var(--green)';exEl.textContent=d.excess+' kcal';
+    exLabel.textContent='여유';
+  }
+  $('recovery-what-detail').textContent=d.what_ate_detail||'';
+  $('recovery-tomorrow-target').textContent=d.tomorrow_target+' kcal';
+  $('recovery-adjustment').textContent=d.adjustment_note||'';
+  $('r-breakfast').textContent=d.meals.breakfast;
+  $('r-lunch').textContent=d.meals.lunch;
+  $('r-dinner').textContent=d.meals.dinner;
+  $('r-snack').textContent=d.meals.snack;
+  $('r-tip').textContent=d.tip||'';
+  $('recovery-result').style.display='block';
 }
 
 async function getRecoveryMeal(){
@@ -4001,23 +4038,18 @@ async function getRecoveryMeal(){
   hideErr('recovery-error');
   $('recovery-result').style.display='none';
   $('recovery-loading').style.display='flex';
+  const todayLog=getLogs().find(l=>new Date(l.ts).toDateString()===new Date().toDateString());
+  const workoutDone=!!(todayLog&&todayLog.done>0);
   try{
     const res=await fetch(API+'/recovery-meal',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({what_ate:what,gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,diet_style:$('recovery-style').value||'한식',lang:LANG})
+      body:JSON.stringify({what_ate:what,gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,diet_style:$('recovery-style').value||'한식',workout_done:workoutDone,lang:LANG})
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
-    $('recovery-what-detail').textContent=d.what_ate_detail||'';
-    $('recovery-excess-kcal').textContent=(d.excess>0?'+':'')+d.excess+' kcal';
-    $('recovery-tomorrow-target').textContent=d.tomorrow_target+' kcal';
-    $('recovery-adjustment').textContent=d.adjustment_note||'';
-    $('r-breakfast').textContent=d.meals.breakfast;
-    $('r-lunch').textContent=d.meals.lunch;
-    $('r-dinner').textContent=d.meals.dinner;
-    $('r-snack').textContent=d.meals.snack;
-    $('r-tip').textContent=d.tip||'';
-    $('recovery-result').style.display='block';
+    d._what=what;d._style=$('recovery-style').value;
+    localStorage.setItem('nzd_recovery_cache',JSON.stringify({date:new Date().toDateString(),data:d}));
+    renderRecoveryResult(d);
     $('recovery-loading').style.display='none';
     $('recovery-result').scrollIntoView({behavior:'smooth',block:'start'});
   }catch(e){showErr('recovery-error',e.message);$('recovery-loading').style.display='none';}
