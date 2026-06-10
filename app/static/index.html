@@ -1328,6 +1328,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <div class="diet-result" id="diet-result">
         <div class="card">
           <div class="card-title" data-i18n="macroTitle">🔥 하루 칼로리 & 영양소</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px" data-i18n="macroHint">목표 수치 기준 — 식단 합계와 ±10% 오차 있을 수 있어요</div>
           <div class="macro-grid">
             <div class="macro-card cal-card"><div class="macro-num" id="d-calories"></div><div class="macro-unit">kcal</div><div class="macro-label" data-i18n="macroCalLabel">목표 칼로리</div></div>
             <div class="macro-card pro-card"><div class="macro-num" id="d-protein"></div><div class="macro-unit">g</div><div class="macro-label" data-i18n="macroProteinLabel">단백질</div></div>
@@ -1693,7 +1694,7 @@ const TRANS = {
     dietQuickIngr:['닭가슴살','두부','햇반','계란','고구마','참치캔','브로콜리','오트밀','그릭요거트','바나나','현미밥','아보카도'],
     dietStyleOpts:['🍚 한식 (밥·국·반찬)','🍝 양식 (파스타·샐러드)','🥪 빵/샌드위치','🏪 간편식 (편의점)','💪 고단백 위주'],
     dietBtn:'🥗 복구 식단 받기',dietBackBtn:'← 다시 받기',loadCalories:'복구 식단 만드는 중...',
-    macroTitle:'📊 오늘의 참고 수치',macroCalLabel:'목표 칼로리',macroProteinLabel:'단백질',macroCarbLabel:'탄수화물',macroFatLabel:'지방',
+    macroTitle:'📊 오늘의 참고 수치',macroHint:'목표 수치 기준 — 식단 합계와 ±10% 오차 있을 수 있어요',macroCalLabel:'목표 칼로리',macroProteinLabel:'단백질',macroCarbLabel:'탄수화물',macroFatLabel:'지방',
     mealTitle:'🍽️ 지금 선택할 수 있는 식사',mealBreakfast:'🌅 아침',mealLunch:'☀️ 점심',mealDinner:'🌙 저녁',mealSnack:'🍎 간식',
     profileHeading:'⚙️ 내 프로필',basicInfoTitle:'👤 기본 정보',
     nameLabel:'이름 (선택)',namePlaceholder:'이름을 입력해주세요',
@@ -1868,7 +1869,7 @@ const TRANS = {
     dietQuickIngr:['Chicken breast','Tofu','Rice','Eggs','Sweet potato','Tuna can','Broccoli','Oatmeal','Greek yogurt','Banana','Brown rice','Avocado'],
     dietStyleOpts:['🍚 Korean (rice & sides)','🍝 Western (pasta & salad)','🥪 Bread / Sandwiches','🏪 Convenience Store','💪 High Protein'],
     dietBtn:'🥗 Get Recovery Meal',dietBackBtn:'← Try again',loadCalories:'Building recovery meal...',
-    macroTitle:'📊 Reference Numbers',macroCalLabel:'Target',macroProteinLabel:'Protein',macroCalLabel:'Carbs',macroFatLabel:'Fat',
+    macroTitle:'📊 Reference Numbers',macroHint:'Target values — meals may vary ±10%',macroCalLabel:'Target',macroProteinLabel:'Protein',macroCarbLabel:'Carbs',macroFatLabel:'Fat',
     mealTitle:"🍽️ What you can eat right now",mealBreakfast:'🌅 Breakfast',mealLunch:'☀️ Lunch',mealDinner:'🌙 Dinner',mealSnack:'🍎 Snack',
     profileHeading:'⚙️ My Profile',basicInfoTitle:'👤 Basic Info',
     nameLabel:'Name (optional)',namePlaceholder:'Enter your name',
