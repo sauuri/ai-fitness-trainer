@@ -19,7 +19,7 @@ body{background:var(--bg);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-bottom:1px solid #f9731618;
   display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:8px;padding-left:16px;padding-right:12px}
-#top-bar .app-name{display:flex;align-items:center;gap:7px;font-size:16px;font-weight:900;color:#fff;letter-spacing:-.5px}
+#top-bar .app-name{display:flex;align-items:center;gap:7px;font-size:18px;font-weight:900;color:#fff;letter-spacing:.4px}
 #top-bar .app-name .logo-mark{width:26px;height:26px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px #f9731440}
 #top-bar .app-name .logo-text{color:#fff}
 .top-btn{background:none;border:1px solid #1e2d42;border-radius:10px;color:#4a6a8a;font-size:11px;font-weight:700;padding:5px 9px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;line-height:1}
@@ -505,7 +505,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .meal-text{font-size:13px;color:var(--text);line-height:1.5}
 .ingredient-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .ingr-chip{background:#0a0f1a;border:1px solid var(--border);border-radius:20px;padding:5px 11px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;user-select:none}
-.ingr-chip.selected{background:#6366f120;border-color:#6366f160;color:#a5b4fc}
+.ingr-chip.selected{background:#f9731622;border-color:#f9731660;color:var(--accent);font-weight:700}
 .selected-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .sel-chip{display:flex;align-items:center;gap:4px;background:#6366f118;border:1px solid #6366f140;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600;color:#a5b4fc}
 .sel-chip button{background:none;border:none;color:#a5b4fc;font-size:14px;cursor:pointer;padding:0;line-height:1}
@@ -779,6 +779,27 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           <div class="qa-sub" data-i18n="qaQuitSub">포기 번역기 열기</div>
         </div>
       </button>
+
+      <!-- 홈 하단 -->
+      <div id="home-bottom" style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
+        <div style="background:#0c1018;border:1px solid #1a2436;border-radius:14px;padding:14px 16px">
+          <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px">오늘의 한 마디</div>
+          <div id="home-quote" style="font-size:13px;color:var(--text);line-height:1.7"></div>
+        </div>
+        <div id="home-last-log" style="display:none;background:#0c1018;border:1px solid #1a2436;border-radius:14px;padding:13px 16px">
+          <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">최근 운동</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div id="home-last-target" style="font-size:14px;font-weight:800;color:var(--text)"></div>
+              <div id="home-last-date" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
+            </div>
+            <div style="text-align:right">
+              <div id="home-last-kcal" style="font-size:18px;font-weight:900;color:var(--accent)"></div>
+              <div style="font-size:10px;color:var(--muted)">kcal</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2553,6 +2574,35 @@ function initHome(){
     $('pb-info').innerHTML=`${nameText}<strong>${dG}</strong> · <strong>${p.age}${t('ageUnit')}</strong> · ${p.weight}kg / ${p.height}cm · ${dGoal} · ${dLevel}${injText}`;
     showQuickHome();
     renderQuickStats();
+    renderHomeBottom();
+  }
+}
+
+function renderHomeBottom(){
+  const QUOTES=[
+    '운동을 후회한 적은 없다. 운동 안 한 걸 후회할 뿐이다.',
+    '1%의 가능성만 있어도, 그게 오늘 해야 하는 이유다.',
+    '완벽한 운동보다 불완전하게라도 하는 운동이 낫다.',
+    '몸은 늘 할 수 있다고 말한다. 멈추는 건 항상 머리다.',
+    '오늘의 땀이 내일의 자신감이 된다.',
+    '1분이면 충분하다. 시작하면 달라진다.',
+    '지금 힘든 게, 나중에 쉬워지는 이유다.',
+    '어제의 나보다 오늘의 내가 조금만 더 나으면 된다.',
+    '포기는 언제든 할 수 있다. 오늘은 딱 1분만.',
+  ];
+  const qEl=$('home-quote');
+  if(qEl){
+    const idx=new Date().getDate()%QUOTES.length;
+    qEl.textContent='"'+QUOTES[idx]+'"';
+  }
+  const logs=getLogs();
+  const lastEl=$('home-last-log');
+  if(lastEl&&logs.length>0){
+    const last=logs[0];
+    $('home-last-target').textContent=last.target||'-';
+    $('home-last-date').textContent=last.date||'';
+    $('home-last-kcal').textContent=last.kcal||'-';
+    lastEl.style.display='block';
   }
 }
 
