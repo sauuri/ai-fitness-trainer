@@ -3928,13 +3928,15 @@ function dietBack(){
   $('diet-step-2').classList.remove('active');
 }
 
+const QUICK_INGR={
+  ko:['닭가슴살','두부','햇반','계란','고구마','참치캔','브로콜리','오트밀','그릭요거트','바나나','현미밥','아보카도'],
+  en:['Chicken breast','Tofu','Rice','Eggs','Sweet potato','Tuna','Broccoli','Oatmeal','Greek yogurt','Banana','Brown rice','Avocado']
+};
 function renderQuickChips(){
   const chips=$('quick-chips');
   if(!chips) return;
-  const items=t('dietQuickIngr');
-  chips.innerHTML=items.map(name=>`
-    <button class="ingr-chip${_selectedIngredients.has(name)?' selected':''}" onclick="toggleIngredient('${name}')">${name}</button>
-  `).join('');
+  const items=QUICK_INGR[LANG]||QUICK_INGR.ko;
+  chips.innerHTML=items.map(name=>`<button class="ingr-chip${_selectedIngredients.has(name)?' selected':''}" onclick="toggleIngredient(this,'${name}')">${name}</button>`).join('');
 }
 
 function renderSelectedChips(){
@@ -3948,10 +3950,14 @@ function renderSelectedChips(){
   `).join('');
 }
 
-function toggleIngredient(name){
-  if(_selectedIngredients.has(name)) _selectedIngredients.delete(name);
-  else _selectedIngredients.add(name);
-  renderQuickChips();
+function toggleIngredient(el,name){
+  if(_selectedIngredients.has(name)){
+    _selectedIngredients.delete(name);
+    el.classList.remove('selected');
+  } else {
+    _selectedIngredients.add(name);
+    el.classList.add('selected');
+  }
   renderSelectedChips();
   vibrate([15]);
 }
