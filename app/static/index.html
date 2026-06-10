@@ -802,6 +802,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         <textarea class="excuse-custom" id="excuse-custom" data-i18n-ph="excuseCustomPh" placeholder="또는 직접 입력..." style="margin-bottom:0;flex:1"></textarea>
         <button class="btn" onclick="runExcuseTranslator()" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;margin-top:0;padding:0 14px;flex-shrink:0;font-size:18px">🔀</button>
       </div>
+      <div class="error" id="excuse-error"></div>
       <div class="loading" id="excuse-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="excuseLoading">번역 중...</div></div>
       <div id="excuse-result" style="display:none">
         <div class="excuse-result">
@@ -1258,6 +1259,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       </div>
       <button class="btn btn-primary" onclick="convertRoutine()" style="margin-top:0" data-i18n="convertBtn">변환하기 🔄</button>
     </div>
+    <div class="error" id="convert-error"></div>
     <div class="loading" id="convert-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadConvert">루틴 변환 중...</div></div>
     <div id="convert-result" style="display:none;margin-top:12px">
       <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px" id="cv-title"></div>
@@ -1270,6 +1272,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 
 <!-- ===== DIET ===== -->
 <div class="page" id="page-diet">
+  <div class="page-heading" data-i18n="dietHeading">🥗 식단</div>
   <div id="diet-no-profile" class="card" style="text-align:center;padding:28px;display:none">
     <div style="font-size:36px;margin-bottom:10px">🥗</div>
     <div style="font-size:13px;color:var(--muted);margin-bottom:12px" data-i18n="dietNoProfile">프로필을 먼저 설정해주세요</div>
@@ -1736,7 +1739,7 @@ const TRANS = {
     weekChartTitle:'📅 최근 7일 운동',calChartTitle:'🔥 세션별 소모 칼로리',
     targetChartTitle:'🏋️ 부위별 운동 균형',logTitle:'📋 운동 로그',
     feedbackBtn:'🤖 AI 피드백',calChartEmpty:'운동 완료 후 기록이 쌓여요.',aiAnalyzing:'AI 분석 중...',
-    analysisHeading:'📈 AI 분석',todayRoutineCard:'🏋️ 오늘의 루틴',
+    analysisHeading:'📈 AI 분석',todayRoutineCard:'🏋️ 오늘의 루틴',dietHeading:'🥗 식단',
     failureTitle:'😞 운동 실패 원인 분석',failureChartEmpty:'기록 탭에서 😞 못 함 기록을 남기면 여기서 패턴을 분석해요.',
     analyzeFailBtn:'🔍 실패 패턴 분석하기',loadFailure:'실패 패턴 분석 중...',
     reportTitle:'📈 4주 성장 리포트',genReportBtn:'📊 리포트 생성하기',loadReport:'4주 데이터 분석 중...',
@@ -1916,7 +1919,7 @@ const TRANS = {
     weekChartTitle:'📅 Last 7 Days',calChartTitle:'🔥 Calories per Session',
     targetChartTitle:'🏋️ Muscle Group Balance',logTitle:'📋 Workout Log',
     feedbackBtn:'🤖 AI Feedback',calChartEmpty:'Records appear after completing workouts.',aiAnalyzing:'AI Analyzing...',
-    analysisHeading:'📈 AI Analysis',todayRoutineCard:"🏋️ Today's Routine",
+    analysisHeading:'📈 AI Analysis',todayRoutineCard:"🏋️ Today's Routine",dietHeading:'🥗 Meals',
     failureTitle:'😞 Workout Failure Analysis',failureChartEmpty:'Log missed workouts in the Log tab to analyze patterns here.',
     analyzeFailBtn:'🔍 Analyze Failure Patterns',loadFailure:'Analyzing failure patterns...',
     reportTitle:'📈 4-Week Growth Report',genReportBtn:'📊 Generate Report',loadReport:'Analyzing 4-week data...',
@@ -2324,6 +2327,7 @@ function selectExcuse(el, text){
 async function runExcuseTranslator(){
   const excuse=_selectedExcuse||$('excuse-custom').value.trim();
   if(!excuse){vibrate([80]);return}
+  hideErr('excuse-error');
   vibrate([25]);
   $('excuse-result').style.display='none';
   $('excuse-loading').classList.add('show');
@@ -2356,7 +2360,7 @@ async function runExcuseTranslator(){
     $('excuse-result').style.display='block';
     showNoRegretBanner('excuse-result');
     playTick();vibrate([40]);
-  }catch(e){alert(e.message)}
+  }catch(e){showErr('excuse-error',e.message)}
   finally{$('excuse-loading').classList.remove('show')}
 }
 
@@ -2449,6 +2453,20 @@ function navToRoutine(mode){
 function getProfile(){return JSON.parse(localStorage.getItem('fitness_profile')||'null')}
 function getLogs(){return JSON.parse(localStorage.getItem('fitness_logs')||'[]')}
 function getMissedLogs(){return JSON.parse(localStorage.getItem('fitness_missed')||'[]')}
+function calcStreak(logs){
+  let streak=0;
+  const today=new Date();today.setHours(0,0,0,0);
+  for(let i=0;i<30;i++){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const has=logs.some(l=>{const ld=new Date(l.ts);ld.setHours(0,0,0,0);return ld.getTime()===d.getTime()});
+    if(has) streak++; else if(i>0) break;
+  }
+  return streak;
+}
+function isTodayLogged(logs){
+  const today=new Date().toDateString();
+  return logs.some(l=>new Date(l.ts).toDateString()===today);
+}
 
 function saveProfile(){
   const equip=[...document.querySelectorAll('input[name=equip]:checked')].map(e=>e.value);
@@ -2855,16 +2873,8 @@ function renderQuickStats(){
   checkSnoozeBanner();
   loadTodaySteps();
   const logs=getLogs();
-  // 스트릭 계산
-  let streak=0;
-  const today=new Date();today.setHours(0,0,0,0);
-  for(let i=0;i<30;i++){
-    const d=new Date(today);d.setDate(today.getDate()-i);
-    const has=logs.some(l=>{const ld=new Date(l.ts);ld.setHours(0,0,0,0);return ld.getTime()===d.getTime()});
-    if(has) streak++; else if(i>0) break;
-  }
   const sn=$('qa-streak-num');
-  if(sn) sn.textContent=streak;
+  if(sn) sn.textContent=calcStreak(logs);
   // 날짜
   const dn=$('qa-date');
   if(dn){
@@ -3449,21 +3459,13 @@ function completeWorkout(){
     skipped:false,ts:Date.now()
   };
   const logs=getLogs();
-  logs.unshift(log);
+  const todayIdx=logs.findIndex(l=>new Date(l.ts).toDateString()===new Date().toDateString());
+  if(todayIdx>=0) logs[todayIdx]=log; else logs.unshift(log);
   if(logs.length>100) logs.pop();
   localStorage.setItem('fitness_logs',JSON.stringify(logs));
 
-  // Streak from updated logs
-  let streak=0;
-  const today2=new Date();today2.setHours(0,0,0,0);
-  for(let i=0;i<30;i++){
-    const dd=new Date(today2);dd.setDate(today2.getDate()-i);
-    const has=logs.some(l=>{const ld=new Date(l.ts);ld.setHours(0,0,0,0);return ld.getTime()===dd.getTime()});
-    if(has) streak++;
-    else if(i>0) break;
-  }
   $('insurance-award').style.display='none';
-  checkAndAwardInsurance(streak);
+  checkAndAwardInsurance(calcStreak(logs));
 
   // Calorie from live bar
   const calText=$('cal-live-num')?.textContent||'0 kcal';
@@ -3568,22 +3570,15 @@ function saveMinWorkout(){
     kcal:0,is_min:true,skipped:false,ts:Date.now()
   };
   const logs=getLogs();
-  logs.unshift(log);
+  const todayIdxM=logs.findIndex(l=>new Date(l.ts).toDateString()===new Date().toDateString());
+  if(todayIdxM>=0) logs[todayIdxM]=log; else logs.unshift(log);
   if(logs.length>100) logs.pop();
   localStorage.setItem('fitness_logs',JSON.stringify(logs));
-
-  let streak=0;
-  const tod=new Date();tod.setHours(0,0,0,0);
-  for(let i=0;i<30;i++){
-    const dd=new Date(tod);dd.setDate(tod.getDate()-i);
-    const has=logs.some(l=>{const ld=new Date(l.ts);ld.setHours(0,0,0,0);return ld.getTime()===dd.getTime()});
-    if(has) streak++; else if(i>0) break;
-  }
 
   $('ds-rate').textContent='100%';
   $('ds-done').textContent=total+'/'+total;
   $('ds-cal').textContent=t('minSaved');
-  $('ds-streak').textContent=streak;
+  $('ds-streak').textContent=calcStreak(logs);
   $('ds-target').textContent=t('minDoneTarget');
   $('min-result').classList.remove('show');
   resetEmotionSection();
@@ -3686,23 +3681,13 @@ function renderDash(){
   const recent10=logs.slice(0,10);
   const avgRate=recent10.length?Math.round(recent10.reduce((a,l)=>a+l.rate,0)/recent10.length):0;
 
-  // Streak
-  let streak=0;
-  const today=new Date();today.setHours(0,0,0,0);
-  for(let i=0;i<30;i++){
-    const d=new Date(today);d.setDate(today.getDate()-i);
-    const hasLog=logs.some(l=>{const ld=new Date(l.ts);ld.setHours(0,0,0,0);return ld.getTime()===d.getTime()});
-    if(hasLog) streak++;
-    else if(i>0) break;
-  }
-
   // Balance score
   const {score,counts}=calcBalance(logs);
 
   $('d-week').textContent=weekLogs.length;
   $('d-month').textContent=monthLogs.length;
   $('d-rate').textContent=avgRate+'%';
-  $('d-streak').textContent=streak;
+  $('d-streak').textContent=calcStreak(logs);
   $('d-balance').textContent=score;
   $('d-total').textContent=logs.length;
 
@@ -3954,6 +3939,7 @@ async function convertRoutine(){
   const d=window._currentRoutine;
   const p=getProfile();
   if(!d||!p) return;
+  hideErr('convert-error');
   $('convert-loading').classList.add('show');
   $('convert-result').style.display='none';
   try{
@@ -3986,7 +3972,7 @@ async function convertRoutine(){
     if(cv.note){$('cv-note').textContent=cv.note;$('cv-note').style.display='block'}
     else{$('cv-note').style.display='none'}
     $('convert-result').style.display='block';
-  }catch(e){alert(e.message)}
+  }catch(e){showErr('convert-error',e.message)}
   finally{$('convert-loading').classList.remove('show')}
 }
 
