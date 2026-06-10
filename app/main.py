@@ -119,6 +119,9 @@ class CaloriesRequest(BaseModel):
     goal: str
     weekly_days: int
     diet_style: str = "한식"
+    ingredients: list = []
+    today_kcal: int = 0
+    workout_done: bool = False
     lang: str = "ko"
 
 
@@ -561,15 +564,18 @@ async def get_calories(req: CaloriesRequest):
 성별: {req.gender} / 나이: {req.age}세 / 몸무게: {req.weight}kg / 키: {req.height}cm
 목표: {req.goal} / 주당 운동 횟수: {req.weekly_days}회
 선호 식단 스타일: {req.diet_style}
+오늘 운동 여부: {'완료 (소모 칼로리: ' + str(req.today_kcal) + 'kcal)' if req.workout_done else '운동 못 함'}
+{"보유 재료: " + ", ".join(req.ingredients) if req.ingredients else "보유 재료: 특별히 없음"}
 
-식단 예시는 반드시 {req.diet_style} 스타일로 현실적으로 작성해주세요.
-한식이면 밥·국·반찬 위주, 양식이면 파스타·샐러드 위주,
-빵/샌드위치면 토스트·베이글 위주, 간편식이면 편의점에서 바로 살 수 있는 것 위주,
-고단백 위주면 닭가슴살·계란·단백질쉐이크 중심으로 작성해주세요.
+식단 작성 규칙:
+1. 보유 재료가 있으면 그 재료를 최대한 활용한 식단을 구성하세요.
+2. {req.diet_style} 스타일을 기반으로 작성하되, 보유 재료와 자연스럽게 조합하세요.
+3. 오늘 운동을 완료했으면 소모 칼로리를 고려해 회복·보충 중심 식단으로 구성하세요.
+4. 오늘 운동을 못 했으면 가볍고 유지하기 좋은 식단으로, 자책 없이 구성하세요.
 
 tip 필드는 반드시 다음 내용을 포함하세요:
 1. 오늘 상황에 대한 짧은 공감 (자책 유발 금지)
-2. 오늘 망해도 괜찮은 이유 한 문장
+2. 오늘 이 식단이 왜 괜찮은지 한 문장
 3. 내일 다시 이어가기 위한 작은 행동 1개
 
 다음 JSON 형식으로만 응답:

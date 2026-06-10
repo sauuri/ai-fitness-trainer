@@ -494,6 +494,15 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .meal-item{background:#0a0f1a;border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:7px}
 .meal-time{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:3px}
 .meal-text{font-size:13px;color:var(--text);line-height:1.5}
+.ingredient-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.ingr-chip{background:#0a0f1a;border:1px solid var(--border);border-radius:20px;padding:5px 11px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;user-select:none}
+.ingr-chip.selected{background:#6366f120;border-color:#6366f160;color:#a5b4fc}
+.selected-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.sel-chip{display:flex;align-items:center;gap:4px;background:#6366f118;border:1px solid #6366f140;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600;color:#a5b4fc}
+.sel-chip button{background:none;border:none;color:#a5b4fc;font-size:14px;cursor:pointer;padding:0;line-height:1}
+.custom-ingr-row{display:flex;gap:6px;margin-top:6px}
+.custom-ingr-row input{flex:1;background:#0a0f1a;border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:13px}
+.custom-ingr-row button{background:#6366f120;border:1px solid #6366f140;border-radius:8px;padding:7px 12px;color:#a5b4fc;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
 
 /* WORKOUT DONE */
 #workout-done{display:none;animation:fadeUp .5s ease}
@@ -1278,19 +1287,9 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
     <!-- 식단 step 1: 입력 -->
     <div class="step-page active" id="diet-step-1">
       <div class="card">
-        <div class="card-title" data-i18n="dietCardTitle">🥗 오늘 망해도 괜찮아요</div>
+        <div class="card-title" data-i18n="dietCardTitle">🥗 지금 있는 재료로 식단 짜줄게요</div>
         <div id="diet-profile-info" style="font-size:12px;color:var(--muted);margin-bottom:14px"></div>
         <div style="display:flex;flex-direction:column;gap:14px">
-          <div class="form-group">
-            <label data-i18n="dietWeekLabel">주당 운동 횟수</label>
-            <select id="diet-days" data-i18n-opt="dietWeekOpts">
-              <option value="1">주 1회</option>
-              <option value="2">주 2회</option>
-              <option value="3" selected>주 3회</option>
-              <option value="4">주 4회</option>
-              <option value="5">주 5회 이상</option>
-            </select>
-          </div>
           <div class="form-group">
             <label data-i18n="dietStyleLabel">선호 식단 스타일</label>
             <select id="diet-style" data-i18n-opt="dietStyleOpts">
@@ -1301,10 +1300,25 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
               <option value="고단백 위주">💪 고단백 위주</option>
             </select>
           </div>
+          <div class="form-group">
+            <label data-i18n="dietIngrLabel">자주 쓰는 재료</label>
+            <div class="ingredient-chips" id="quick-chips"></div>
+          </div>
+          <div class="form-group">
+            <label data-i18n="dietCustomLabel">직접 추가</label>
+            <div class="custom-ingr-row">
+              <input type="text" id="custom-ingredient" data-i18n-ph="dietCustomPlaceholder" placeholder="재료 이름 입력" onkeydown="if(event.key==='Enter')addCustomIngredient()">
+              <button onclick="addCustomIngredient()" data-i18n="dietCustomBtn">추가</button>
+            </div>
+          </div>
+          <div id="selected-ingr-section" style="display:none">
+            <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px" data-i18n="dietSelectedLabel">선택된 재료</div>
+            <div class="selected-chips" id="selected-chips"></div>
+          </div>
         </div>
-        <button class="btn btn-primary" onclick="getDiet()" style="margin-top:16px" data-i18n="dietBtn">🥗 복구 식단 받기</button>
+        <button class="btn btn-primary" onclick="getDiet()" style="margin-top:16px" data-i18n="dietBtn">🥗 식단 받기</button>
       </div>
-      <div class="loading" id="diet-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadCalories">칼로리 계산 중...</div></div>
+      <div class="loading" id="diet-loading"><div class="loading-ring"></div><div class="loading-text" data-i18n="loadCalories">복구 식단 만드는 중...</div></div>
       <div class="error" id="diet-error"></div>
     </div>
 
@@ -1672,9 +1686,10 @@ const TRANS = {
     converterTitle:'🔄 상황별 루틴 변환기',noRoutineMsg:'먼저 루틴 탭에서 맞춤 루틴을 생성해주세요.',
     convertTypeLabel:'변환 유형',convertBtn:'변환하기 🔄',loadConvert:'루틴 변환 중...',
     convertOpts:['🏠 집 운동으로 변환','⚡ 짧게 (15분 이내)','💆 회복 루틴으로','🤸 맨몸 운동으로','🦵 무릎 보호 루틴으로'],
-    dietNoProfile:'프로필을 먼저 설정해주세요',dietCardTitle:'🥗 오늘 망해도 괜찮아요',
-    dietWeekLabel:'주당 운동 횟수',dietWeekOpts:['주 1회','주 2회','주 3회','주 4회','주 5회 이상'],
+    dietNoProfile:'프로필을 먼저 설정해주세요',dietCardTitle:'🥗 지금 있는 재료로 식단 짜줄게요',
     dietStyleLabel:'선호 식단 스타일',
+    dietIngrLabel:'자주 쓰는 재료',dietCustomLabel:'직접 추가',dietCustomPlaceholder:'재료 이름 입력',dietCustomBtn:'추가',dietSelectedLabel:'선택된 재료',
+    dietQuickIngr:['닭가슴살','두부','햇반','계란','고구마','참치캔','브로콜리','오트밀','그릭요거트','바나나','현미밥','아보카도'],
     dietStyleOpts:['🍚 한식 (밥·국·반찬)','🍝 양식 (파스타·샐러드)','🥪 빵/샌드위치','🏪 간편식 (편의점)','💪 고단백 위주'],
     dietBtn:'🥗 복구 식단 받기',dietBackBtn:'← 다시 받기',loadCalories:'복구 식단 만드는 중...',
     macroTitle:'📊 오늘의 참고 수치',macroCalLabel:'목표 칼로리',macroProteinLabel:'단백질',macroCarbLabel:'탄수화물',macroFatLabel:'지방',
@@ -1846,9 +1861,10 @@ const TRANS = {
     converterTitle:'🔄 Routine Converter',noRoutineMsg:'Generate a routine first in the Routine tab.',
     convertTypeLabel:'Convert Type',convertBtn:'Convert 🔄',loadConvert:'Converting routine...',
     convertOpts:['🏠 Home Workout','⚡ Shorter (under 15 min)','💆 Recovery Routine','🤸 Bodyweight Only','🦵 Knee-safe Routine'],
-    dietNoProfile:'Please set up your profile first',dietCardTitle:"🥗 Today's not over yet",
-    dietWeekLabel:'Weekly Workouts',dietWeekOpts:['1x / week','2x / week','3x / week','4x / week','5+ / week'],
+    dietNoProfile:'Please set up your profile first',dietCardTitle:'🥗 Build a meal from what you have',
     dietStyleLabel:'Diet Style',
+    dietIngrLabel:'Common ingredients',dietCustomLabel:'Add custom',dietCustomPlaceholder:'Enter ingredient',dietCustomBtn:'Add',dietSelectedLabel:'Selected',
+    dietQuickIngr:['Chicken breast','Tofu','Rice','Eggs','Sweet potato','Tuna can','Broccoli','Oatmeal','Greek yogurt','Banana','Brown rice','Avocado'],
     dietStyleOpts:['🍚 Korean (rice & sides)','🍝 Western (pasta & salad)','🥪 Bread / Sandwiches','🏪 Convenience Store','💪 High Protein'],
     dietBtn:'🥗 Get Recovery Meal',dietBackBtn:'← Try again',loadCalories:'Building recovery meal...',
     macroTitle:'📊 Reference Numbers',macroCalLabel:'Target',macroProteinLabel:'Protein',macroCalLabel:'Carbs',macroFatLabel:'Fat',
@@ -3903,11 +3919,58 @@ function initDiet(){
   $('diet-no-profile').style.display='none';
   $('diet-form').style.display='block';
   $('diet-profile-info').textContent=`${t('displayGender')[p.gender]||p.gender} · ${p.age}${t('ageUnit')} · ${p.weight}kg · ${p.height}cm · ${t('dietGoalPrefix')}${t('displayGoal')[p.goal]||p.goal}`;
+  renderQuickChips();
+  renderSelectedChips();
 }
 
 function dietBack(){
   $('diet-step-1').classList.add('active');
   $('diet-step-2').classList.remove('active');
+}
+
+function renderQuickChips(){
+  const chips=$('quick-chips');
+  if(!chips) return;
+  const items=t('dietQuickIngr');
+  chips.innerHTML=items.map(name=>`
+    <button class="ingr-chip${_selectedIngredients.has(name)?' selected':''}" onclick="toggleIngredient('${name}')">${name}</button>
+  `).join('');
+}
+
+function renderSelectedChips(){
+  const sec=$('selected-ingr-section');
+  const container=$('selected-chips');
+  if(!container) return;
+  if(_selectedIngredients.size===0){sec.style.display='none';return;}
+  sec.style.display='block';
+  container.innerHTML=[..._selectedIngredients].map(name=>`
+    <div class="sel-chip">${name}<button onclick="removeIngredient('${name}')">×</button></div>
+  `).join('');
+}
+
+function toggleIngredient(name){
+  if(_selectedIngredients.has(name)) _selectedIngredients.delete(name);
+  else _selectedIngredients.add(name);
+  renderQuickChips();
+  renderSelectedChips();
+  vibrate([15]);
+}
+
+function removeIngredient(name){
+  _selectedIngredients.delete(name);
+  renderQuickChips();
+  renderSelectedChips();
+}
+
+function addCustomIngredient(){
+  const input=$('custom-ingredient');
+  const val=input?.value.trim();
+  if(!val) return;
+  _selectedIngredients.add(val);
+  input.value='';
+  renderQuickChips();
+  renderSelectedChips();
+  vibrate([15]);
 }
 
 async function getDiet(){
@@ -3916,10 +3979,15 @@ async function getDiet(){
   hideErr('diet-error');
   $('diet-result').classList.remove('show');
   $('diet-loading').classList.add('show');
+  // 오늘 운동 데이터
+  const todayLog=getLogs().find(l=>{const d=new Date(l.ts);const n=new Date();return d.toDateString()===n.toDateString()});
+  const todayKcal=todayLog?.kcal||0;
+  const workoutDone=!!todayLog;
+  const ingredients=[..._selectedIngredients];
   try{
     const res=await fetch(API+'/calories',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,weekly_days:parseInt($('diet-days').value),diet_style:$('diet-style').value,lang:LANG})
+      body:JSON.stringify({gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,weekly_days:p.weeklyDays||3,diet_style:$('diet-style').value,ingredients,today_kcal:todayKcal,workout_done:workoutDone,lang:LANG})
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
