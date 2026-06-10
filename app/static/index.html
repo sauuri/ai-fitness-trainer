@@ -1334,6 +1334,7 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
             <div class="macro-card carb-card"><div class="macro-num" id="d-carbs"></div><div class="macro-unit">g</div><div class="macro-label" data-i18n="macroCarbLabel">탄수화물</div></div>
             <div class="macro-card fat-card"><div class="macro-num" id="d-fat"></div><div class="macro-unit">g</div><div class="macro-label" data-i18n="macroFatLabel">지방</div></div>
           </div>
+          <div id="d-ingredient-note" style="display:none;margin-top:10px;padding:9px 12px;background:#6366f110;border:1px solid #6366f130;border-radius:10px;font-size:12px;color:#a5b4fc;line-height:1.6"></div>
         </div>
         <div class="card">
           <div class="card-title" data-i18n="mealTitle">🍽️ 오늘의 식단 예시</div>
@@ -4007,6 +4008,13 @@ async function getDiet(){
     $('d-dinner').textContent=d.meals.dinner;
     $('d-snack').textContent=d.meals.snack;
     $('d-tip').textContent=d.tip;
+    const noteEl=$('d-ingredient-note');
+    if(d.ingredient_note&&_selectedIngredients.size>0){
+      noteEl.textContent='💡 '+d.ingredient_note;
+      noteEl.style.display='block';
+    } else {
+      noteEl.style.display='none';
+    }
     $('diet-result').classList.add('show');
     $('diet-loading').classList.remove('show');
     $('diet-step-1').classList.remove('active');
