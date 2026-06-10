@@ -1356,9 +1356,19 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <div style="font-size:12px;color:var(--muted);margin-bottom:12px" data-i18n="recoveryDesc">오늘 뭘 드셨는지 알려주시면 내일 식단을 맞춰드릴게요</div>
       <div class="form-group">
         <label data-i18n="recoveryLabel">오늘 뭘 드셨어요?</label>
-        <input type="text" id="recovery-input" data-i18n-ph="recoveryPlaceholder" placeholder="예: 엽떡 1인분, 치킨 반마리, 맥주 2캔" style="width:100%">
+        <input type="text" id="recovery-input" data-i18n-ph="recoveryPlaceholder" placeholder="예: 엽떡 한통, 치킨 반마리, 맥주 2캔" style="width:100%" onkeydown="if(event.key==='Enter')getRecoveryMeal()">
       </div>
-      <button class="btn btn-primary" onclick="getRecoveryMeal()" style="margin-top:12px" data-i18n="recoveryBtn">📅 내일 식단 짜줘</button>
+      <div class="form-group">
+        <label data-i18n="dietStyleLabel">내일 식단 스타일</label>
+        <select id="recovery-style" data-i18n-opt="dietStyleOpts">
+          <option value="한식">🍚 한식 (밥·국·반찬)</option>
+          <option value="양식">🍝 양식 (파스타·샐러드)</option>
+          <option value="빵/샌드위치">🥪 빵/샌드위치</option>
+          <option value="간편식">🏪 간편식 (편의점)</option>
+          <option value="고단백 위주">💪 고단백 위주</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="getRecoveryMeal()" style="margin-top:4px" data-i18n="recoveryBtn">📅 내일 식단 짜줘</button>
       <div class="loading" id="recovery-loading" style="display:none"><div class="loading-ring"></div><div class="loading-text" data-i18n="recoveryLoading">칼로리 계산 중...</div></div>
       <div class="error" id="recovery-error"></div>
     </div>
@@ -3994,7 +4004,7 @@ async function getRecoveryMeal(){
   try{
     const res=await fetch(API+'/recovery-meal',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({what_ate:what,gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,diet_style:$('diet-style').value||'한식',lang:LANG})
+      body:JSON.stringify({what_ate:what,gender:p.gender,age:p.age,weight:p.weight,height:p.height,goal:p.goal,diet_style:$('recovery-style').value||'한식',lang:LANG})
     });
     const d=await res.json();
     if(!res.ok) throw new Error(d.detail||'오류');
