@@ -3537,8 +3537,9 @@ function completeWorkout(){
   if(logs.length>100) logs.pop();
   localStorage.setItem('fitness_logs',JSON.stringify(logs));
 
+  const streak=calcStreak(logs);
   $('insurance-award').style.display='none';
-  checkAndAwardInsurance(calcStreak(logs));
+  checkAndAwardInsurance(streak);
 
   // Calorie from live bar
   const calText=$('cal-live-num')?.textContent||'0 kcal';
