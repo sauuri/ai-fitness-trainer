@@ -4340,7 +4340,7 @@ if(sessionStorage.getItem('nzd_entered')){
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadProfileForm();
 initHome();
-if(!getProfile()) showPage('profile');
+// 프로필 없으면 홈 온보딩 카드가 안내 → 자동 리다이렉트 없음
 applyLang();
 initNotifications();
 syncFromSupabase();
