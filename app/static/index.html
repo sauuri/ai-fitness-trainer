@@ -1287,8 +1287,9 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
   <!-- Routine converter -->
   <div class="card">
     <div class="card-title" data-i18n="converterTitle">🔄 상황별 루틴 변환기</div>
-    <div id="no-routine-msg" style="font-size:13px;color:var(--muted);padding:4px 0 10px" data-i18n="noRoutineMsg">
-      먼저 루틴 탭에서 맞춤 루틴을 생성해주세요.
+    <div id="no-routine-msg" style="padding:4px 0 10px">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px" data-i18n="noRoutineMsg">먼저 루틴 탭에서 맞춤 루틴을 생성해주세요.</div>
+      <button class="btn btn-outline" style="width:100%" onclick="showPage('home')">🏋️ 루틴 탭으로 가기 →</button>
     </div>
     <div id="converter-form" style="display:none">
       <div class="form-group" style="margin-bottom:10px">
