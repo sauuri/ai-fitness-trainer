@@ -709,11 +709,25 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
     <span id="pb-info"></span>
     <button class="profile-edit-btn" onclick="showPage('profile')" data-i18n="editProfileBtn">수정 →</button>
   </div>
-  <div id="no-profile-msg" class="card" style="text-align:center;padding:28px">
-    <div style="font-size:36px;margin-bottom:10px">🏋️</div>
-    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">No-Zero-Day</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:16px" data-i18n-html="noProfileMsg">포기하지 않게 만드는 AI 운동 코치<br>먼저 프로필을 설정해주세요</div>
-    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="showPage('profile')" data-i18n="setProfileBtn">프로필 설정하기 →</button>
+  <div id="no-profile-msg" class="card" style="text-align:center;padding:28px 20px">
+    <div style="font-size:48px;margin-bottom:12px">⚡</div>
+    <div style="font-size:17px;font-weight:900;color:#fff;margin-bottom:6px">No<span style="color:var(--accent)">Zero</span>Day</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">포기하지 않게 만드는 AI 운동 코치<br>먼저 프로필을 설정해주세요</div>
+    <div style="display:flex;flex-direction:column;gap:8px;text-align:left;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)">
+        <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0">1</div>
+        프로필 설정 (나이·몸무게·목표)
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)">
+        <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0">2</div>
+        오늘 컨디션 입력 → AI 루틴 생성
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)">
+        <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0">3</div>
+        운동 완료 저장 → 스트릭 쌓기
+      </div>
+    </div>
+    <button class="btn btn-primary" style="max-width:220px;margin:0 auto" onclick="showPage('profile')" data-i18n="setProfileBtn">프로필 설정하기 →</button>
   </div>
 
   <!-- ── 퀵 액션 (3초 진입) ── -->
@@ -949,9 +963,11 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
           </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
-          <button class="btn btn-primary" id="risk-btn" onclick="predictRisk()" style="margin-top:0" data-i18n="analyzeBtn">🔮 오늘 컨디션 분석하기</button>
-          <button class="btn" onclick="goLazy()" style="background:#6366f120;color:#a5b4fc;border:1px solid #6366f140;margin-top:0;touch-action:manipulation" data-i18n="lazyBtn">😮‍💨 오늘 0만 피하면 돼 — 최소만 할게</button>
-          <button class="btn btn-peak" onclick="goPeak()" style="margin-top:0" data-i18n="peakBtn">💥 고점 모드 — 오늘 전력으로 간다</button>
+          <button class="btn btn-primary" id="risk-btn" onclick="predictRisk()" style="margin-top:0;font-size:15px;padding:14px" data-i18n="analyzeBtn">🔮 오늘 컨디션 분석하기</button>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button class="btn" onclick="goLazy()" style="background:#0c1018;color:var(--muted);border:1px solid #1e2d42;margin-top:0;font-size:12px;padding:11px 8px;touch-action:manipulation" data-i18n="lazyBtn">😮‍💨 최소만 할게</button>
+            <button class="btn btn-peak" onclick="goPeak()" style="margin-top:0;font-size:12px;padding:11px 8px" data-i18n="peakBtn">💥 고점 모드</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1241,9 +1257,10 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
     <div class="card-title" data-i18n="failureTitle">😞 운동 실패 원인 분석</div>
     <div id="missed-reason-chart" class="bar-chart" style="margin-bottom:10px">
       <div style="text-align:center;padding:18px 0 10px">
-        <div style="font-size:40px;margin-bottom:8px">📉</div>
+        <div style="font-size:40px;margin-bottom:8px">🔍</div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">아직 실패 기록이 없어요</div>
-        <div style="font-size:11px;color:var(--muted);line-height:1.6">기록 탭에서 <strong style="color:#c4b5fd">😞 못 함</strong> 기록을 남기면<br>AI가 패턴을 분석해드려요</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:12px">기록 탭에서 <strong style="color:var(--accent)">😞 못 함</strong> 기록을 남기면<br>AI가 왜 못 했는지 패턴을 분석해드려요</div>
+        <button class="btn btn-outline" style="font-size:11px;padding:7px 14px" onclick="showPage('dash')">📋 기록 탭으로 가기 →</button>
       </div>
     </div>
     <button class="btn btn-outline" style="width:100%;margin-bottom:4px" onclick="getAnalysis()" data-i18n="analyzeFailBtn">🔍 실패 패턴 분석하기</button>
