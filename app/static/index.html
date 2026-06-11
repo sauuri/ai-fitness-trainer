@@ -2432,7 +2432,7 @@ const API = (typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform())
   : '';
 
 // ── Sound & Vibration ─────────────────────────────────────────────────────────
-let soundOn = true;
+let soundOn = localStorage.getItem('nzd_sound') !== 'off';
 let _audioCtx = null;
 function getCtx(){
   if(!_audioCtx) _audioCtx=new(window.AudioContext||window.webkitAudioContext)();
@@ -2475,10 +2475,18 @@ function playComplete(){
 }
 function toggleSound(){
   soundOn=!soundOn;
+  localStorage.setItem('nzd_sound', soundOn ? 'on' : 'off');
   $('sound-icon').textContent=soundOn?'🔔':'🔕';
   document.getElementById('top-sound-btn').style.color=soundOn?'':'var(--red)';
   document.getElementById('top-sound-btn').style.borderColor=soundOn?'':'var(--red)';
   if(soundOn) playTick();
+}
+function initSoundBtn(){
+  if(!soundOn){
+    $('sound-icon').textContent='🔕';
+    document.getElementById('top-sound-btn').style.color='var(--red)';
+    document.getElementById('top-sound-btn').style.borderColor='var(--red)';
+  }
 }
 
 // ── Navigation ──────────────────────────────────────────────────────────────
@@ -2549,6 +2557,7 @@ function saveProfile(){
   };
   localStorage.setItem('fitness_profile',JSON.stringify(profile));
   syncToSupabase();
+  playTick(); vibrate([40]);
   $('profile-saved').style.display='block';
   setTimeout(()=>$('profile-saved').style.display='none',2000);
   initHome();
@@ -3950,6 +3959,7 @@ async function getFeedback(){
     $('fb-improve').innerHTML=(d.improve||[]).map(i=>`<div class="fb-item fb-improve">💡 ${i}</div>`).join('');
     $('fb-tip').textContent=`🎯 ${d.next_tip}`;
     $('feedback-result').style.display='block';
+    playTick(); vibrate([20]);
   }catch(e){showErr('fb-error',e.message)}
   finally{$('fb-loading').classList.remove('show')}
 }
@@ -3999,6 +4009,7 @@ async function getAnalysis(){
     $('strategy-list').innerHTML=(d.strategy||[]).map(s=>`<div class="strategy-item">💡 ${s}</div>`).join('');
     $('analysis-plan').textContent=`🎯 ${d.next_week_plan||''}`;
     $('analysis-result').style.display='block';
+    playTick(); vibrate([20]);
   }catch(e){showErr('analysis-error',e.message)}
   finally{$('analysis-loading').classList.remove('show')}
 }
@@ -4028,6 +4039,7 @@ async function getReport(){
     $('rp-next').textContent=d.next_focus??'';
     $('report-result').style.display='block';
     const es=$('report-empty-state');if(es)es.style.display='none';
+    playTick(); vibrate([20]);
   }catch(e){showErr('report-error',e.message)}
   finally{$('report-loading').classList.remove('show')}
 }
@@ -4340,6 +4352,7 @@ if(sessionStorage.getItem('nzd_entered')){
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadProfileForm();
 initHome();
+initSoundBtn();
 // 프로필 없으면 홈 온보딩 카드가 안내 → 자동 리다이렉트 없음
 applyLang();
 initNotifications();
