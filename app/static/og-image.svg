@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06080f"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f97316"/>
+      <stop offset="50%" style="stop-color:#a855f7"/>
+      <stop offset="100%" style="stop-color:#6366f1"/>
+    </linearGradient>
+    <linearGradient id="streakGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f97316"/>
+      <stop offset="100%" style="stop-color:#fbbf24"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Top accent bar -->
+  <rect width="1200" height="8" fill="url(#accent)"/>
+
+  <!-- Left: Branding -->
+  <text x="80" y="120" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#475569" letter-spacing="3">NOZERODAY</text>
+
+  <!-- Main headline -->
+  <text x="80" y="220" font-family="Arial, sans-serif" font-size="68" font-weight="900" fill="#ffffff">오늘 운동</text>
+  <text x="80" y="300" font-family="Arial, sans-serif" font-size="68" font-weight="900" fill="#ffffff">포기하려고요?</text>
+
+  <!-- Sub text -->
+  <text x="80" y="370" font-family="Arial, sans-serif" font-size="28" fill="#64748b">이유를 입력하면 AI가 1분 루틴으로 바꿔드려요</text>
+
+  <!-- Feature pills -->
+  <rect x="80" y="420" width="180" height="44" rx="22" fill="#f9731615" stroke="#f9731640" stroke-width="1"/>
+  <text x="170" y="448" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#f97316" text-anchor="middle">포기 번역기 🔀</text>
+
+  <rect x="276" y="420" width="170" height="44" rx="22" fill="#6366f115" stroke="#6366f140" stroke-width="1"/>
+  <text x="361" y="448" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#818cf8" text-anchor="middle">1분 루틴 💪</text>
+
+  <rect x="462" y="420" width="170" height="44" rx="22" fill="#10b98115" stroke="#10b98140" stroke-width="1"/>
+  <text x="547" y="448" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#10b981" text-anchor="middle">AI 분석 🧠</text>
+
+  <!-- Bottom tag -->
+  <text x="80" y="560" font-family="Arial, sans-serif" font-size="18" fill="#1e293b">#오운완 #노제로데이 #AI운동</text>
+
+  <!-- Right: Mock card -->
+  <rect x="760" y="60" width="360" height="500" rx="24" fill="#0f172a" stroke="#1e2d42" stroke-width="1"/>
+  <rect x="760" y="60" width="360" height="6" rx="3" fill="url(#accent)"/>
+
+  <!-- Card content -->
+  <text x="940" y="130" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#334155" text-anchor="middle" letter-spacing="2">NOZERODAY</text>
+  <text x="940" y="190" font-family="Arial, sans-serif" font-size="56" text-anchor="middle">🏆</text>
+  <text x="940" y="240" font-family="Arial, sans-serif" font-size="24" font-weight="900" fill="#ffffff" text-anchor="middle">운동 완료!</text>
+  <text x="940" y="268" font-family="Arial, sans-serif" font-size="13" fill="#64748b" text-anchor="middle">전신 운동 ✓</text>
+
+  <!-- Stats row -->
+  <rect x="790" y="290" width="100" height="52" rx="10" fill="#0a0f1a"/>
+  <text x="840" y="315" font-family="Arial, sans-serif" font-size="18" font-weight="900" fill="#10b981" text-anchor="middle">100%</text>
+  <text x="840" y="333" font-family="Arial, sans-serif" font-size="10" fill="#334155" text-anchor="middle">완료율</text>
+
+  <rect x="900" y="290" width="80" height="52" rx="10" fill="#0a0f1a"/>
+  <text x="940" y="315" font-family="Arial, sans-serif" font-size="18" font-weight="900" fill="#f97316" text-anchor="middle">7일</text>
+  <text x="940" y="333" font-family="Arial, sans-serif" font-size="10" fill="#334155" text-anchor="middle">🔥 streak</text>
+
+  <rect x="990" y="290" width="100" height="52" rx="10" fill="#0a0f1a"/>
+  <text x="1040" y="315" font-family="Arial, sans-serif" font-size="18" font-weight="900" fill="#10b981" text-anchor="middle">250</text>
+  <text x="1040" y="333" font-family="Arial, sans-serif" font-size="10" fill="#334155" text-anchor="middle">kcal</text>
+
+  <!-- Streak big -->
+  <rect x="790" y="358" width="300" height="80" rx="14" fill="#f9731608" stroke="#f9731620" stroke-width="1"/>
+  <text x="940" y="398" font-family="Arial, sans-serif" font-size="40" font-weight="900" fill="#f97316" text-anchor="middle">🔥 7</text>
+  <text x="940" y="425" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#f97316" text-anchor="middle" opacity="0.8">일 연속 운동 중</text>
+
+  <!-- Risk badge -->
+  <rect x="790" y="454" width="300" height="34" rx="8" fill="#f9731610" stroke="#f9731625" stroke-width="1"/>
+  <text x="940" y="476" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#f97316" text-anchor="middle">포기 위험도 84% → 그래도 해냄 💪</text>
+
+  <!-- Success badge -->
+  <text x="940" y="530" font-family="Arial, sans-serif" font-size="16" font-weight="900" fill="#10b981" text-anchor="middle">✅ No Zero Day 성공</text>
+</svg>

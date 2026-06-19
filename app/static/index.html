@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>No-Zero-Day | AI 운동 실패 방지 코치</title>
+<meta name="description" content="오늘 운동 포기하려고요? 이유를 입력하면 AI가 1분 루틴으로 바꿔드려요. 포기 위험도 분석 · 맞춤 루틴 · 스트릭 관리">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NoZeroDay">
+<meta property="og:title" content="오늘 운동 포기하려고요? AI가 1분 루틴으로 바꿔드려요 💪">
+<meta property="og:description" content="포기 위험도 분석 → 딱 1분짜리 루틴 → No Zero Day 성공. 운동 포기 직전인 사람을 위한 AI 운동 코치.">
+<meta property="og:image" content="https://ai-fitness-trainer-alpha.vercel.app/static/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://ai-fitness-trainer-alpha.vercel.app">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="오늘 운동 포기하려고요? AI가 1분 루틴으로 바꿔드려요 💪">
+<meta name="twitter:description" content="포기 위험도 분석 → 딱 1분짜리 루틴 → No Zero Day 성공">
+<meta name="twitter:image" content="https://ai-fitness-trainer-alpha.vercel.app/static/og-image.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -236,6 +249,14 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .ex-alt{font-size:11px;color:var(--muted);margin-top:3px;font-style:italic}
 .ex-weight-row{display:flex;align-items:center;gap:6px;margin-top:7px}
 .ex-weight-label{font-size:11px;color:var(--muted)}
+.ex-gif-btn{background:none;border:1px solid #1e2d42;border-radius:8px;color:var(--muted);font-size:11px;padding:5px 10px;cursor:pointer;margin-top:7px;touch-action:manipulation;transition:color .15s,border-color .15s}
+.ex-gif-btn:active{color:var(--accent);border-color:var(--accent)}
+.ex-info-panel{background:#080c14;border:1px solid #1a2436;border-radius:10px;padding:12px;margin-top:8px}
+.ex-info-desc{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px}
+.ex-info-muscle{font-size:11px;color:var(--accent);font-weight:700;margin-bottom:8px;text-transform:capitalize}
+.ex-info-steps{display:flex;flex-direction:column;gap:6px}
+.ex-info-step{display:flex;gap:8px;font-size:11px;color:var(--text);line-height:1.5}
+.ex-info-num{background:#f9731622;color:var(--accent);border-radius:50%;width:18px;height:18px;min-width:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:1px}
 .weight-input{width:74px!important;font-size:12px!important;padding:5px 8px!important;border-radius:7px!important}
 
 /* SIMPLE LIST (warmup/cooldown) */
@@ -512,6 +533,32 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
 .custom-ingr-row{display:flex;gap:6px;margin-top:6px}
 .custom-ingr-row input{flex:1;background:#0a0f1a;border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:13px}
 .custom-ingr-row button{background:#6366f120;border:1px solid #6366f140;border-radius:8px;padding:7px 12px;color:#a5b4fc;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+
+/* SHARE CARD MODAL */
+.share-overlay{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;-webkit-overflow-scrolling:touch}
+.share-overlay.open{display:flex}
+.share-card-wrap{width:min(320px,88vw);background:linear-gradient(145deg,#0f172a 0%,#1a243a 100%);border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.7)}
+.sc-top{height:5px;background:linear-gradient(90deg,#f97316,#a855f7,#6366f1)}
+.sc-body{padding:24px 22px 20px}
+.sc-logo{font-size:10px;font-weight:800;color:#334155;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:14px}
+.sc-trophy{font-size:52px;text-align:center;margin-bottom:6px}
+.sc-title{font-size:21px;font-weight:900;color:#fff;text-align:center;margin-bottom:3px}
+.sc-target{font-size:12px;color:#64748b;text-align:center;margin-bottom:16px}
+.sc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:16px}
+.sc-stat{background:#0a0f1a;border-radius:10px;padding:9px 4px;text-align:center}
+.sc-stat-n{font-size:16px;font-weight:900;color:#10b981;letter-spacing:-.5px}
+.sc-stat-l{font-size:9px;color:#334155;margin-top:2px}
+.sc-streak{text-align:center;margin-bottom:14px;padding:14px 0;background:#f9731608;border-radius:14px;border:1px solid #f9731620}
+.sc-streak-n{font-size:44px;font-weight:900;color:#f97316;line-height:1;letter-spacing:-2px}
+.sc-streak-l{font-size:12px;color:#f97316;font-weight:700;margin-top:3px;opacity:.8}
+.sc-divider{height:1px;background:#1e2d42;margin:0 0 12px}
+.sc-exs{font-size:12px;color:#475569;text-align:center;margin-bottom:10px;line-height:1.7;word-break:keep-all}
+.sc-risk{font-size:11px;color:#f97316;text-align:center;background:#f9731610;border:1px solid #f9731625;border-radius:8px;padding:6px 10px;margin-bottom:12px;font-weight:700}
+.sc-badge{font-size:15px;font-weight:900;color:#10b981;text-align:center;margin-bottom:8px}
+.sc-tags{font-size:10px;color:#1e293b;text-align:center;letter-spacing:.3px}
+.share-overlay-hint{color:#475569;font-size:12px;text-align:center;margin-top:14px;line-height:1.7;max-width:280px}
+.share-overlay-btns{display:flex;gap:8px;margin-top:14px;width:min(320px,88vw)}
+.share-overlay-btns .btn{margin-top:0;flex:1;font-size:13px}
 
 /* WORKOUT DONE */
 #workout-done{display:none;animation:fadeUp .5s ease}
@@ -797,11 +844,11 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <!-- 홈 하단 -->
       <div id="home-bottom" style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
         <div style="background:#0c1018;border:1px solid #1a2436;border-radius:14px;padding:14px 16px">
-          <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px">오늘의 한 마디</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px" data-i18n="homeQuoteLabel">오늘의 한 마디</div>
           <div id="home-quote" style="font-size:13px;color:var(--text);line-height:1.7"></div>
         </div>
         <div id="home-last-log" style="display:none;background:#0c1018;border:1px solid #1a2436;border-radius:14px;padding:13px 16px">
-          <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">최근 운동</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px" data-i18n="homeLastLabel">최근 운동</div>
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div>
               <div id="home-last-target" style="font-size:14px;font-weight:800;color:var(--text)"></div>
@@ -1090,6 +1137,10 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
         </div>
 
         <div class="done-actions">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <button class="btn" style="background:#1a2436;color:var(--accent);border:1px solid #f9731635;margin-top:0;font-size:13px" onclick="saveRoutine()" id="save-routine-btn" data-i18n="saveRoutineBtn">⭐ 루틴 저장</button>
+            <button class="btn" style="background:#1a2436;color:var(--muted);border:1px solid #1e2d42;margin-top:0;font-size:13px" onclick="showShareCardModal()" data-i18n="shareStreakBtn">🔗 공유</button>
+          </div>
           <button class="btn btn-primary" style="margin-top:0" onclick="showPage('dash')" data-i18n="viewLogBtn">📊 기록 확인하기</button>
           <button class="btn" style="background:#1a2436;color:var(--text);width:100%" onclick="startNewRoutine()" data-i18n="newRoutineBtn">💪 새 루틴 짜기</button>
         </div>
@@ -1299,6 +1350,12 @@ h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
       <div id="rp-warnings" style="margin-bottom:8px"></div>
       <div class="report-next" id="rp-next"></div>
     </div>
+  </div>
+
+  <!-- 저장된 루틴 -->
+  <div class="card" id="saved-routines-card" style="display:none">
+    <div class="card-title" data-i18n="savedRoutineLabel">⭐ 저장된 루틴</div>
+    <div id="saved-routines-list"></div>
   </div>
 
   <!-- Routine converter -->
@@ -1774,7 +1831,7 @@ const TRANS = {
     timeLabel:'가능한 시간',timeOpts:['10분','20분','40분','60분','90분'],
     targetLabel:'오늘 운동 부위',
     targetOpts:['전신 (풀바디)','가슴 + 삼두','등 + 이두','어깨 (숄더데이)','하체 (스쿼트·레그프레스·런지)','코어 (복근·허리)','유산소 (런닝·자전거)'],
-    analyzeBtn:'🔮 오늘 컨디션 분석하기',lazyBtn:'😮‍💨 오늘 0만 피하면 돼 — 최소만 할게',peakBtn:'💥 고점 모드 — 오늘 전력으로 간다',
+    analyzeBtn:'🔮 오늘 컨디션 분석하기',lazyBtn:'😮‍💨 최소만 할게',peakBtn:'💥 고점 모드',
     backStep2:'← 다시 입력',backStep3:'← 뒤로',backDiet:'← 다시 계산',
     lazyTitle:'😩 오늘 하기 싫은 이유',lazyReasonLabel:'이유 선택',
     lazyReasonOpts:['너무 피곤함 😴','그냥 귀찮음 🛋️','시간이 없음 ⏰','근육통 있음 😣','기분이 안 좋음 😞','스트레스가 큼 🤯','비 와서 나가기 싫음 🌧️'],
@@ -1782,16 +1839,17 @@ const TRANS = {
     routineBtn:'💪 맞춤 루틴 짜줘',minBtn:'😮‍💨 최소 실행',peakGoBtn:'💥 고점으로 간다',
     workoutDoneTitle:'운동 완료!',workoutDoneSub:'오늘도 제로데이를 막았어요<br>꾸준함이 최고의 능력이에요',
     statRate:'완료율',statDone:'완료 운동',statKcal:'kcal 소모',statStreak:'연속 운동일 🔥',
-    todayRoutine:'오늘의 루틴',viewLogBtn:'📊 기록 확인하기',newRoutineBtn:'💪 새 루틴 짜기',
+    todayRoutine:'오늘의 루틴',viewLogBtn:'📊 기록 확인하기',newRoutineBtn:'💪 새 루틴 짜기',saveRoutineBtn:'⭐ 루틴 저장',shareStreakBtn:'🔗 공유',savedRoutineLabel:'저장된 루틴',loadRoutineBtn:'불러오기',deleteRoutineBtn:'삭제',noSavedRoutines:'저장된 루틴이 없어요',
     wantMoreBtn:'더 하고 싶어졌어 💪',saveMinBtn:'완료 저장 ✅',
     totalTime:'총 운동 시간',tapPause:'(탭하면 일시정지)',
     warmupLabel:'🔥 워밍업',mainLabel:'💪 메인 운동',cooldownLabel:'🧘 마무리 스트레칭',
     allDoneBanner:'🎉 오늘 운동 전부 완료! 제로데이 방지 성공 💪',
     statDoneLabel:'완료한 운동',statTotalLabel:'전체 운동',statPctLabel:'완료율',
     postFatigueLabel:'오늘 피로도',saveWorkoutBtn:'운동 완료 저장 ✅',
-    setsLabel:'세트',repsLabel:'회',restLabel:'휴식',weightLabel:'💪 사용 중량',altPrefix:'대체: ',
+    setsLabel:'세트',repsLabel:'회',restLabel:'휴식',weightLabel:'💪 사용 중량',altPrefix:'대체: ',gifBtn:'동작 방법',gifClose:'접기',
     calLiveLabel:'🔥 예상 소모 칼로리',calLiveTag:'(체중·성별·중량 반영)',calLiveTagNoProfile:'(프로필 설정 시 더 정확해져요)',
-    homeHeading:'🏋️ No-Zero-Day',dashHeading:'📊 운동 기록',missedBtn:'😞 못 함 기록',
+    homeHeading:'🏋️ No-Zero-Day',dashHeading:'📊 운동 기록',missedBtn:'😞 못 함 기록',homeQuoteLabel:'오늘의 한 마디',homeLastLabel:'최근 운동',
+    quotes:['운동을 후회한 적은 없다. 운동 안 한 걸 후회할 뿐이다.','1%의 가능성만 있어도, 그게 오늘 해야 하는 이유다.','완벽한 운동보다 불완전하게라도 하는 운동이 낫다.','몸은 늘 할 수 있다고 말한다. 멈추는 건 항상 머리다.','오늘의 땀이 내일의 자신감이 된다.','1분이면 충분하다. 시작하면 달라진다.','지금 힘든 게, 나중에 쉬워지는 이유다.','어제의 나보다 오늘의 내가 조금만 더 나으면 된다.','포기는 언제든 할 수 있다. 오늘은 딱 1분만.'],
     dWeekLabel:'이번 주',dWeekSub:'회',dMonthLabel:'이번 달',dMonthSub:'회',
     dRateLabel:'평균 완료율',dRateSub:'최근 10회',
     dStreakLabel:'연속 운동일',dStreakSub:'일',dBalanceLabel:'균형 점수',dBalanceSub:'/ 100',
@@ -1803,6 +1861,7 @@ const TRANS = {
     feedbackBtn:'🤖 AI 피드백',calChartEmpty:'운동 완료 후 기록이 쌓여요.',aiAnalyzing:'AI 분석 중...',
     analysisHeading:'📈 AI 분석',todayRoutineCard:'🏋️ 오늘의 루틴',dietHeading:'🥗 식단',
     failureTitle:'😞 운동 실패 원인 분석',failureChartEmpty:'기록 탭에서 😞 못 함 기록을 남기면 여기서 패턴을 분석해요.',
+    failureEmptyTitle:'아직 실패 기록이 없어요',failureEmptyDesc:'기록 탭에서 <strong style="color:var(--accent)">😞 못 함</strong> 기록을 남기면<br>AI가 패턴을 분석해드려요',gotoLogBtn:'📋 기록 탭으로 가기 →',
     analyzeFailBtn:'🔍 실패 패턴 분석하기',loadFailure:'실패 패턴 분석 중...',
     reportTitle:'📈 4주 성장 리포트',genReportBtn:'📊 리포트 생성하기',loadReport:'4주 데이터 분석 중...',
     reportSessions:'총 운동 횟수',reportCompletion:'평균 완료율',reportStreak:'연속 운동일',reportMost:'가장 많이 한 부위',
@@ -1954,7 +2013,7 @@ const TRANS = {
     timeLabel:'Available Time',timeOpts:['10 min','20 min','40 min','60 min','90 min'],
     targetLabel:'Target Muscle Group',
     targetOpts:['Full Body','Chest + Triceps','Back + Biceps','Shoulders','Legs (Squats, Leg Press, Lunges)','Core (Abs, Lower Back)','Cardio (Running, Cycling)'],
-    analyzeBtn:"🔮 Analyze Today's Condition",lazyBtn:'😮‍💨 Just avoid zero — minimal only',peakBtn:'💥 Peak Mode — Go all out today',
+    analyzeBtn:"🔮 Analyze Today's Condition",lazyBtn:'😮‍💨 Minimal only',peakBtn:'💥 Peak Mode',
     backStep2:'← Re-enter',backStep3:'← Back',backDiet:'← Recalculate',
     lazyTitle:"😩 Why You Don't Feel Like It",lazyReasonLabel:'Select Reason',
     lazyReasonOpts:['Too tired 😴','Just lazy 🛋️','No time ⏰','Sore muscles 😣','Bad mood 😞','Too stressed 🤯','Bad weather 🌧️'],
@@ -1962,16 +2021,17 @@ const TRANS = {
     routineBtn:'💪 Build My Routine',minBtn:'😮‍💨 Minimal Workout',peakGoBtn:'💥 Peak Mode',
     workoutDoneTitle:'Workout Complete!',workoutDoneSub:'Zero day prevented again!<br>Consistency is your greatest strength',
     statRate:'Completion',statDone:'Exercises Done',statKcal:'kcal Burned',statStreak:'Day Streak 🔥',
-    todayRoutine:"Today's Routine",viewLogBtn:'📊 View Log',newRoutineBtn:'💪 New Routine',
+    todayRoutine:"Today's Routine",viewLogBtn:'📊 View Log',newRoutineBtn:'💪 New Routine',saveRoutineBtn:'⭐ Save Routine',shareStreakBtn:'🔗 Share',savedRoutineLabel:'Saved Routines',loadRoutineBtn:'Load',deleteRoutineBtn:'Delete',noSavedRoutines:'No saved routines yet',
     wantMoreBtn:'I want to do more 💪',saveMinBtn:'Save Complete ✅',
     totalTime:'Total Time',tapPause:'(tap to pause)',
     warmupLabel:'🔥 Warm-up',mainLabel:'💪 Main Workout',cooldownLabel:'🧘 Cool-down',
     allDoneBanner:'🎉 All exercises done! Zero day prevented 💪',
     statDoneLabel:'Done',statTotalLabel:'Total',statPctLabel:'Rate',
     postFatigueLabel:'Post-workout Fatigue',saveWorkoutBtn:'Save Workout ✅',
-    setsLabel:'sets',repsLabel:'reps',restLabel:'rest',weightLabel:'💪 Weight Used',altPrefix:'Alt: ',
+    setsLabel:'sets',repsLabel:'reps',restLabel:'rest',weightLabel:'💪 Weight Used',altPrefix:'Alt: ',gifBtn:'How to do it',gifClose:'Collapse',
     calLiveLabel:'🔥 Est. Calories Burned',calLiveTag:'(weight, gender & load)',calLiveTagNoProfile:'(set profile for better accuracy)',
-    homeHeading:'🏋️ No-Zero-Day',dashHeading:'📊 Workout Log',missedBtn:'😞 Log Missed',
+    homeHeading:'🏋️ No-Zero-Day',dashHeading:'📊 Workout Log',missedBtn:'😞 Log Missed',homeQuoteLabel:'Quote of the Day',homeLastLabel:'Recent Workout',
+    quotes:["I never regret a workout. Only the ones I skipped.","Even 1% chance is reason enough to start today.","An imperfect workout beats a perfect excuse.","Your body can always do it. It's your mind that quits.","Today's sweat is tomorrow's confidence.","One minute is enough. Starting changes everything.","The hardest days now are why it gets easier later.","Just be a little better than yesterday.","You can quit anytime — but give it just 1 min today."],
     dWeekLabel:'This Week',dWeekSub:'sessions',dMonthLabel:'This Month',dMonthSub:'sessions',
     dRateLabel:'Avg Completion',dRateSub:'Last 10',
     dStreakLabel:'Streak',dStreakSub:'days',dBalanceLabel:'Balance',dBalanceSub:'/ 100',
@@ -1983,6 +2043,7 @@ const TRANS = {
     feedbackBtn:'🤖 AI Feedback',calChartEmpty:'Records appear after completing workouts.',aiAnalyzing:'AI Analyzing...',
     analysisHeading:'📈 AI Analysis',todayRoutineCard:"🏋️ Today's Routine",dietHeading:'🥗 Meals',
     failureTitle:'😞 Workout Failure Analysis',failureChartEmpty:'Log missed workouts in the Log tab to analyze patterns here.',
+    failureEmptyTitle:'No failure records yet',failureEmptyDesc:'Log missed workouts in the <strong style="color:var(--accent)">😞 Missed</strong> section<br>and AI will analyze your patterns',gotoLogBtn:'📋 Go to Log →',
     analyzeFailBtn:'🔍 Analyze Failure Patterns',loadFailure:'Analyzing failure patterns...',
     reportTitle:'📈 4-Week Growth Report',genReportBtn:'📊 Generate Report',loadReport:'Analyzing 4-week data...',
     reportSessions:'Total Sessions',reportCompletion:'Avg Completion',reportStreak:'Streak',reportMost:'Most Trained',
@@ -2498,7 +2559,7 @@ function showPage(name){
   document.querySelectorAll('.nav-btn')[idx].classList.add('active');
   if(name==='dash') renderDash();
   if(name==='diet') initDiet();
-  if(name==='analysis') renderAnalysisCharts();
+  if(name==='analysis'){ renderAnalysisCharts(); renderSavedRoutines(); }
   if(name==='profile') loadNotiSettings(); // 프로필 탭 열 때마다 localStorage에서 복원
 }
 
@@ -2606,17 +2667,7 @@ function initHome(){
 }
 
 function renderHomeBottom(){
-  const QUOTES=[
-    '운동을 후회한 적은 없다. 운동 안 한 걸 후회할 뿐이다.',
-    '1%의 가능성만 있어도, 그게 오늘 해야 하는 이유다.',
-    '완벽한 운동보다 불완전하게라도 하는 운동이 낫다.',
-    '몸은 늘 할 수 있다고 말한다. 멈추는 건 항상 머리다.',
-    '오늘의 땀이 내일의 자신감이 된다.',
-    '1분이면 충분하다. 시작하면 달라진다.',
-    '지금 힘든 게, 나중에 쉬워지는 이유다.',
-    '어제의 나보다 오늘의 내가 조금만 더 나으면 된다.',
-    '포기는 언제든 할 수 있다. 오늘은 딱 1분만.',
-  ];
+  const QUOTES=t('quotes');
   const qEl=$('home-quote');
   if(qEl){
     const idx=new Date().getDate()%QUOTES.length;
@@ -3024,6 +3075,7 @@ async function predictRisk(){
 
 function renderRisk(d){
   const score=d.risk_score||0;
+  window._lastRiskScore=score;
   let cls='risk-low',numCls='low';
   if(score>=80){cls='risk-crit';numCls='crit'}
   else if(score>=60){cls='risk-high';numCls='high'}
@@ -3185,6 +3237,38 @@ function addRestTime(sec){
   _restTotal=Math.max(_restTotal,_restRemain);
   updateTimerUI();
   playTick();
+}
+async function loadExGif(btn, name){
+  let panel = btn.nextElementSibling;
+  if(panel && panel.classList.contains('ex-info-panel')){
+    const visible = panel.style.display !== 'none';
+    panel.style.display = visible ? 'none' : 'block';
+    btn.textContent = '📋 ' + (visible ? t('gifBtn') : t('gifClose'));
+    return;
+  }
+  btn.textContent = '⏳';
+  btn.disabled = true;
+  try{
+    const r = await fetch(API + '/exercise-info/' + encodeURIComponent(name) + '?lang=' + LANG);
+    const d = await r.json();
+    if(d && (d.description || (d.instructions && d.instructions.length))){
+      panel = document.createElement('div');
+      panel.className = 'ex-info-panel';
+      const steps = (d.instructions||[]).map((s,i)=>`<div class="ex-info-step"><span class="ex-info-num">${i+1}</span><span>${s}</span></div>`).join('');
+      const muscles = [d.target, ...(d.secondaryMuscles||[])].filter(Boolean).join(', ');
+      panel.innerHTML =
+        (d.description?`<div class="ex-info-desc">${d.description}</div>`:'') +
+        (muscles?`<div class="ex-info-muscle">🎯 ${muscles}</div>`:'') +
+        (steps?`<div class="ex-info-steps">${steps}</div>`:'');
+      btn.insertAdjacentElement('afterend', panel);
+      btn.textContent = '📋 ' + t('gifClose');
+    } else {
+      btn.textContent = '📋 ' + t('gifBtn');
+    }
+  }catch(e){
+    btn.textContent = '📋 ' + t('gifBtn');
+  }
+  btn.disabled = false;
 }
 function onExCheck(cb){
   updateProgress();
@@ -3414,6 +3498,11 @@ function renderRoutine(d){
       <div class="ex-tip">💡 ${ex.tip}</div>
       ${ex.caution?`<div class="ex-caution">⚠️ ${ex.caution}</div>`:''}
       ${ex.alternative?`<div class="ex-alt">${t('altPrefix')}${ex.alternative}</div>`:''}
+      <button class="ex-gif-btn"
+        onclick="loadExGif(this,'${(ex.name||'').replace(/'/g,"\\'")}')"
+        data-purpose="${(ex.purpose||'').replace(/"/g,'&quot;')}"
+        data-tip="${(ex.tip||'').replace(/"/g,'&quot;')}"
+        data-caution="${(ex.caution||'').replace(/"/g,'&quot;')}">📋 ${t('gifBtn')}</button>
       <div class="ex-weight-row">
         <span class="ex-weight-label">${t('weightLabel')}</span>
         <input type="number" class="weight-input" id="weight-${i}" placeholder="0" min="0" max="999" step="0.5" oninput="updateCalories()">
@@ -3525,6 +3614,201 @@ function launchConfetti(){
   draw();
 }
 
+// ── 루틴 저장 ─────────────────────────────────────────────────────────────────
+function getSavedRoutines(){
+  return JSON.parse(localStorage.getItem('nzd_saved_routines')||'[]');
+}
+function saveRoutine(){
+  const d=window._currentRoutine;
+  if(!d) return;
+  const saved=getSavedRoutines();
+  const entry={
+    id:Date.now(),
+    title:d.title||t('todayRoutine'),
+    target:window._currentTarget||'',
+    date:new Date().toLocaleDateString('ko-KR'),
+    routine:d
+  };
+  saved.unshift(entry);
+  if(saved.length>10) saved.pop();
+  localStorage.setItem('nzd_saved_routines',JSON.stringify(saved));
+  const btn=$('save-routine-btn');
+  if(btn){ btn.textContent='✅ 저장됨'; btn.disabled=true; }
+  vibrate([30]);
+}
+function loadSavedRoutine(id){
+  const saved=getSavedRoutines();
+  const entry=saved.find(s=>s.id===id);
+  if(!entry) return;
+  window._currentRoutine=entry.routine;
+  window._currentTarget=entry.target;
+  renderRoutine(entry.routine);
+  showPage('home');
+  goToStep(3);
+  vibrate([20]);
+}
+function deleteSavedRoutine(id){
+  const saved=getSavedRoutines().filter(s=>s.id!==id);
+  localStorage.setItem('nzd_saved_routines',JSON.stringify(saved));
+  renderSavedRoutines();
+}
+function renderSavedRoutines(){
+  const el=$('saved-routines-list');
+  const card=$('saved-routines-card');
+  if(!el) return;
+  const saved=getSavedRoutines();
+  if(!card) return;
+  card.style.display=saved.length?'block':'none';
+  if(!saved.length){ el.innerHTML=''; return; }
+  el.innerHTML=saved.map(s=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #1a2436">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${s.target?s.target+' · ':''}${s.date}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;margin-left:10px">
+        <button class="btn" style="padding:6px 12px;font-size:11px;margin-top:0;background:#f9731618;color:var(--accent);border:1px solid #f9731635" onclick="loadSavedRoutine(${s.id})">${t('loadRoutineBtn')}</button>
+        <button class="btn" style="padding:6px 10px;font-size:11px;margin-top:0;background:#0c1018;color:var(--muted);border:1px solid #1e2d42" onclick="deleteSavedRoutine(${s.id})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+// ── 스트릭 공유 ───────────────────────────────────────────────────────────────
+function showShareCardModal(){
+  const streak=calcStreak(getLogs());
+  const target=window._currentTarget||(LANG==='ko'?'오늘의 운동':"Today's Workout");
+  const exercises=(window._currentRoutine?.main||[]).slice(0,3).map(e=>e.name);
+  const rate=$('ds-rate')?.textContent||'100%';
+  const kcal=$('ds-cal')?.textContent||'0';
+  const riskScore=window._lastRiskScore||0;
+  const isKo=LANG==='ko';
+
+  const exLine=exercises.length?exercises.join(' · '):'-';
+  const riskHtml=riskScore>0
+    ?`<div class="sc-risk">${isKo?`포기 위험도 ${riskScore}% → 그래도 해냄 💪`:`Risk ${riskScore}% → Crushed it 💪`}</div>`
+    :'';
+
+  $('share-card-body').innerHTML=`
+    <div class="sc-logo">NOZERODAY</div>
+    <div class="sc-trophy">🏆</div>
+    <div class="sc-title">${isKo?'운동 완료!':'Workout Done!'}</div>
+    <div class="sc-target">${target} ✓</div>
+    <div class="sc-stats">
+      <div class="sc-stat">
+        <div class="sc-stat-n">${rate}</div>
+        <div class="sc-stat-l">${isKo?'완료율':'Rate'}</div>
+      </div>
+      <div class="sc-stat">
+        <div class="sc-stat-n" style="color:#f97316">${streak}${isKo?'일':'d'}</div>
+        <div class="sc-stat-l">🔥 streak</div>
+      </div>
+      <div class="sc-stat">
+        <div class="sc-stat-n">${kcal}</div>
+        <div class="sc-stat-l">kcal</div>
+      </div>
+    </div>
+    <div class="sc-streak">
+      <div class="sc-streak-n">🔥 ${streak}</div>
+      <div class="sc-streak-l">${isKo?'일 연속 운동 중':'-day streak'}</div>
+    </div>
+    <div class="sc-divider"></div>
+    ${riskHtml}
+    <div class="sc-exs">${exLine}</div>
+    <div class="sc-badge">✅ No Zero Day ${isKo?'성공':'Success'}</div>
+    <div class="sc-tags">#오운완 #노제로데이 #AI운동</div>
+  `;
+
+  $('share-overlay-hint').innerHTML=isKo
+    ?'스크린샷 찍어서 인스타 스토리에 올려요 📸<br>또는 텍스트 공유로 빠르게 공유!'
+    :'Screenshot & share to Instagram 📸<br>or use text share below!';
+
+  $('share-card-modal').classList.add('open');
+}
+
+function closeShareCard(){
+  $('share-card-modal').classList.remove('open');
+}
+
+async function copyShareText(btn){
+  const streak=calcStreak(getLogs());
+  const total=getLogs().filter(l=>!l.skipped).length;
+  const target=window._currentTarget||(LANG==='ko'?'오늘의 운동':"Today's Workout");
+  const riskScore=window._lastRiskScore||0;
+  const riskLine=riskScore>0?(LANG==='ko'?`\n포기 위험도 ${riskScore}% → 그래도 해냄 💪`:`\nRisk ${riskScore}% → Crushed it 💪`):'';
+  const text=LANG==='ko'
+    ?`🏆 ${target} 완료!\n🔥 ${streak}일 연속 운동 중${riskLine}\n총 ${total}번 운동 완료\n\nNoZeroDay — 포기 안 하게 만드는 AI 운동 앱\n#오운완 #노제로데이 #AI운동`
+    :`🏆 ${target} Done!\n🔥 ${streak}-day streak${riskLine}\n${total} total workouts\n\nNoZeroDay — AI coach that keeps you going\n#workout #nozeroday`;
+  try{
+    await navigator.clipboard.writeText(text);
+    const orig=btn.textContent;
+    btn.textContent='✅ 복사됨!';
+    setTimeout(()=>{btn.textContent=orig;},2000);
+  }catch(e){
+    alert(text);
+  }
+}
+
+async function shareStreakText(){
+  const streak=calcStreak(getLogs());
+  const total=getLogs().filter(l=>!l.skipped).length;
+  const text=LANG==='ko'
+    ?`🔥 ${streak}일 연속 운동 중!\n총 ${total}번 운동 완료\n\n포기 안 하게 만드는 AI 운동 코치\nNoZeroDay 앱으로 함께해요 💪\n#오운완 #노제로데이`
+    :`🔥 ${streak}-day workout streak!\n${total} total workouts done\n\nJoin me on NoZeroDay — AI coach that keeps you going 💪`;
+  const url='https://ai-fitness-trainer-alpha.vercel.app';
+  try{
+    if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform()){
+      await Capacitor.Plugins.Share.share({title:'NoZeroDay',text,url,dialogTitle:LANG==='ko'?'공유하기':'Share'});
+    }else if(navigator.share){
+      await navigator.share({title:'NoZeroDay',text,url});
+    }else{
+      throw new Error('no share api');
+    }
+  }catch(e){
+    try{await navigator.clipboard.writeText(text+'\n'+url);alert(LANG==='ko'?'📋 클립보드에 복사됐어요!\n카카오톡에 붙여넣기 하세요 😊':'📋 Copied! Paste it anywhere.');}catch(e2){}
+  }
+}
+
+async function shareStreak(){
+  const logs=getLogs();
+  const streak=calcStreak(logs);
+  const total=logs.filter(l=>!l.skipped).length;
+  const profile=getProfile();
+  const name=profile?.name||'NoZeroDay';
+  const text=LANG==='ko'
+    ?`🔥 ${streak}일 연속 운동 중!\n총 ${total}번 운동 완료\n\n포기 안 하게 만드는 AI 운동 코치\nNo-Zero-Day 앱으로 함께해요 💪`
+    :`🔥 ${streak}-day workout streak!\n${total} total workouts done\n\nJoin me on No-Zero-Day — the AI coach that keeps you going 💪`;
+  try{
+    if(typeof Capacitor!=='undefined'&&Capacitor.isNativePlatform()){
+      const {Share}=Capacitor.Plugins;
+      await Share.share({
+        title:'NoZeroDay',
+        text,
+        dialogTitle:LANG==='ko'?'공유하기':'Share'
+      });
+    } else {
+      await navigator.share({title:'NoZeroDay',text});
+    }
+  }catch(e){
+    // 공유 취소 또는 미지원 — 클립보드 복사
+    try{
+      await navigator.clipboard.writeText(text);
+      alert(LANG==='ko'?'클립보드에 복사됐어요!':'Copied to clipboard!');
+    }catch(e2){}
+  }
+}
+
+function maybeRequestReview(totalDone){
+  if(typeof Capacitor==='undefined'||!Capacitor.isNativePlatform()) return;
+  const MILESTONES=[5,20,50];
+  const last=parseInt(localStorage.getItem('nzd_last_review')||'0');
+  const next=MILESTONES.find(m=>m>last&&totalDone>=m);
+  if(!next) return;
+  localStorage.setItem('nzd_last_review',String(next));
+  setTimeout(()=>{
+    try{ Capacitor.Plugins.ReviewBridge?.requestReview(); }catch(e){}
+  }, 2000);
+}
+
 function completeWorkout(){
   const d=window._currentRoutine;
   if(!d) return;
@@ -3567,6 +3851,7 @@ function completeWorkout(){
   const streak=calcStreak(logs);
   $('insurance-award').style.display='none';
   checkAndAwardInsurance(streak);
+  maybeRequestReview(logs.filter(l=>!l.skipped).length);
 
   // Calorie from live bar
   const calText=$('cal-live-num')?.textContent||'0 kcal';
@@ -3979,9 +4264,9 @@ function renderAnalysisCharts(){
       </div>`).join(''):
     `<div style="text-align:center;padding:14px 0 8px">
       <div style="font-size:36px;margin-bottom:8px">🔍</div>
-      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">아직 실패 기록이 없어요</div>
-      <div style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:10px">기록 탭에서 <strong style="color:var(--accent)">😞 못 함</strong> 기록을 남기면<br>AI가 패턴을 분석해드려요</div>
-      <button class="btn btn-outline" style="font-size:11px;padding:7px 14px" onclick="showPage('dash')">📋 기록 탭으로 가기 →</button>
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">${t('failureEmptyTitle')}</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:10px">${t('failureEmptyDesc')}</div>
+      <button class="btn btn-outline" style="font-size:11px;padding:7px 14px" onclick="showPage('dash')">${t('gotoLogBtn')}</button>
     </div>`;
   const hasRoutine=!!window._currentRoutine;
   $('no-routine-msg').style.display=hasRoutine?'none':'block';
@@ -4372,6 +4657,20 @@ document.addEventListener('resume',()=>{
     <div class="day-modal-date" id="day-modal-date"></div>
     <div id="day-modal-body"></div>
     <button class="btn btn-outline" style="width:100%;margin-top:4px" onclick="$('day-modal').classList.remove('show')" data-i18n="closeBtn">닫기</button>
+  </div>
+</div>
+
+<!-- Share Card Modal -->
+<div class="share-overlay" id="share-card-modal">
+  <div class="share-card-wrap">
+    <div class="sc-top"></div>
+    <div class="sc-body" id="share-card-body"></div>
+  </div>
+  <div class="share-overlay-hint" id="share-overlay-hint"></div>
+  <div class="share-overlay-btns">
+    <button class="btn" style="background:#1a2436;color:var(--muted);border:1px solid #1e2d42" onclick="closeShareCard()">✕ 닫기</button>
+    <button class="btn" style="background:#1a2436;color:#10b981;border:1px solid #10b98130" onclick="copyShareText(this)">📋 복사</button>
+    <button class="btn" style="background:linear-gradient(135deg,#f97316,#6366f1);color:#fff" onclick="shareStreakText()">🔗 공유</button>
   </div>
 </div>
 

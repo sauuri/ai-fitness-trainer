@@ -2,3 +2,4 @@ fastapi
 openai
 pydantic-settings
 python-dotenv
+httpx

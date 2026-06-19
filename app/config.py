@@ -4,5 +4,6 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
     openai_api_key: str = ""
     model_name: str = "gpt-4o-mini"
+    rapidapi_key: str = ""
 
 settings = Settings()

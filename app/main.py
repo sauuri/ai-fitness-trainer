@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import AsyncOpenAI
 from app.config import settings
+from app.exercisedb import fetch_exercise_info
 
 app = FastAPI()
 app.add_middleware(
@@ -759,3 +760,11 @@ route 기준: 피로/통증/늦은시간 → rest / 귀찮음/의욕없음/운�
         response_format={"type": "json_object"}
     )
     return JSONResponse(json.loads(resp.choices[0].message.content))
+
+
+@app.get("/exercise-info/{name:path}")
+async def exercise_info(name: str, lang: str = "en"):
+    if not settings.rapidapi_key:
+        return JSONResponse(None)
+    data = await fetch_exercise_info(name, settings.rapidapi_key, lang=lang, openai_client=client)
+    return JSONResponse(data)
