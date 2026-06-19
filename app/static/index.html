@@ -4553,11 +4553,15 @@ function clearAppCache(){
   }
 }
 
-function confirmReset(){
+async function confirmReset(){
   if($('reset-confirm').value.trim()!==t('confirmWord')){
     alert(t('confirmWordError'));
     return;
   }
+  try{
+    const sb=getSupaClient();
+    if(sb) await sb.from('nzd_sync').delete().eq('device_id', getDeviceId());
+  }catch(e){ console.log('Cloud delete error:', e) }
   localStorage.clear();
   location.reload();
 }
