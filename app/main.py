@@ -1,6 +1,8 @@
 import json
 import pathlib
-from fastapi import FastAPI
+import time
+from collections import defaultdict
+from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -17,6 +19,43 @@ app.add_middleware(
 )
 client = AsyncOpenAI(api_key=settings.openai_api_key)
 BASE = pathlib.Path(__file__).parent
+
+# ── 기본 비용 방어: IP당 공유 rate limit (AI 호출 엔드포인트 전체) ──────────────
+# 서버리스 인스턴스 메모리 기반이라 완벽하진 않지만, 단일 클라이언트가
+# 스크립트로 반복 호출해 OpenAI 비용을 무한정 발생시키는 걸 막는 1차 방어선.
+RATE_LIMIT_WINDOW = 60
+RATE_LIMIT_MAX = 20
+_rate_buckets: dict[str, list[float]] = defaultdict(list)
+AI_PATHS = (
+    "/routine", "/predict-risk", "/min-routine", "/analyze-failures",
+    "/convert-routine", "/report", "/feedback", "/motivation",
+    "/calories", "/recovery-meal", "/excuse", "/exercise-info",
+)
+
+
+def _client_ip(request: Request) -> str:
+    fwd = request.headers.get("x-forwarded-for")
+    if fwd:
+        return fwd.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+@app.middleware("http")
+async def rate_limit_ai_endpoints(request: Request, call_next):
+    if request.url.path.startswith(AI_PATHS):
+        ip = _client_ip(request)
+        now = time.monotonic()
+        bucket = _rate_buckets[ip]
+        cutoff = now - RATE_LIMIT_WINDOW
+        while bucket and bucket[0] < cutoff:
+            bucket.pop(0)
+        if len(bucket) >= RATE_LIMIT_MAX:
+            return JSONResponse(
+                {"detail": "요청이 너무 많습니다. 잠시 후 다시 시도해주세요."},
+                status_code=429,
+            )
+        bucket.append(now)
+    return await call_next(request)
 
 
 def lang_sys(lang: str) -> str:
